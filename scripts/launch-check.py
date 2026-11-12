@@ -9,7 +9,7 @@ import uuid
 root = Path(__file__).resolve().parents[1]
 run = root / ".build/release-launch" / str(uuid.uuid4())
 run.mkdir(parents=True)
-app = root / "dist/CodePath.app/Contents/MacOS/CodePath"
+app = root / "dist/codelib.app/Contents/MacOS/CodePath"
 env = dict(os.environ, CODEPATH_DATA_DIR=str(run / "data"))
 process = subprocess.Popen([str(app)], cwd=root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 try:

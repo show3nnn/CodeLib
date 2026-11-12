@@ -8,6 +8,9 @@ final class AppModel {
     let course: Course?
     let catalog: CourseCatalog?
     let contentError: String?
+    let appRelease: AppRelease?
+    let releaseHistory: ReleaseHistory?
+    let releaseHistoryError: String?
     let dataURL: URL
     private var store: ProgressStore?
     var document = ProgressDocument()
@@ -42,6 +45,11 @@ final class AppModel {
     }
 
     init() {
+        appRelease = try? AppRelease(info: Bundle.main.infoDictionary ?? [:])
+        do {
+            releaseHistory = try ReleaseHistory.bundled()
+            releaseHistoryError = nil
+        } catch { releaseHistory = nil; releaseHistoryError = error.localizedDescription }
         do {
             let loaded = try Course.bundled()
             let loadedCatalog = try CourseCatalog.bundled(availableCourseIDs: [loaded.id])
@@ -147,7 +155,7 @@ final class AppModel {
 
     func exportProgress() {
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = "CodePath-progress.json"
+        panel.nameFieldStringValue = "codelib-progress.json"
         panel.allowedContentTypes = [.json]
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
@@ -157,6 +165,17 @@ final class AppModel {
 
     func exportProgress(to destination: URL) throws {
         try ProgressStore.export(document, to: destination, protecting: dataURL)
+    }
+
+    @discardableResult
+    func markReleaseViewed(_ version: NumericVersion) -> Bool {
+        guard store != nil, releaseHistory?.releases.contains(where: { $0.version == version }) == true else { return false }
+        if let seen = document.lastViewedRelease, seen >= version {
+            flush()
+        } else {
+            update { $0.lastViewedRelease = version }
+        }
+        return !hasUnsavedChanges && storageError == nil && saveError == nil
     }
 
     func importProgress() {

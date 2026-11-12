@@ -51,6 +51,7 @@ public struct ProgressDocument: Codable, Sendable {
     public var lastExerciseID: String?
     public var lastStudyDate: Date?
     public var preferences = Preferences()
+    public var lastViewedRelease: NumericVersion?
     public init() {}
 
     public func validate() throws {
@@ -122,7 +123,7 @@ public final class ProgressStore {
         try Self.withFileLock(at: url) {
             let current = try FileManager.default.fileExists(atPath: url.path) ? Data(contentsOf: url) : nil
             guard current == revision else {
-                throw ContentError.invalid("Данные изменены другим экземпляром приложения. Закройте и откройте CodePath снова.")
+                throw ContentError.invalid("Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова.")
             }
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]

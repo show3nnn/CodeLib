@@ -3,7 +3,7 @@ source "$(dirname "$0")/toolchain.sh"
 CONFIGURATION="${CONFIGURATION:-release}"
 swift_package build -c "$CONFIGURATION"
 BIN="$(swift_package build -c "$CONFIGURATION" --show-bin-path)"
-APP="${APP_OUTPUT:-$PWD/dist/CodePath.app}"
+APP="${APP_OUTPUT:-$PWD/dist/codelib.app}"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN/CodePath" "$APP/Contents/MacOS/CodePath"
 if [ -d "$APP/Contents/MacOS/CodePath_LearningCore.bundle" ]; then

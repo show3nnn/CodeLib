@@ -6,10 +6,12 @@ import AppKit
 struct CodePathApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @State private var model = AppModel()
+    @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
-        Window("CodePath", id: "main") {
+        Window("codelib", id: "main") {
             RootView(model: model)
+                .tint(.green)
                 .preferredColorScheme(model.colorScheme)
                 .onAppear {
                     delegate.model = model
@@ -20,6 +22,10 @@ struct CodePathApp: App {
         }
         .defaultSize(width: 1180, height: 800)
         .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("О codelib") { openWindow(id: "about") }
+                Button("История обновлений") { openWindow(id: "release-history") }
+            }
             CommandGroup(after: .newItem) {
                 Button("Продолжить обучение") { model.resume() }.keyboardShortcut("r", modifiers: [.command, .shift])
             }
@@ -32,8 +38,14 @@ struct CodePathApp: App {
             }
         }
         Settings {
-            SettingsView(model: model).preferredColorScheme(model.colorScheme)
+            SettingsView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
         }
+        Window("О codelib", id: "about") {
+            AboutView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
+        }.windowResizability(.contentSize)
+        Window("История обновлений codelib", id: "release-history") {
+            ReleaseHistoryView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
+        }.defaultSize(width: 680, height: 720)
     }
 }
 

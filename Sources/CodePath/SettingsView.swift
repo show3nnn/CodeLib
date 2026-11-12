@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Bindable var model: AppModel
     @State private var confirmReset = false
     @State private var confirmImport = false
+    @Environment(\.openWindow) private var openWindow
     var body: some View {
         Form {
             Section("Оформление") {
@@ -48,7 +49,12 @@ struct SettingsView: View {
                 }
                 Button("Сбросить прогресс…", role: .destructive) { confirmReset = true }
             }
-            Section("О CodePath") {
+            Section("О codelib") {
+                ReleaseVersionLabel(release: model.appRelease)
+                HStack {
+                    Button("О codelib") { openWindow(id: "about") }
+                    Button("История обновлений") { openWindow(id: "release-history") }
+                }
                 Text("Нативная лаборатория C++ · без аккаунтов, сети и телеметрии.")
                 Text("Написание кода проверяется самостоятельно. Встроенного исполнения кода и AI-помощника в этой версии нет.").foregroundStyle(.secondary)
             }

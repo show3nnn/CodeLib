@@ -22,7 +22,7 @@ struct RootView: View {
             }
         }
         .frame(minWidth: 760, minHeight: 560)
-        .alert("CodePath", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
+        .alert("codelib", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
             Button("Понятно") { model.message = nil }
         } message: { Text(model.message ?? "") }
     }
@@ -30,7 +30,7 @@ struct RootView: View {
     private var workspace: some View {
         NavigationSplitView {
             List(selection: $model.page) {
-                Section("CodePath") {
+                Section("codelib") {
                     ForEach(AppModel.Page.allCases) { page in
                         Label(page.title, systemImage: page.icon).tag(page)
                     }

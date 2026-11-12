@@ -15,6 +15,37 @@ struct AppModelTests {
         return url
     }
 
+    @Test func releaseAcknowledgementRetriesFailedWritesAndPersists() throws {
+        let root = try setup()
+        let model = AppModel()
+        let version = try #require(model.releaseHistory?.releases.first?.version)
+        let lock = root.appendingPathComponent("progress.json.lock")
+        let descriptor = open(lock.path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
+        #expect(descriptor >= 0)
+        defer { flock(descriptor, LOCK_UN); close(descriptor) }
+        #expect(flock(descriptor, LOCK_EX | LOCK_NB) == 0)
+        #expect(!model.markReleaseViewed(version))
+        #expect(model.saveError != nil)
+        #expect(!model.markReleaseViewed(version))
+        #expect(AppModel().document.lastViewedRelease == nil)
+        #expect(flock(descriptor, LOCK_UN) == 0)
+        #expect(model.markReleaseViewed(version))
+        #expect(model.saveError == nil)
+        #expect(AppModel().document.lastViewedRelease == version)
+        let old = try #require(model.releaseHistory?.releases.last?.version)
+        #expect(model.markReleaseViewed(old))
+        #expect(model.document.lastViewedRelease == version)
+    }
+
+    @Test func brokenStorageCannotAcknowledgeRelease() throws {
+        let root = try setup()
+        try Data("broken".utf8).write(to: root.appendingPathComponent("progress.json"))
+        let model = AppModel()
+        let version = try #require(model.releaseHistory?.releases.first?.version)
+        #expect(!model.markReleaseViewed(version))
+        #expect(model.document.lastViewedRelease == nil)
+    }
+
     @Test func codeIsNeverAutomaticallyChecked() throws {
         _ = try setup()
         let model = AppModel()

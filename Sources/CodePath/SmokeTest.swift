@@ -17,9 +17,14 @@ enum SmokeTest {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
             check(model.contentError == nil, "Bundled course loads inside app bundle")
             check(model.storageError == nil, "Progress file opens")
+            let release = try AppRelease(info: Bundle.main.infoDictionary ?? [:])
+            check(model.appRelease?.version == release.version, "Runtime version uses packaged metadata")
+            check(model.releaseHistory?.releases.first?.version == release.version, "Release notes match app version")
+            check(Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String == "codelib", "Public application name is codelib")
             let course = try Course.bundled()
             let first = course.exercises[0]
             if reopen {
+                check(model.document.lastViewedRelease == release.version, "Viewed release restored in a new process")
                 check(model.document.exercises[first.id]?.draft == first.starter + "// smoke: черновик 🚀\n", "Draft restored after process restart")
                 check(model.document.exercises[first.id]?.completion == .selfReviewed, "Self-completion restored after restart")
                 check(model.document.preferences.theme == "dark", "Theme restored after restart")
@@ -29,6 +34,28 @@ enum SmokeTest {
                 guard let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) else {
                     throw ContentError.invalid("Main window not found")
                 }
+                check(!window.title.contains("CodePath"), "Main window has no legacy public title")
+                check(activateMenuItem("О codelib", in: NSApp.mainMenu), "About menu entry is wired")
+                await settle()
+                if let about = NSApp.windows.first(where: { $0.isVisible && $0.title == "О codelib" }) {
+                    try snapshot(window: about, to: directory.appendingPathComponent("about.png"))
+                    check(about.contentView != nil, "Real About scene opens")
+                    about.close()
+                } else { failures.append("Real About scene opens") }
+                check(activateMenuItem("История обновлений", in: NSApp.mainMenu), "History menu entry is wired")
+                await settle()
+                if let history = NSApp.windows.first(where: { $0.isVisible && $0.title == "История обновлений codelib" }) {
+                    check(history.contentView != nil, "Real history scene opens")
+                    for theme in ["light", "dark"] {
+                        model.update { $0.preferences.theme = theme }
+                        history.setContentSize(NSSize(width: theme == "light" ? 680 : 560, height: 580))
+                        await settle()
+                        try snapshot(window: history, to: directory.appendingPathComponent("history-\(theme).png"))
+                    }
+                    history.close()
+                } else { failures.append("Real history scene opens") }
+                check(model.document.lastViewedRelease == nil, "Closing history does not falsely acknowledge it")
+                check(model.markReleaseViewed(release.version), "Viewed release successfully saved")
                 model.update { $0.preferences.theme = "light" }
                 window.setContentSize(NSSize(width: 1180, height: 800))
                 for page in [AppModel.Page.home, .catalog, .syllabus, .progress] {
@@ -146,6 +173,18 @@ enum SmokeTest {
             if let editor = findEditor(in: child) { return editor }
         }
         return nil
+    }
+
+    private static func activateMenuItem(_ title: String, in menu: NSMenu?) -> Bool {
+        guard let menu else { return false }
+        for (index, item) in menu.items.enumerated() {
+            if item.title == title && item.isEnabled {
+                menu.performActionForItem(at: index)
+                return true
+            }
+            if activateMenuItem(title, in: item.submenu) { return true }
+        }
+        return false
     }
 
     private static func snapshot(window: NSWindow, to url: URL) throws {
