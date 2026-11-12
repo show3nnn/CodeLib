@@ -6,7 +6,7 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
-                PageHeader(eyebrow: "Ваша лаборатория кода", title: "Хороший день, чтобы разобраться.",
+                PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { "С возвращением, \($0.nickname)!" } ?? "Хороший день, чтобы разобраться.",
                            subtitle: "Немного теории. Много собственного кода. Один понятный шаг за другим.")
                 if let course = model.course {
                     Card {

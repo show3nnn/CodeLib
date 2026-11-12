@@ -41,7 +41,7 @@ struct AppReleaseTests {
         let current = try #require(history.releases.first?.version)
         let old = try #require(history.releases.last?.version)
         #expect(history.updates(after: nil, through: current).count == history.releases.count)
-        #expect(history.updates(after: old, through: current).map(\.version) == [current])
+        #expect(history.updates(after: old, through: current).map(\.version) == history.releases.filter { $0.version > old }.map(\.version))
         #expect(history.updates(after: current, through: current).isEmpty)
         #expect(history.updates(after: nil, through: old).map(\.version) == [old])
     }

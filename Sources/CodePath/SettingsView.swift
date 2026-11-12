@@ -6,8 +6,21 @@ struct SettingsView: View {
     @State private var confirmReset = false
     @State private var confirmImport = false
     @Environment(\.openWindow) private var openWindow
+    @State private var editProfile = false
     var body: some View {
         Form {
+            Section("Локальный профиль") {
+                if let profile = model.document.profile {
+                    HStack {
+                        ProfileAvatar(profile: profile)
+                        Text(profile.nickname).font(.headline)
+                        Spacer()
+                        Button("Изменить…") { editProfile = true }
+                    }
+                } else {
+                    Text("Профиль можно создать в главном окне начальной настройки.")
+                }
+            }
             Section("Оформление") {
                 Picker("Тема", selection: Binding(get: { model.document.preferences.theme }, set: { value in
                     model.update { $0.preferences.theme = value }
@@ -60,6 +73,9 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped).padding().frame(width: 570, height: 640)
+        .sheet(isPresented: $editProfile) {
+            EditProfileView(model: model, profile: model.document.profile ?? LocalProfile())
+        }
         .disabled(model.storageError != nil)
         .confirmationDialog("Удалить весь учебный прогресс?", isPresented: $confirmReset) {
             Button("Сбросить прогресс", role: .destructive) { model.reset() }

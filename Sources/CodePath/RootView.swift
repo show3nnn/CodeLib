@@ -3,6 +3,7 @@ import LearningCore
 
 struct RootView: View {
     @Bindable var model: AppModel
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         Group {
@@ -17,11 +18,16 @@ struct RootView: View {
                     Text("Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.")
                         .font(.caption).foregroundStyle(.secondary).frame(maxWidth: 520)
                 }.padding()
+            } else if model.startupRoute == .onboarding {
+                OnboardingView(model: model)
             } else {
                 workspace
             }
         }
         .frame(minWidth: 760, minHeight: 560)
+        .task(id: model.startupRoute) {
+            if model.takeUpdateHistoryPresentation() { openWindow(id: "release-history") }
+        }
         .alert("codelib", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
             Button("Понятно") { model.message = nil }
         } message: { Text(model.message ?? "") }
@@ -30,6 +36,12 @@ struct RootView: View {
     private var workspace: some View {
         NavigationSplitView {
             List(selection: $model.page) {
+                if let profile = model.document.profile {
+                    HStack {
+                        ProfileAvatar(profile: profile, size: 34)
+                        Text(profile.nickname).font(.headline)
+                    }.padding(.vertical, 6)
+                }
                 Section("codelib") {
                     ForEach(AppModel.Page.allCases) { page in
                         Label(page.title, systemImage: page.icon).tag(page)

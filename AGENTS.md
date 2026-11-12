@@ -6,7 +6,9 @@
 ## Commands and boundaries
 
 - Use `bash scripts/test.sh` (Swift Testing), `--filter ProgressTests` for focused persistence tests; `bash scripts/build.sh` produces `dist/codelib.app`. `bash scripts/run.sh` keeps development progress in `.local-data/`, not the user's Application Support folder.
-- Public brand is lowercase `codelib`; keep the existing bundle identifier, `CodePath` executable/targets and Application Support path for compatibility. `packaging/Info.plist` is the runtime version/stage/build source; release notes live in `LearningCore/Resources/releases.json`. Automatic history presentation awaits onboarding; do not advertise it as implemented.
+- Public brand is lowercase `codelib`; keep the existing bundle identifier, `CodePath` executable/targets and Application Support path for compatibility. `packaging/Info.plist` is the runtime version/stage/build source; release notes live in `LearningCore/Resources/releases.json`. Startup routing uses committed progress: onboarding before automatic history, no history on a fresh install, once per process until acknowledged.
+- Сообщения новых коммитов и журнал разработки писать преимущественно по-русски. Старую историю Git не переписывать ради перевода.
+- Version-1 setup currently supports a single local profile and Russian UI/course only. Do not offer a fake English switch or claim full CHANGELOG1 onboarding/localization acceptance. Avatar uploads are bounded, downsampled and cropped to a 256px PNG; exports include that photo.
 - Scripts select `/Applications/Xcode.app` via `DEVELOPER_DIR` and keep caches/artifacts inside `.build/`; do not change global `xcode-select` or system permissions. Target is macOS 26, tested on arm64.
 - `CodePath.xcodeproj` is the native app; its local package dependency is `LearningCore`. The SwiftPM executable target is deliberately named **CodePathApp**, not CodePath, to avoid Xcode test-host resolution conflicts.
 - `LearningCore` must stay free of SwiftUI/AppKit. Storage uses versioned Codable JSON with atomic writes, backup, advisory lock, and revision checks; retain unknown exercise IDs and distinguish an empty draft from no draft.

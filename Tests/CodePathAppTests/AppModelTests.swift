@@ -46,6 +46,42 @@ struct AppModelTests {
         #expect(model.document.lastViewedRelease == nil)
     }
 
+    @Test func setupCompletionWaitsForDiskAndKeepsLegacyProgress() throws {
+        let root = try setup()
+        let model = AppModel()
+        model.updateState("unknown.task") { $0.draft = ""; $0.completion = .selfReviewed }
+        var state = OnboardingState()
+        state.step = .appearance
+        state.draft = LocalProfile(nickname: "Анна", avatar: .star)
+        #expect(model.saveOnboarding(state))
+        #expect(AppModel().document.onboarding?.step == .appearance)
+        let descriptor = open(root.appendingPathComponent("progress.json.lock").path, O_RDWR)
+        #expect(descriptor >= 0)
+        defer { flock(descriptor, LOCK_UN); close(descriptor) }
+        #expect(flock(descriptor, LOCK_EX | LOCK_NB) == 0)
+        #expect(!model.saveOnboarding(state, finish: true))
+        #expect(model.startupRoute == .onboarding)
+        #expect(AppModel().document.profile == nil)
+        #expect(flock(descriptor, LOCK_UN) == 0)
+        #expect(model.saveOnboarding(state, theme: "dark", finish: true))
+        let reopened = AppModel()
+        #expect(reopened.document.profile?.nickname == "Анна")
+        #expect(reopened.document.preferences.theme == "dark")
+        #expect(reopened.document.exercises["unknown.task"]?.draft == "")
+        #expect(reopened.document.completed("unknown.task"))
+        #expect(reopened.document.lastViewedRelease == nil)
+        #expect(reopened.saveProfile(LocalProfile(nickname: "Новое имя", avatar: .leaf)))
+        #expect(AppModel().document.onboarding?.draft.nickname == "Новое имя")
+    }
+
+    @Test func invalidProfileNeverReplacesValidProgress() throws {
+        _ = try setup()
+        let model = AppModel()
+        #expect(model.saveProfile(LocalProfile(nickname: "Имя")))
+        #expect(!model.saveProfile(LocalProfile(nickname: "  ")))
+        #expect(AppModel().document.profile?.nickname == "Имя")
+    }
+
     @Test func codeIsNeverAutomaticallyChecked() throws {
         _ = try setup()
         let model = AppModel()

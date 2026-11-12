@@ -20,6 +20,51 @@ final class AppModel {
     var page: Page = .home
     var selectedExerciseID: String?
     var message: String?
+    private var updateHistoryPresented = false
+
+    // Presentation follows committed data, never an in-memory completion from a failed write.
+    var startupRoute: StartupRoute {
+        let snapshot = document // Observe updates, while routing only from the committed snapshot.
+        return StartupRoute.resolve(document: store?.document ?? snapshot, current: appRelease?.version)
+    }
+    var isExistingLearner: Bool {
+        !document.exercises.isEmpty || document.lastStudyDate != nil || document.lastViewedRelease != nil
+    }
+
+    func takeUpdateHistoryPresentation() -> Bool {
+        guard storageError == nil, startupRoute == .releaseHistory, !updateHistoryPresented else { return false }
+        updateHistoryPresented = true
+        return true
+    }
+
+    @discardableResult
+    func saveOnboarding(_ state: OnboardingState, theme: String? = nil, finish: Bool = false) -> Bool {
+        guard store != nil else { return false }
+        var next = document
+        var state = state
+        if finish {
+            state.completedVersion = 1
+            next.profile = state.draft
+            // A fresh installation goes straight to learning, not a simultaneous What's New.
+            if !isExistingLearner { next.lastViewedRelease = appRelease?.version }
+        }
+        next.onboarding = state
+        if let theme { next.preferences.theme = theme }
+        do { try next.validate() } catch { message = error.localizedDescription; return false }
+        update { $0 = next }
+        return !hasUnsavedChanges && saveError == nil
+    }
+
+    @discardableResult
+    func saveProfile(_ profile: LocalProfile) -> Bool {
+        do { try profile.validate() } catch { message = error.localizedDescription; return false }
+        guard store != nil else { return false }
+        update {
+            $0.profile = profile
+            if $0.onboarding?.completedVersion == 1 { $0.onboarding?.draft = profile }
+        }
+        return !hasUnsavedChanges && saveError == nil
+    }
 
     enum Page: String, CaseIterable, Identifiable {
         case home, catalog, syllabus, lesson, progress

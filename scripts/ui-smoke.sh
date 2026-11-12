@@ -9,4 +9,5 @@ mkdir -p "$RUN/data" "$RUN/screenshots"
 export CODEPATH_DATA_DIR="$RUN/data"
 "$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots"
 "$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --reopen
+"$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --reopen --simulate-update
 echo "UI reports and screenshots: $RUN/screenshots"

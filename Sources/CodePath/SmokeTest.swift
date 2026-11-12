@@ -24,16 +24,37 @@ enum SmokeTest {
             let course = try Course.bundled()
             let first = course.exercises[0]
             if reopen {
+                check(model.document.profile?.nickname == "Ученик 🚀", "Profile restored in a new process")
+                check(model.startupRoute == .workspace, "Completed setup does not repeat on relaunch")
                 check(model.document.lastViewedRelease == release.version, "Viewed release restored in a new process")
                 check(model.document.exercises[first.id]?.draft == first.starter + "// smoke: черновик 🚀\n", "Draft restored after process restart")
                 check(model.document.exercises[first.id]?.completion == .selfReviewed, "Self-completion restored after restart")
                 check(model.document.preferences.theme == "dark", "Theme restored after restart")
                 model.resume()
                 check(model.exercise?.id == model.document.lastExerciseID, "Resume restores last exercise")
+                if ProcessInfo.processInfo.arguments.contains("--simulate-update") {
+                    model.update { $0.lastViewedRelease = NumericVersion(rawValue: "0.1.1") }
+                    await settle()
+                    check(model.startupRoute == .releaseHistory, "Existing completed profile routes to updates")
+                    check(NSApp.windows.contains(where: { $0.isVisible && $0.title == "История обновлений codelib" }), "Update history automatically opens after version change")
+                    check(!model.takeUpdateHistoryPresentation(), "Automatic update presentation occurs once per process")
+                    check(model.markReleaseViewed(release.version), "Automatic update can be acknowledged durably")
+                }
             } else {
                 guard let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) else {
                     throw ContentError.invalid("Main window not found")
                 }
+                check(model.startupRoute == .onboarding, "Fresh installation starts with onboarding")
+                try snapshot(window: window, to: directory.appendingPathComponent("onboarding-welcome.png"))
+                var setup = OnboardingState()
+                setup.step = .appearance
+                setup.draft = LocalProfile(nickname: "Ученик 🚀", avatar: .leaf)
+                check(model.saveOnboarding(setup), "Partial setup persists")
+                await settle()
+                check(model.saveOnboarding(setup, finish: true), "Setup completion persists")
+                await settle()
+                check(model.startupRoute == .workspace, "Fresh install enters learning without update history")
+                let previouslyViewed = model.document.lastViewedRelease
                 check(!window.title.contains("CodePath"), "Main window has no legacy public title")
                 check(activateMenuItem("О codelib", in: NSApp.mainMenu), "About menu entry is wired")
                 await settle()
@@ -54,7 +75,7 @@ enum SmokeTest {
                     }
                     history.close()
                 } else { failures.append("Real history scene opens") }
-                check(model.document.lastViewedRelease == nil, "Closing history does not falsely acknowledge it")
+                check(model.document.lastViewedRelease == previouslyViewed, "Closing history does not change acknowledgement")
                 check(model.markReleaseViewed(release.version), "Viewed release successfully saved")
                 model.update { $0.preferences.theme = "light" }
                 window.setContentSize(NSSize(width: 1180, height: 800))
@@ -159,7 +180,8 @@ enum SmokeTest {
         let report: [String: Any] = ["checks": checks, "failures": failures, "reopen": reopen]
         do {
             let bytes = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
-            try bytes.write(to: directory.appendingPathComponent(reopen ? "reopen-report.json" : "report.json"), options: .atomic)
+            let name = ProcessInfo.processInfo.arguments.contains("--simulate-update") ? "update-report.json" : reopen ? "reopen-report.json" : "report.json"
+            try bytes.write(to: directory.appendingPathComponent(name), options: .atomic)
         } catch { failures.append(error.localizedDescription) }
         print("UI smoke: \(checks.count) checks; failures: \(failures)")
         // This mode is a test process, not a normal application exit.

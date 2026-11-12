@@ -52,10 +52,22 @@ public struct ProgressDocument: Codable, Sendable {
     public var lastStudyDate: Date?
     public var preferences = Preferences()
     public var lastViewedRelease: NumericVersion?
+    public var profile: LocalProfile?
+    public var onboarding: OnboardingState?
     public init() {}
 
     public func validate() throws {
         guard schemaVersion == 1 else { throw StorageError.unsupportedVersion(schemaVersion) }
+        try profile?.validate()
+        if let onboarding {
+            guard (0...1).contains(onboarding.completedVersion), onboarding.draft.nickname.count <= 30,
+                  onboarding.draft.nickname.utf8.count <= 512 else { throw StorageError.invalidData }
+            var avatarCheck = onboarding.draft
+            avatarCheck.nickname = "Аватар"
+            try avatarCheck.validate()
+            if onboarding.step == .appearance || onboarding.completedVersion == 1 { try onboarding.draft.validate() }
+            if onboarding.completedVersion == 1 && profile == nil { throw StorageError.invalidData }
+        }
         guard ["system", "light", "dark"].contains(preferences.theme),
               (12...28).contains(preferences.textSize), (11...26).contains(preferences.codeSize),
               exercises.values.allSatisfy({ $0.attempts >= 0 && (0...3).contains($0.hintLevel) }) else {
