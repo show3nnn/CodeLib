@@ -1,0 +1,66 @@
+import SwiftUI
+import LearningCore
+import AppKit
+
+@main
+struct CodePathApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
+    @State private var model = AppModel()
+
+    var body: some Scene {
+        Window("CodePath", id: "main") {
+            RootView(model: model)
+                .preferredColorScheme(model.colorScheme)
+                .onAppear {
+                    delegate.model = model
+                    #if DEBUG
+                    delegate.startSmokeTestIfRequested()
+                    #endif
+                }
+        }
+        .defaultSize(width: 1180, height: 800)
+        .commands {
+            CommandGroup(after: .newItem) {
+                Button("Продолжить обучение") { model.resume() }.keyboardShortcut("r", modifiers: [.command, .shift])
+            }
+            CommandMenu("Обучение") {
+                Button("Предыдущее задание") { model.move(-1) }.keyboardShortcut("[", modifiers: .command)
+                    .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: -1) == nil)
+                Button("Следующее задание") { model.move(1) }.keyboardShortcut("]", modifiers: .command)
+                    .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: 1) == nil)
+                Button("Сохранить изменения") { model.flush() }.keyboardShortcut("s", modifiers: .command)
+            }
+        }
+        Settings {
+            SettingsView(model: model).preferredColorScheme(model.colorScheme)
+        }
+    }
+}
+
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    var model: AppModel?
+    #if DEBUG
+    private var smokeStarted = false
+    func startSmokeTestIfRequested() {
+        let args = ProcessInfo.processInfo.arguments
+        guard !smokeStarted, let index = args.firstIndex(of: "--ui-smoke-test"),
+              args.indices.contains(index + 1), let model else { return }
+        smokeStarted = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(400))
+            await SmokeTest.run(model: model, directory: URL(fileURLWithPath: args[index + 1]), reopen: args.contains("--reopen"))
+        }
+    }
+    #endif
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        model?.flush()
+        guard model?.hasUnsavedChanges == true else { return .terminateNow }
+        let alert = NSAlert()
+        alert.messageText = "Изменения не сохранены"
+        alert.informativeText = "Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные."
+        alert.addButton(withTitle: "Остаться")
+        alert.addButton(withTitle: "Выйти без сохранения")
+        return alert.runModal() == .alertSecondButtonReturn ? .terminateNow : .terminateCancel
+    }
+}
