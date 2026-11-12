@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "entries": [
+    {"id":"cpp-foundations","title":"C++ — с нуля до уверенного первого курса","language":"C++","summary":"Практика, понимание языка и консольные проекты.","availability":"available"},
+    {"id":"python-future","title":"Python","language":"Python","summary":"Будущее направление. Учебные материалы пока недоступны.","availability":"comingSoon"},
+    {"id":"javascript-future","title":"JavaScript","language":"JavaScript","summary":"Будущее направление. Учебные материалы пока недоступны.","availability":"comingSoon"},
+    {"id":"java-future","title":"Java","language":"Java","summary":"Будущее направление. Учебные материалы пока недоступны.","availability":"comingSoon"},
+    {"id":"rust-future","title":"Rust","language":"Rust","summary":"Будущее направление. Учебные материалы пока недоступны.","availability":"comingSoon"}
+  ]
+}
