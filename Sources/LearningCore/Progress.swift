@@ -28,10 +28,11 @@ public struct Preferences: Codable, Sendable {
     public var codeSize: Double = 15
     public var syntaxHighlighting = true
     public var showLineNumbers = true
+    public var achievementSounds = true
     public init() {}
 
     private enum CodingKeys: String, CodingKey {
-        case theme, textSize, codeSize, syntaxHighlighting, showLineNumbers
+        case theme, textSize, codeSize, syntaxHighlighting, showLineNumbers, achievementSounds
     }
 
     public init(from decoder: any Decoder) throws {
@@ -42,6 +43,7 @@ public struct Preferences: Codable, Sendable {
         // Additive preferences: version-1 progress files must retain all existing results.
         syntaxHighlighting = try values.decodeIfPresent(Bool.self, forKey: .syntaxHighlighting) ?? true
         showLineNumbers = try values.decodeIfPresent(Bool.self, forKey: .showLineNumbers) ?? true
+        achievementSounds = try values.decodeIfPresent(Bool.self, forKey: .achievementSounds) ?? true
     }
 }
 
@@ -55,10 +57,12 @@ public struct ProgressDocument: Codable, Sendable {
     public var lastViewedRelease: NumericVersion?
     public var profile: LocalProfile?
     public var onboarding: OnboardingState?
+    public var achievements: AchievementState?
     public init() {}
 
     public func validate() throws {
         guard schemaVersion == 1 else { throw StorageError.unsupportedVersion(schemaVersion) }
+        if let achievements { try AchievementEngine.validate(achievements) }
         try profile?.validate()
         if let onboarding {
             guard (0...1).contains(onboarding.completedVersion), onboarding.draft.nickname.count <= 30,

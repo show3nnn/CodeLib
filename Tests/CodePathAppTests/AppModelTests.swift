@@ -95,6 +95,69 @@ struct AppModelTests {
         #expect(reopened.document.lastExerciseID == lesson.exercises[2].id)
     }
 
+    @Test func achievementsNotifyOnlyAfterSuccessfulWriteAndNeverRepeat() throws {
+        let root = try setup()
+        let model = AppModel()
+        let task = try #require(model.course?.exercises.first { $0.kind == .code })
+        model.open(task)
+        let descriptor = open(root.appendingPathComponent("progress.json.lock").path, O_RDWR)
+        #expect(descriptor >= 0)
+        defer { flock(descriptor, LOCK_UN); close(descriptor) }
+        #expect(flock(descriptor, LOCK_EX | LOCK_NB) == 0)
+        model.selfComplete()
+        #expect(model.hasUnsavedChanges && model.achievementNotifications.isEmpty)
+        #expect(AppModel().document.achievements?.awards["award.selfreview"] == nil)
+        #expect(flock(descriptor, LOCK_UN) == 0)
+        model.flush()
+        #expect(model.achievementNotifications == ["award.selfreview"])
+        model.achievementNotifications.removeAll()
+        model.selfComplete()
+        #expect(model.achievementNotifications.isEmpty)
+        #expect(AppModel().document.achievements?.awards["award.selfreview"] != nil)
+        #expect(AppModel().achievementNotifications.isEmpty)
+    }
+
+    @Test func oldProgressBackfillsSilentlyAndLegacyProfileGetsStableUUID() throws {
+        let root = try setup()
+        let course = try Course.bundled()
+        let url = root.appendingPathComponent("progress.json")
+        var document = ProgressDocument()
+        var profile = LocalProfile(nickname: "Прежний профиль")
+        profile.id = nil; profile.createdAt = nil
+        document.profile = profile
+        for task in course.exercises.prefix(60) {
+            var state = ExerciseProgress(); state.completion = .selfReviewed
+            document.exercises[task.id] = state
+        }
+        try JSONEncoder().encode(document).write(to: url)
+        let model = AppModel()
+        #expect(model.achievementNotifications.isEmpty)
+        #expect((model.document.achievements?.awards.count ?? 0) > 5)
+        #expect(model.document.achievements?.awards.values.allSatisfy(\.historical) == true)
+        let id = try #require(model.document.profile?.id)
+        #expect(AppModel().document.profile?.id == id)
+        #expect(model.document.profile?.createdAt == nil)
+        #expect(model.saveProfile(LocalProfile(nickname: "Новое имя")))
+        #expect(AppModel().document.profile?.id == id)
+    }
+
+    @Test func codeAndTypographyResetsKeepLearningHistoryAndOtherPreferences() throws {
+        _ = try setup()
+        let model = AppModel()
+        let task = try #require(model.course?.exercises.first { $0.kind == .code })
+        model.open(task)
+        model.updateState(task.id) { $0.draft = ""; $0.hintLevel = 2; $0.completion = .selfReviewed }
+        model.update { $0.preferences.textSize = 28; $0.preferences.codeSize = 26; $0.preferences.theme = "dark"; $0.preferences.achievementSounds = false }
+        model.resetCodeDraft()
+        model.resetTypography()
+        let restored = AppModel()
+        #expect(restored.state(for: task.id).draft == task.starter)
+        #expect(restored.state(for: task.id).completion == .selfReviewed && restored.state(for: task.id).hintLevel == 2)
+        #expect(restored.document.preferences.textSize == Preferences().textSize)
+        #expect(restored.document.preferences.codeSize == Preferences().codeSize)
+        #expect(restored.document.preferences.theme == "dark" && !restored.document.preferences.achievementSounds)
+    }
+
     @Test func codeIsNeverAutomaticallyChecked() throws {
         _ = try setup()
         let model = AppModel()

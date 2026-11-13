@@ -23,6 +23,9 @@ enum SmokeTest {
             check(Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String == "codelib", "Public application name is codelib")
             let course = try Course.bundled()
             let first = course.exercises[0]
+            model.update { $0.preferences.achievementSounds = false }
+            check(AchievementCatalog.soundURL != nil, "Original achievement sound is bundled")
+            check(!AchievementAudio.play(enabled: false), "Disabled achievement sound does not play")
             if reopen {
                 check(model.document.profile?.nickname == "Ученик 🚀", "Profile restored in a new process")
                 check(model.startupRoute == .workspace, "Completed setup does not repeat on relaunch")
@@ -79,7 +82,7 @@ enum SmokeTest {
                 check(model.markReleaseViewed(release.version), "Viewed release successfully saved")
                 model.update { $0.preferences.theme = "light" }
                 window.setContentSize(NSSize(width: 1180, height: 800))
-                for page in [AppModel.Page.home, .catalog, .syllabus, .progress] {
+                for page in [AppModel.Page.home, .catalog, .syllabus, .progress, .achievements] {
                     model.page = page
                     await settle()
                     try snapshot(window: window, to: directory.appendingPathComponent("\(page.rawValue)-light.png"))
@@ -130,6 +133,7 @@ enum SmokeTest {
                 model.selfComplete()
                 check(model.state(for: first.id).completion == .selfReviewed, "Code is self-reviewed, not auto-graded")
                 check(!model.hasUnsavedChanges, "Editor draft persisted to disk")
+                check(model.document.achievements?.awards["award.selfreview"] != nil, "Real self-review unlocks its own achievement, not a run achievement")
                 try snapshot(window: window, to: directory.appendingPathComponent("lesson-light.png"))
 
                 for task in course.exercises where task.kind != .code {

@@ -81,8 +81,10 @@ struct RootView: View {
                     case .syllabus: SyllabusView(model: model)
                     case .lesson: LessonView(model: model)
                     case .progress: ProgressViewScreen(model: model)
+                    case .achievements: AchievementCollectionView(model: model)
                     }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                AchievementBanner(model: model)
             }
             .navigationTitle(model.page.title)
             .toolbar {

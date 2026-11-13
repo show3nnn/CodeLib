@@ -17,6 +17,11 @@ struct SettingsView: View {
                         Spacer()
                         Button("Изменить…") { editProfile = true }
                     }
+                    if let date = profile.createdAt {
+                        Text("Профиль создан: \(date.formatted(date: .abbreviated, time: .omitted))").font(.caption).foregroundStyle(.secondary)
+                    } else {
+                        Text("Дата создания прежнего профиля не была сохранена.").font(.caption).foregroundStyle(.secondary)
+                    }
                 } else {
                     Text("Профиль можно создать в главном окне начальной настройки.")
                 }
@@ -41,6 +46,10 @@ struct SettingsView: View {
                 }
                 Text("Учиться удобно, когда текст читается легко.")
                     .font(.system(size: model.document.preferences.textSize))
+                CodeBlock(code: "int answer = 42;\nstd::cout << answer;", fontSize: model.document.preferences.codeSize)
+                Button("Стандартные размеры шрифта") {
+                    model.resetTypography()
+                }
             }
             Section("Редактор C++") {
                 Toggle("Подсветка синтаксиса", isOn: Binding(get: { model.document.preferences.syntaxHighlighting }, set: { value in
@@ -51,6 +60,12 @@ struct SettingsView: View {
                 }))
                 Text("Подсветка помогает читать код, но не проверяет его правильность и не запускает программу.")
                     .font(.caption).foregroundStyle(.secondary)
+            }
+            Section("Уведомления") {
+                Toggle("Звуки достижений", isOn: Binding(get: { model.document.preferences.achievementSounds }, set: { value in
+                    model.update { $0.preferences.achievementSounds = value }
+                }))
+                Text("Короткий оригинальный звук при получении награды. Громкость зависит от macOS.").font(.caption).foregroundStyle(.secondary)
             }
             Section("Локальные данные") {
                 Text("Прогресс хранится только на этом Mac. Резервная копия содержит предыдущую успешно сохранённую версию.")

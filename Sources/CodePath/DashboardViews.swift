@@ -6,8 +6,11 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
-                PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { "С возвращением, \($0.nickname)!" } ?? "Хороший день, чтобы разобраться.",
-                           subtitle: "Немного теории. Много собственного кода. Один понятный шаг за другим.")
+                HStack(spacing: 20) {
+                    PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { "С возвращением, \($0.nickname)!" } ?? "Хороший день, чтобы разобраться.",
+                               subtitle: "Немного теории. Много собственного кода. Один понятный шаг за другим.")
+                    if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 72) }
+                }
                 if let course = model.course {
                     Card {
                         VStack(alignment: .leading, spacing: 18) {
@@ -31,11 +34,12 @@ struct HomeView: View {
                             }
                         }
                     }
-                    HStack(spacing: 16) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 170))], spacing: 16) {
                         Metric(value: "\(course.lessons.filter { model.document.lessonCompleted($0) }.count)", label: "уроков завершено", icon: "book.closed")
                         Metric(value: "\(model.document.completedCount(in: course))", label: "заданий завершено", icon: "checkmark.circle")
                         Metric(value: "\(course.sections.count)", label: "доступных разделов", icon: "square.stack")
                     }
+                    RecentAchievementsView(model: model)
                     Card {
                         VStack(alignment: .leading, spacing: 10) {
                             Label("От первой строки до своего проекта", systemImage: "leaf").font(.headline)
@@ -169,10 +173,11 @@ struct ProgressViewScreen: View {
                 PageHeader(eyebrow: "Ваш путь", title: "Знания складываются из практики", subtitle: "Автоматическая проверка и самостоятельные отметки учитываются отдельно.")
                 if let course = model.course {
                     let finished = course.exercises.filter { model.document.completed($0.id) }
-                    HStack(spacing: 16) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 170))], spacing: 16) {
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .automatic }.count)", label: "проверено автоматически", icon: "checkmark.seal")
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .selfReviewed }.count)", label: "отмечено вами", icon: "person.crop.circle.badge.checkmark")
                         Metric(value: "\(course.exercises.count - finished.count)", label: "впереди", icon: "arrow.forward.circle")
+                        Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
                     }
                     Card {
                         VStack(alignment: .leading, spacing: 12) {

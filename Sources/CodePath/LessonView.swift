@@ -89,6 +89,7 @@ private struct ExerciseView: View {
     @Bindable var model: AppModel
     let exercise: Exercise
     @State private var showRepeatConfirmation = false
+    @State private var showResetCodeConfirmation = false
     private var state: ExerciseProgress { model.state(for: exercise.id) }
     private var draft: Binding<String> {
         Binding(get: { state.draft ?? exercise.starter }, set: { value in
@@ -170,6 +171,9 @@ private struct ExerciseView: View {
                 model.updateState(exercise.id) { $0.completion = .unfinished; $0.lastCorrect = nil }
             }
         } message: { Text("Черновик, ответы и история подсказок останутся. Вы сможете заново завершить задание.") }
+        .confirmationDialog("Заменить черновик стартовым кодом?", isPresented: $showResetCodeConfirmation) {
+            Button("Сбросить код", role: .destructive) { model.resetCodeDraft() }
+        } message: { Text("Текущий черновик будет заменён. Прежняя самостоятельная отметка и подсказки сохранятся; это не проверка нового текста.") }
     }
 
     @ViewBuilder private var responseArea: some View {
@@ -178,6 +182,8 @@ private struct ExerciseView: View {
                 HStack {
                     Text("Ваш код · C++17").font(.headline)
                     Spacer()
+                    Button("Сбросить код", systemImage: "arrow.counterclockwise") { showResetCodeConfirmation = true }
+                        .disabled(draft.wrappedValue == exercise.starter)
                     Button("Копировать", systemImage: "doc.on.doc") {
                         NSPasteboard.general.clearContents()
                         NSPasteboard.general.setString(draft.wrappedValue, forType: .string)

@@ -23,11 +23,15 @@ public struct LocalProfile: Codable, Sendable, Equatable {
         }
     }
     public var nickname: String
+    public var id: UUID?
+    public var createdAt: Date?
     public var avatar: Avatar
     public var photo: Data?
     public var initial: String { String(nickname.prefix(1)).uppercased() }
 
     public init(nickname: String = "", avatar: Avatar = .initial, photo: Data? = nil) {
+        self.id = UUID()
+        self.createdAt = Date()
         self.nickname = nickname
         self.avatar = avatar
         self.photo = photo
@@ -38,6 +42,7 @@ public struct LocalProfile: Codable, Sendable, Equatable {
     }
 
     public func validate() throws {
+        if let createdAt, !createdAt.timeIntervalSince1970.isFinite { throw StorageError.invalidData }
         let name = Self.normalizedName(nickname)
         guard name == nickname, (1...30).contains(name.count), name.utf8.count <= 512,
               name.unicodeScalars.contains(where: { !CharacterSet.whitespacesAndNewlines.contains($0) && !CharacterSet.controlCharacters.contains($0) && $0.properties.generalCategory != .format }),

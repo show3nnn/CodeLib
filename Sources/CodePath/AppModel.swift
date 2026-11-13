@@ -21,6 +21,8 @@ final class AppModel {
     var selectedExerciseID: String?
     var message: String?
     private var updateHistoryPresented = false
+    var achievementNotifications: [String] = []
+    private var pendingAwards: Set<String> = []
 
     // Presentation follows committed data, never an in-memory completion from a failed write.
     var startupRoute: StartupRoute {
@@ -44,6 +46,8 @@ final class AppModel {
         var state = state
         if finish {
             state.completedVersion = 1
+            state.draft.id = state.draft.id ?? UUID()
+            state.draft.createdAt = state.draft.createdAt ?? Date()
             next.profile = state.draft
             // A fresh installation goes straight to learning, not a simultaneous What's New.
             if !isExistingLearner { next.lastViewedRelease = appRelease?.version }
@@ -57,6 +61,14 @@ final class AppModel {
 
     @discardableResult
     func saveProfile(_ profile: LocalProfile) -> Bool {
+        var profile = profile
+        if let existing = document.profile {
+            profile.id = existing.id ?? UUID()
+            profile.createdAt = existing.createdAt
+        } else {
+            profile.id = profile.id ?? UUID()
+            profile.createdAt = profile.createdAt ?? Date()
+        }
         do { try profile.validate() } catch { message = error.localizedDescription; return false }
         guard store != nil else { return false }
         update {
@@ -67,7 +79,7 @@ final class AppModel {
     }
 
     enum Page: String, CaseIterable, Identifiable {
-        case home, catalog, syllabus, lesson, progress
+        case home, catalog, syllabus, lesson, progress, achievements
         var id: String { rawValue }
         var title: String {
             switch self {
@@ -76,6 +88,7 @@ final class AppModel {
             case .syllabus: "Программа C++"
             case .lesson: "Обучение"
             case .progress: "Мой прогресс"
+            case .achievements: "Достижения"
             }
         }
         var icon: String {
@@ -85,6 +98,7 @@ final class AppModel {
             case .syllabus: "list.bullet.rectangle"
             case .lesson: "book"
             case .progress: "chart.bar"
+            case .achievements: "trophy"
             }
         }
     }
@@ -97,6 +111,7 @@ final class AppModel {
         } catch { releaseHistory = nil; releaseHistoryError = error.localizedDescription }
         do {
             let loaded = try Course.bundled()
+            try AchievementCatalog.validate(course: loaded)
             let loadedCatalog = try CourseCatalog.bundled(availableCourseIDs: [loaded.id])
             course = loaded
             catalog = loadedCatalog
@@ -119,6 +134,7 @@ final class AppModel {
             selectedExerciseID = course?.exercises.first { $0.id == document.lastExerciseID }?.id
                 ?? course?.exercises.first?.id
             storageError = nil
+            if FileManager.default.fileExists(atPath: dataURL.path) { migrateLearningMetadata() }
         } catch {
             store = nil
             storageError = error.localizedDescription
@@ -139,7 +155,12 @@ final class AppModel {
 
     func update(_ mutate: (inout ProgressDocument) -> Void) {
         guard store != nil else { return }
+        let historical = document.achievements == nil && !document.exercises.isEmpty
         mutate(&document)
+        if let course {
+            let added = AchievementEngine.reconcile(&document, course: course, now: Date(), historical: historical)
+            if !historical { pendingAwards.formUnion(added) }
+        }
         hasUnsavedChanges = true
         flush()
     }
@@ -151,17 +172,41 @@ final class AppModel {
             try store.update { $0 = snapshot }
             hasUnsavedChanges = false
             saveError = nil
+            let earned = AchievementCatalog.all.map(\.id).filter { pendingAwards.contains($0) }
+            achievementNotifications.append(contentsOf: earned.filter { !achievementNotifications.contains($0) })
+            pendingAwards.removeAll()
         } catch { saveError = error.localizedDescription }
     }
 
     func updateState(_ id: String, _ mutate: (inout ExerciseProgress) -> Void) {
+        let knownExercise = course?.exercises.contains(where: { $0.id == id }) == true
         update {
             var value = $0.exercises[id] ?? ExerciseProgress()
             mutate(&value)
             $0.exercises[id] = value
             $0.lastExerciseID = id
             $0.lastStudyDate = Date()
+            if knownExercise {
+                if $0.achievements == nil { $0.achievements = AchievementState() }
+                $0.achievements?.studyDays.insert(AchievementEngine.dayKey(Date()))
+            }
         }
+    }
+
+    private func migrateLearningMetadata() {
+        var changed = false
+        if var profile = document.profile, profile.id == nil {
+            profile.id = profile.id ?? UUID()
+            // The original creation date is unknown; do not invent one during migration.
+            document.profile = profile
+            if document.onboarding?.completedVersion == 1 { document.onboarding?.draft = profile }
+            changed = true
+        }
+        if document.achievements == nil, let course {
+            _ = AchievementEngine.reconcile(&document, course: course, now: Date(), historical: true)
+            changed = true
+        }
+        if changed { hasUnsavedChanges = true; flush() }
     }
 
     func open(_ exercise: Exercise) {
@@ -189,6 +234,16 @@ final class AppModel {
     func openLesson(_ lesson: Lesson) {
         guard let exercise = document.resumeExercise(in: lesson) else { return }
         open(exercise)
+    }
+
+    func resetCodeDraft() {
+        guard let exercise, exercise.kind == .code else { return }
+        updateState(exercise.id) { $0.draft = exercise.starter }
+    }
+
+    func resetTypography() {
+        let defaults = Preferences()
+        update { $0.preferences.textSize = defaults.textSize; $0.preferences.codeSize = defaults.codeSize }
     }
 
     func move(_ offset: Int) {
@@ -246,10 +301,13 @@ final class AppModel {
         do {
             try store.importDocument(from: url)
             document = store.document
+            pendingAwards.removeAll()
+            achievementNotifications.removeAll()
             hasUnsavedChanges = false
             saveError = nil
             selectedExerciseID = course?.exercises.first { $0.id == document.lastExerciseID }?.id
                 ?? course?.exercises.first?.id
+            migrateLearningMetadata()
         } catch { message = "Импорт отменён, текущие данные сохранены: \(error.localizedDescription)" }
     }
 
@@ -258,6 +316,8 @@ final class AppModel {
         do {
             try store.reset()
             document = store.document
+            pendingAwards.removeAll()
+            achievementNotifications.removeAll()
             hasUnsavedChanges = false
             saveError = nil
             selectedExerciseID = course?.exercises.first?.id
