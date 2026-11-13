@@ -67,12 +67,12 @@ public struct CourseTranslation: Codable, Sendable {
 
     private func sourceCourse(from data: Data) throws -> Course {
         guard formatVersion == 1, locale != .russian, sourceSHA256 == Self.digest(data) else {
-            throw ContentError.invalid("Перевод имеет неподдерживаемый формат или устарел относительно исходного курса")
+            throw ContentError.invalidTranslationSource
         }
         let course = try JSONDecoder().decode(Course.self, from: data)
         try course.validate()
         guard courseID == course.id, course.exercises.allSatisfy({ $0.choiceLabels == nil }) else {
-            throw ContentError.invalid("Перевод относится к другому курсу или уже локализованному содержимому")
+            throw ContentError.translationCourseMismatch
         }
         return course
     }
@@ -81,7 +81,7 @@ public struct CourseTranslation: Codable, Sendable {
     public func apply(to sourceData: Data) throws -> Course {
         let report = try coverage(for: sourceData)
         guard status == .reviewed, report.isComplete else {
-            throw ContentError.invalid("Перевод не готов: отсутствует \(report.missing.count) полей, неизвестных полей \(report.unknown.count)")
+            throw ContentError.translationNotReady(missing: report.missing.count, unknown: report.unknown.count)
         }
         return try projectedCourse(from: sourceData)
     }
@@ -90,7 +90,7 @@ public struct CourseTranslation: Codable, Sendable {
     public func developerPreview(from sourceData: Data) throws -> Course {
         let report = try coverage(for: sourceData)
         guard report.unknown.isEmpty, texts.values.allSatisfy({ !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) else {
-            throw ContentError.invalid("В черновике перевода есть пустые или неизвестные поля")
+            throw ContentError.invalidTranslationFields
         }
         return try projectedCourse(from: sourceData)
     }

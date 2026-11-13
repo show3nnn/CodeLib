@@ -46,7 +46,7 @@ public struct AppRelease: Sendable {
               let build = info["CFBundleVersion"] as? String, !build.isEmpty,
               build.utf8.allSatisfy({ (48...57).contains($0) }), let number = Int(build), number > 0,
               let rawStage = info["CodelibReleaseStage"] as? String, let stage = Stage(rawValue: rawStage) else {
-            throw ContentError.invalid("Не удалось прочитать версию сборки codelib")
+            throw ContentError.invalidAppVersion
         }
         self.version = version
         self.build = build
@@ -79,7 +79,7 @@ public struct ReleaseHistory: Codable, Sendable {
 
     public static func bundled() throws -> Self {
         guard let url = Bundle.module.url(forResource: "releases", withExtension: "json") else {
-            throw ContentError.invalid("История обновлений отсутствует")
+            throw ContentError.missingReleaseHistory
         }
         let history = try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
         try history.validate()
@@ -93,7 +93,7 @@ public struct ReleaseHistory: Codable, Sendable {
                   !note.title.isEmpty && !note.summary.isEmpty && !note.features.isEmpty
                       && Set(note.features.map(\.id)).count == note.features.count
                       && note.features.allSatisfy { !$0.id.isEmpty && !$0.symbol.isEmpty && !$0.title.isEmpty && !$0.detail.isEmpty }
-              }) else { throw ContentError.invalid("История обновлений повреждена") }
+              }) else { throw ContentError.invalidReleaseHistory }
     }
 
     public func updates(after seen: NumericVersion?, through current: NumericVersion) -> [ReleaseNote] {

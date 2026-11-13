@@ -8,11 +8,11 @@ struct RootView: View {
     var body: some View {
         Group {
             if let error = model.contentError {
-                ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error))
+                ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error.resource()))
             } else if let error = model.storageError {
                 VStack(spacing: 20) {
                     ContentUnavailableView("Прогресс не открыт", systemImage: "externaldrive.badge.exclamationmark",
-                                           description: Text(error + "\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
+                                           description: Text("\(String(localized: error.resource()))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
                     Text(model.dataURL.path).font(.caption).textSelection(.enabled)
                     Button("Восстановить резервную копию") { model.restoreBackup() }
                     Text("Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.")
@@ -30,7 +30,9 @@ struct RootView: View {
         }
         .alert("codelib", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
             Button("Понятно") { model.message = nil }
-        } message: { Text(model.message ?? "") }
+        } message: {
+            if let message = model.message { Text(message.resource()) }
+        }
     }
 
     private var workspace: some View {
@@ -68,7 +70,10 @@ struct RootView: View {
             VStack(spacing: 0) {
                 if model.hasUnsavedChanges {
                     HStack {
-                        Label("Не сохранено: \(model.saveError ?? "идёт запись")", systemImage: "exclamationmark.triangle")
+                        Label {
+                            if let error = model.saveError { Text("Не сохранено: \(String(localized: error.resource()))") }
+                            else { Text("Не сохранено: идёт запись") }
+                        } icon: { Image(systemName: "exclamationmark.triangle") }
                         Spacer()
                         Button("Повторить") { model.flush() }
                         Button("Экспорт") { model.exportProgress() }

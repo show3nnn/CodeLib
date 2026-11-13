@@ -18,7 +18,7 @@ public struct CourseCatalog: Codable, Sendable {
 
     public static func bundled(availableCourseIDs: Set<String>) throws -> CourseCatalog {
         guard let url = Bundle.module.url(forResource: "catalog", withExtension: "json") else {
-            throw ContentError.invalid("Отсутствует каталог курсов")
+            throw ContentError.missingCatalog
         }
         let catalog = try JSONDecoder().decode(CourseCatalog.self, from: Data(contentsOf: url))
         try catalog.validate(availableCourseIDs: availableCourseIDs)
@@ -29,7 +29,7 @@ public struct CourseCatalog: Codable, Sendable {
         guard version == 1, !entries.isEmpty, Set(entries.map(\.id)).count == entries.count,
               entries.allSatisfy({ !$0.id.isEmpty && !$0.title.isEmpty && !$0.language.isEmpty && !$0.summary.isEmpty }),
               entries.filter({ $0.availability == .available }).allSatisfy({ availableCourseIDs.contains($0.id) }) else {
-            throw ContentError.invalid("Каталог повреждён или ссылается на отсутствующий курс")
+            throw ContentError.invalidCatalog
         }
     }
 }

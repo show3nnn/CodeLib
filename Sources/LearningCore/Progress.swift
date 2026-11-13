@@ -93,12 +93,15 @@ public struct ProgressDocument: Codable, Sendable {
     }
 }
 
-public enum StorageError: LocalizedError {
-    case unsupportedVersion(Int), invalidData
+public enum StorageError: LocalizedError, Equatable {
+    case unsupportedVersion(Int), invalidData, conflictingRevision, locked, protectedExport
     public var errorDescription: String? {
         switch self {
         case .unsupportedVersion(let version): "Версия данных \(version) не поддерживается. Файл не изменён."
         case .invalidData: "Файл прогресса повреждён или содержит недопустимые значения. Файл не изменён."
+        case .conflictingRevision: "Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова."
+        case .locked: "Другой процесс записывает прогресс. Повторите сохранение."
+        case .protectedExport: "Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы."
         }
     }
 }
@@ -140,7 +143,7 @@ public final class ProgressStore {
         try Self.withFileLock(at: url) {
             let current = try FileManager.default.fileExists(atPath: url.path) ? Data(contentsOf: url) : nil
             guard current == revision else {
-                throw ContentError.invalid("Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова.")
+                throw StorageError.conflictingRevision
             }
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
@@ -159,7 +162,7 @@ public final class ProgressStore {
         guard descriptor >= 0 else { throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO) }
         defer { close(descriptor) }
         guard flock(descriptor, LOCK_EX | LOCK_NB) == 0 else {
-            throw ContentError.invalid("Другой процесс записывает прогресс. Повторите сохранение.")
+            throw StorageError.locked
         }
         defer { flock(descriptor, LOCK_UN) }
         return try operation()
@@ -204,7 +207,7 @@ public final class ProgressStore {
         let isPreserved = canonical.deletingLastPathComponent() == storage.deletingLastPathComponent()
             && canonical.lastPathComponent.hasPrefix(storage.lastPathComponent + ".preserved-")
         guard !isPreserved, !protected.contains(where: { sameFile(destination, $0) }) else {
-            throw ContentError.invalid("Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы.")
+            throw StorageError.protectedExport
         }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]

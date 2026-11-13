@@ -47,16 +47,16 @@ public struct LocalProfile: Codable, Sendable, Equatable {
         guard name == nickname, (1...30).contains(name.count), name.utf8.count <= 512,
               name.unicodeScalars.contains(where: { !CharacterSet.whitespacesAndNewlines.contains($0) && !CharacterSet.controlCharacters.contains($0) && $0.properties.generalCategory != .format }),
               !name.unicodeScalars.contains(where: { $0.properties.generalCategory == .control || $0.properties.generalCategory == .lineSeparator || $0.properties.generalCategory == .paragraphSeparator || (0x202A...0x202E).contains($0.value) || (0x2066...0x2069).contains($0.value) }) else {
-            throw ContentError.invalid("Введите имя от 1 до 30 символов без переносов строк и управляющих знаков.")
+            throw ContentError.invalidProfileName
         }
         if avatar == .photo {
             guard let photo, photo.count >= 24, photo.count <= 262_144,
                   photo.starts(with: [137, 80, 78, 71, 13, 10, 26, 10]),
                   Array(photo[12..<24]) == [73, 72, 68, 82, 0, 0, 1, 0, 0, 0, 1, 0] else {
-                throw ContentError.invalid("Выберите фотографию заново: нужен локальный PNG-аватар до 256 КиБ.")
+                throw ContentError.invalidAvatarPhoto
             }
         } else if photo != nil {
-            throw ContentError.invalid("Фотография не соответствует выбранному аватару.")
+            throw ContentError.avatarMismatch
         }
     }
 }

@@ -1,6 +1,42 @@
 {
   "sourceLanguage": "ru",
   "strings": {
+    "%@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:64; Sources/CodePath/ErrorPresentation.swift:98",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@"
+          }
+        }
+      }
+    },
+    "%@\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии.": {
+      "comment": "Sources/CodePath/RootView.swift:15",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\nThe original file has not been changed. You can restore the previous saved version from a backup."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."
+          }
+        }
+      }
+    },
     "%@ · сборка %@": {
       "comment": "Sources/CodePath/ReleaseViews.swift:9",
       "extractionState": "manual",
@@ -74,7 +110,7 @@
       }
     },
     "%lld из %lld заданий": {
-      "comment": "Sources/CodePath/RootView.swift:55",
+      "comment": "Sources/CodePath/RootView.swift:57",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -182,7 +218,7 @@
       }
     },
     "C++ · первый курс": {
-      "comment": "Sources/CodePath/RootView.swift:53",
+      "comment": "Sources/CodePath/RootView.swift:55",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -290,7 +326,7 @@
       }
     },
     "codelib": {
-      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:121; Sources/CodePath/ReleaseViews.swift:24; Sources/CodePath/RootView.swift:31; Sources/CodePath/RootView.swift:45",
+      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:121; Sources/CodePath/ReleaseViews.swift:24; Sources/CodePath/RootView.swift:31; Sources/CodePath/RootView.swift:47",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -397,6 +433,24 @@
         }
       }
     },
+    "В черновике перевода есть пустые или неизвестные поля": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:97",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The translation draft contains empty or unknown fields"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В черновике перевода есть пустые или неизвестные поля"
+          }
+        }
+      }
+    },
     "Ваш код · C++17": {
       "comment": "Sources/CodePath/LessonView.swift:206",
       "extractionState": "manual",
@@ -487,6 +541,24 @@
         }
       }
     },
+    "Введите имя от 1 до 30 символов без переносов строк и управляющих знаков.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:84",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a name of 1–30 characters without line breaks or control characters."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Введите имя от 1 до 30 символов без переносов строк и управляющих знаков."
+          }
+        }
+      }
+    },
     "Верно. %@": {
       "comment": "Sources/CodePath/LessonView.swift:271",
       "extractionState": "manual",
@@ -523,6 +595,24 @@
         }
       }
     },
+    "Версия данных %lld не поддерживается. Файл не изменён.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:48",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data version %lld is not supported. The file has not been changed."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Версия данных %lld не поддерживается. Файл не изменён."
+          }
+        }
+      }
+    },
     "Восстановить резервную копию": {
       "comment": "Sources/CodePath/RootView.swift:17",
       "extractionState": "manual",
@@ -537,6 +627,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Восстановить резервную копию"
+          }
+        }
+      }
+    },
+    "Восстановление не выполнено: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:29",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore failed: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Восстановление не выполнено: %@"
           }
         }
       }
@@ -613,6 +721,24 @@
         }
       }
     },
+    "Выберите PNG, JPEG или HEIC до 12 МиБ и 40 мегапикселей.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:56",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a PNG, JPEG or HEIC image up to 12 MiB and 40 megapixels."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите PNG, JPEG или HEIC до 12 МиБ и 40 мегапикселей."
+          }
+        }
+      }
+    },
     "Выберите вариант": {
       "comment": "Sources/CodePath/LessonView.swift:228",
       "extractionState": "manual",
@@ -631,6 +757,24 @@
         }
       }
     },
+    "Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:52",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a different export file: you cannot replace active progress, its backup or internal files."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы."
+          }
+        }
+      }
+    },
     "Выберите урок": {
       "comment": "Sources/CodePath/LessonView.swift:87",
       "extractionState": "manual",
@@ -645,6 +789,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Выберите урок"
+          }
+        }
+      }
+    },
+    "Выберите фотографию заново: нужен локальный PNG-аватар до 256 КиБ.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:85",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the photo again: a local PNG avatar up to 256 KiB is required."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выберите фотографию заново: нужен локальный PNG-аватар до 256 КиБ."
           }
         }
       }
@@ -739,6 +901,24 @@
         }
       }
     },
+    "Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:50",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another instance of the app has changed the data. Close and reopen codelib."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова."
+          }
+        }
+      }
+    },
     "Дата создания прежнего профиля не была сохранена.": {
       "comment": "Sources/CodePath/SettingsView.swift:23",
       "extractionState": "manual",
@@ -825,6 +1005,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Доступно: %lld разделов, %lld уроков, %lld заданий. Код, теория, контрольные и мини-проекты — от main до файлов и итогового диспетчера запасов. Все результаты остаются на вашем Mac."
+          }
+        }
+      }
+    },
+    "Другой процесс записывает прогресс. Повторите сохранение.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:51",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another process is writing progress. Try saving again."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Другой процесс записывает прогресс. Повторите сохранение."
           }
         }
       }
@@ -1081,6 +1279,24 @@
         }
       }
     },
+    "Импорт отменён, текущие данные сохранены: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:27",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import canceled; current data has been preserved: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Импорт отменён, текущие данные сохранены: %@"
+          }
+        }
+      }
+    },
     "Импорт…": {
       "comment": "Sources/CodePath/SettingsView.swift:76",
       "extractionState": "manual",
@@ -1225,6 +1441,42 @@
         }
       }
     },
+    "История обновлений отсутствует": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:92",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release history is missing"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "История обновлений отсутствует"
+          }
+        }
+      }
+    },
+    "История обновлений повреждена": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:93",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release history is invalid"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "История обновлений повреждена"
+          }
+        }
+      }
+    },
     "Исходный файл: %@": {
       "comment": "Sources/CodePath/LessonView.swift:147",
       "extractionState": "manual",
@@ -1311,6 +1563,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Каталог"
+          }
+        }
+      }
+    },
+    "Каталог достижений повреждён": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:89",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The achievement catalog is invalid"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Каталог достижений повреждён"
+          }
+        }
+      }
+    },
+    "Каталог повреждён или ссылается на отсутствующий курс": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:88",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The catalog is invalid or refers to a missing course"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Каталог повреждён или ссылается на отсутствующий курс"
           }
         }
       }
@@ -1820,7 +2108,7 @@
       }
     },
     "Настройки": {
-      "comment": "Sources/CodePath/RootView.swift:64",
+      "comment": "Sources/CodePath/RootView.swift:66",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1982,7 +2270,7 @@
       }
     },
     "Не сохранено: %@": {
-      "comment": "Sources/CodePath/RootView.swift:71",
+      "comment": "Sources/CodePath/RootView.swift:74",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1995,6 +2283,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Не сохранено: %@"
+          }
+        }
+      }
+    },
+    "Не сохранено: идёт запись": {
+      "comment": "Sources/CodePath/RootView.swift:75",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not saved: writing in progress"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не сохранено: идёт запись"
           }
         }
       }
@@ -2035,6 +2341,186 @@
         }
       }
     },
+    "Не удалось загрузить ресурс": {
+      "comment": "Sources/CodePath/ReleaseViews.swift:58",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to load the resource"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось загрузить ресурс"
+          }
+        }
+      }
+    },
+    "Не удалось подготовить аватар.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:57",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to prepare the avatar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось подготовить аватар."
+          }
+        }
+      }
+    },
+    "Не удалось прочитать версию сборки codelib": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:91",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to read the codelib build version"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось прочитать версию сборки codelib"
+          }
+        }
+      }
+    },
+    "Не удалось сохранить настройку. Повторите действие.": {
+      "comment": "Sources/CodePath/ProfileViews.swift:164",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to save setup. Try again."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить настройку. Повторите действие."
+          }
+        }
+      }
+    },
+    "Не удалось сохранить отметку просмотра.": {
+      "comment": "Sources/CodePath/ReleaseViews.swift:65",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to save the read marker."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить отметку просмотра."
+          }
+        }
+      }
+    },
+    "Не удалось сохранить профиль.": {
+      "comment": "Sources/CodePath/ProfileViews.swift:99",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to save the profile."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить профиль."
+          }
+        }
+      }
+    },
+    "Не удалось сохранить уменьшенную фотографию.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:58",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to save the resized photo."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось сохранить уменьшенную фотографию."
+          }
+        }
+      }
+    },
+    "Не удалось экспортировать: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:26",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export failed: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не удалось экспортировать: %@"
+          }
+        }
+      }
+    },
+    "Неверные варианты: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:81",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid answer choices: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверные варианты: %@"
+          }
+        }
+      }
+    },
+    "Неверные переводы вариантов: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:82",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid translated answer choices: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверные переводы вариантов: %@"
+          }
+        }
+      }
+    },
     "Недавние достижения": {
       "comment": "Sources/CodePath/AchievementViews.swift:150",
       "extractionState": "manual",
@@ -2053,6 +2539,24 @@
         }
       }
     },
+    "Некорректное число: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:83",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid number: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Некорректное число: %@"
+          }
+        }
+      }
+    },
     "Немного теории. Много собственного кода. Один понятный шаг за другим.": {
       "comment": "Sources/CodePath/DashboardViews.swift:11",
       "extractionState": "manual",
@@ -2067,6 +2571,96 @@
           "stringUnit": {
             "state": "translated",
             "value": "Немного теории. Много собственного кода. Один понятный шаг за другим."
+          }
+        }
+      }
+    },
+    "Неподдерживаемая версия или пустой курс": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:74",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported version or empty course"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неподдерживаемая версия или пустой курс"
+          }
+        }
+      }
+    },
+    "Неполное задание: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:78",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incomplete task: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неполное задание: %@"
+          }
+        }
+      }
+    },
+    "Неполный урок или неверные зависимости: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:77",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incomplete lesson or invalid prerequisites: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неполный урок или неверные зависимости: %@"
+          }
+        }
+      }
+    },
+    "Нет ответа: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:80",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing answer: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет ответа: %@"
+          }
+        }
+      }
+    },
+    "Нет эталона/примеров: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:79",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing reference solution or examples: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Нет эталона/примеров: %@"
           }
         }
       }
@@ -2395,8 +2989,44 @@
         }
       }
     },
+    "Отсутствует каталог курсов": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:87",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The course catalog is missing"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отсутствует каталог курсов"
+          }
+        }
+      }
+    },
+    "Отсутствует ресурс курса": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:72",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The course resource is missing"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отсутствует ресурс курса"
+          }
+        }
+      }
+    },
     "Офлайн · только на вашем Mac": {
-      "comment": "Sources/CodePath/RootView.swift:57",
+      "comment": "Sources/CodePath/RootView.swift:59",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2485,6 +3115,60 @@
         }
       }
     },
+    "Перевод имеет неподдерживаемый формат или устарел относительно исходного курса": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:94",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The translation format is unsupported or the translation is out of date with the source course"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод имеет неподдерживаемый формат или устарел относительно исходного курса"
+          }
+        }
+      }
+    },
+    "Перевод не готов: отсутствует %lld полей, неизвестных полей %lld": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:96",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translation not ready: %lld missing fields, %lld unknown fields"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод не готов: отсутствует %lld полей, неизвестных полей %lld"
+          }
+        }
+      }
+    },
+    "Перевод относится к другому курсу или уже локализованному содержимому": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:95",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The translation targets a different course or content that is already localized"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод относится к другому курсу или уже локализованному содержимому"
+          }
+        }
+      }
+    },
     "Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.": {
       "comment": "Sources/CodePath/RootView.swift:18",
       "extractionState": "manual",
@@ -2558,7 +3242,7 @@
       }
     },
     "Повторить": {
-      "comment": "Sources/CodePath/LessonView.swift:255; Sources/CodePath/RootView.swift:73",
+      "comment": "Sources/CodePath/LessonView.swift:255; Sources/CodePath/RootView.swift:78",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2697,6 +3381,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк."
+          }
+        }
+      }
+    },
+    "Полный перевод курса для %@ пока недоступен": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:73",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A complete course translation for %@ is not available yet"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полный перевод курса для %@ пока недоступен"
           }
         }
       }
@@ -3044,7 +3746,7 @@
       }
     },
     "Продолжить": {
-      "comment": "Sources/CodePath/RootView.swift:92",
+      "comment": "Sources/CodePath/RootView.swift:97",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3151,6 +3853,42 @@
         }
       }
     },
+    "Пустой или повторяющийся ID: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:75",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty or duplicate ID: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пустой или повторяющийся ID: %@"
+          }
+        }
+      }
+    },
+    "Пустой раздел %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:76",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Empty section %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Пустой раздел %@"
+          }
+        }
+      }
+    },
     "Разбор": {
       "comment": "Sources/CodePath/LessonView.swift:183",
       "extractionState": "manual",
@@ -3165,6 +3903,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Разбор"
+          }
+        }
+      }
+    },
+    "Раздел достижения отсутствует: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:90",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Achievement section is missing: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Раздел достижения отсутствует: %@"
           }
         }
       }
@@ -3237,6 +3993,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "С нуля до уверенного первого курса"
+          }
+        }
+      }
+    },
+    "Сброс не выполнен: %@": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:28",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset failed: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Сброс не выполнен: %@"
           }
         }
       }
@@ -3908,7 +4682,7 @@
       }
     },
     "Учиться в своём темпе": {
-      "comment": "Sources/CodePath/RootView.swift:51",
+      "comment": "Sources/CodePath/RootView.swift:53",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3961,6 +4735,42 @@
         }
       }
     },
+    "Файл данных повреждён или имеет неверную структуру.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:61",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The data file is damaged or has an invalid structure."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл данных повреждён или имеет неверную структуру."
+          }
+        }
+      }
+    },
+    "Файл прогресса повреждён или содержит недопустимые значения. Файл не изменён.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:49",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The progress file is damaged or contains invalid values. The file has not been changed."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файл прогресса повреждён или содержит недопустимые значения. Файл не изменён."
+          }
+        }
+      }
+    },
     "Фотография": {
       "comment": "Sources/CodePath/ProfileViews.swift:13",
       "extractionState": "manual",
@@ -3975,6 +4785,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Фотография"
+          }
+        }
+      }
+    },
+    "Фотография не соответствует выбранному аватару.": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:86",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The photo does not match the selected avatar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Фотография не соответствует выбранному аватару."
           }
         }
       }
@@ -4070,7 +4898,7 @@
       }
     },
     "Экспорт": {
-      "comment": "Sources/CodePath/RootView.swift:74",
+      "comment": "Sources/CodePath/RootView.swift:79",
       "extractionState": "manual",
       "localizations": {
         "en": {

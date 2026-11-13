@@ -55,14 +55,14 @@ struct ReleaseHistoryView: View {
                         }
                     } else {
                         ContentUnavailableView("История недоступна", systemImage: "exclamationmark.triangle",
-                                               description: Text(model.releaseHistoryError ?? "Не удалось загрузить ресурс"))
+                                               description: Text(model.releaseHistoryError.map { $0.resource() } ?? "Не удалось загрузить ресурс"))
                     }
                 }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
             }
             Divider()
             HStack {
                 if acknowledgementFailed {
-                    Text(model.saveError ?? model.storageError ?? "Не удалось сохранить отметку просмотра.")
+                    FailureText(failure: model.saveError ?? model.storageError, fallback: "Не удалось сохранить отметку просмотра.")
                         .font(.caption).foregroundStyle(.red).textSelection(.enabled)
                 }
                 Spacer()

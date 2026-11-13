@@ -26,8 +26,8 @@ struct CourseTranslationTests {
         let base = try JSONDecoder().decode(Course.self, from: source)
         let firstLessonKeys = Set(CourseTranslation.sourceTexts(in: base).keys.filter { $0.hasPrefix("cpp.first.") })
         #expect(firstLessonKeys.isSubset(of: Set(translation.texts.keys)))
-        #expect(throws: (any Error).self) { try translation.apply(to: source) }
-        #expect(throws: (any Error).self) { try Course.bundled(locale: .english) }
+        #expect(throws: ContentError.translationNotReady(missing: 0, unknown: 0)) { try translation.apply(to: source) }
+        #expect(throws: ContentError.translationUnavailable("en")) { try Course.bundled(locale: .english) }
         let preview = try translation.developerPreview(from: source)
         #expect(preview.lessons.first?.title == "Programs and main")
         #expect(preview.exercises.first?.title == "Station beacon")

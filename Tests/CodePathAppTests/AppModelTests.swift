@@ -15,6 +15,30 @@ struct AppModelTests {
         return url
     }
 
+    @Test func importAndResetFailuresKeepTypedReasonsAndPersistedState() throws {
+        let root = try setup()
+        let model = AppModel()
+        model.update { $0.exercises["future.id"] = ExerciseProgress(); $0.lastExerciseID = "future.id" }
+        let before = try Data(contentsOf: model.dataURL)
+        let input = root.appendingPathComponent("future-schema.json")
+        try Data("{\"schemaVersion\":99}".utf8).write(to: input)
+        model.importProgress(from: input)
+        #expect(model.message?.operation == .importProgress)
+        #expect(model.message?.cause as? StorageError == .unsupportedVersion(99))
+        #expect(try Data(contentsOf: model.dataURL) == before)
+        #expect(model.document.exercises["future.id"] != nil)
+        model.message = nil
+        let descriptor = open(model.dataURL.appendingPathExtension("lock").path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
+        #expect(descriptor >= 0)
+        defer { flock(descriptor, LOCK_UN); close(descriptor) }
+        #expect(flock(descriptor, LOCK_EX | LOCK_NB) == 0)
+        model.reset()
+        #expect(model.message?.operation == .reset)
+        #expect(model.message?.cause as? StorageError == .locked)
+        #expect(try Data(contentsOf: model.dataURL) == before)
+        #expect(model.document.exercises["future.id"] != nil)
+    }
+
     @Test func releaseAcknowledgementRetriesFailedWritesAndPersists() throws {
         let root = try setup()
         let model = AppModel()

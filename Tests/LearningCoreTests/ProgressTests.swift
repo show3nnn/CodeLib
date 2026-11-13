@@ -4,6 +4,25 @@ import Darwin
 @testable import LearningCore
 
 struct ProgressTests {
+    @Test func structuredStorageReasonsDoNotWeakenWriteProtections() throws {
+        let url = try location()
+        let writer = try ProgressStore(url: url)
+        let stale = try ProgressStore(url: url)
+        try writer.update { $0.lastExerciseID = "saved" }
+        let saved = try Data(contentsOf: url)
+        #expect(throws: StorageError.conflictingRevision) { try stale.update { $0.lastExerciseID = "stale" } }
+        #expect(throws: StorageError.protectedExport) { try writer.export(to: url) }
+        #expect(try Data(contentsOf: url) == saved)
+        let descriptor = open(url.appendingPathExtension("lock").path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
+        #expect(descriptor >= 0)
+        defer { flock(descriptor, LOCK_UN); close(descriptor) }
+        #expect(flock(descriptor, LOCK_EX | LOCK_NB) == 0)
+        #expect(throws: StorageError.locked) { try writer.update { $0.lastExerciseID = "blocked" } }
+        #expect(try Data(contentsOf: url) == saved)
+        #expect(writer.document.lastExerciseID == "saved")
+        #expect(throws: StorageError.unsupportedVersion(99)) { try ProgressStore.decode(Data("{\"schemaVersion\":99}".utf8)) }
+    }
+
     func location() throws -> URL {
         let root = URL(fileURLWithPath: ProcessInfo.processInfo.environment["CODEPATH_TEST_ROOT"]
                        ?? FileManager.default.currentDirectoryPath + "/.build/test-data")

@@ -13,7 +13,7 @@ class UICatalogTests(unittest.TestCase):
         self.assertEqual(manifest["sourceFiles"], source_files(root))
         value = catalog(manifest, ui_en.TEXTS)
         self.assertEqual(value["sourceLanguage"], "ru")
-        self.assertEqual(len(ui_en.TEXTS), 238)
+        self.assertEqual(len(ui_en.TEXTS), 284)
         self.assertEqual(set(value["strings"]), set(ui_en.TEXTS))
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in ui_en.TEXTS.values()))
         self.assertTrue(all(not location.startswith("/") for locations in manifest["entries"].values() for location in locations))
@@ -24,7 +24,12 @@ class UICatalogTests(unittest.TestCase):
                     "Новое достижение · %@", "Получено · %@", "Учтено из прежнего прогресса · %@",
                     "Алгоритмы", "Исследование", "Мастерство", "Настойчивость", "Первые шаги", "Практика",
                     "Мои курсы", "Мой прогресс", "Программа C++", "Достижения", "Написать код", "Числовой ответ",
-                    "Не завершено", "Проверено автоматически", "Отмечено вами", "Инициал имени", "Фотография"]:
+                    "Не завершено", "Проверено автоматически", "Отмечено вами", "Инициал имени", "Фотография",
+                    "Не удалось экспортировать: %@", "Импорт отменён, текущие данные сохранены: %@",
+                    "Сброс не выполнен: %@", "Восстановление не выполнено: %@",
+                    "Версия данных %lld не поддерживается. Файл не изменён.",
+                    "Перевод не готов: отсутствует %lld полей, неизвестных полей %lld",
+                    "Не удалось сохранить профиль."]:
             self.assertIn(key, manifest["entries"])
 
     def test_unknown_empty_and_changed_placeholders_are_rejected(self):

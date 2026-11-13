@@ -68,10 +68,10 @@ public enum AchievementCatalog {
         guard all.count == 24, Set(all.map(\.id)).count == all.count,
               all.allSatisfy({ item in !item.symbol.isEmpty && item.target > 0 && ["ru", "en"].allSatisfy { locale in
                   !(item.titles[locale] ?? "").isEmpty && !(item.descriptions[locale] ?? "").isEmpty
-              } }) else { throw ContentError.invalid("Каталог достижений повреждён") }
+              } }) else { throw ContentError.invalidAchievements }
         for item in all {
             if case .section(let id) = item.criterion, !course.sections.contains(where: { $0.id == id }) {
-                throw ContentError.invalid("Раздел достижения отсутствует: \(id)")
+                throw ContentError.missingAchievementSection(id)
             }
         }
     }

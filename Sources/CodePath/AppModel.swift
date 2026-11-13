@@ -7,19 +7,19 @@ import SwiftUI
 final class AppModel {
     let course: Course?
     let catalog: CourseCatalog?
-    let contentError: String?
+    let contentError: AppFailure?
     let appRelease: AppRelease?
     let releaseHistory: ReleaseHistory?
-    let releaseHistoryError: String?
+    let releaseHistoryError: AppFailure?
     let dataURL: URL
     private var store: ProgressStore?
     var document = ProgressDocument()
-    var storageError: String?
-    var saveError: String?
+    var storageError: AppFailure?
+    var saveError: AppFailure?
     var hasUnsavedChanges = false
     var page: Page = .home
     var selectedExerciseID: String?
-    var message: String?
+    var message: AppFailure?
     private var updateHistoryPresented = false
     var achievementNotifications: [String] = []
     private var pendingAwards: Set<String> = []
@@ -54,7 +54,7 @@ final class AppModel {
         }
         next.onboarding = state
         if let theme { next.preferences.theme = theme }
-        do { try next.validate() } catch { message = error.localizedDescription; return false }
+        do { try next.validate() } catch { message = AppFailure(error); return false }
         update { $0 = next }
         return !hasUnsavedChanges && saveError == nil
     }
@@ -69,7 +69,7 @@ final class AppModel {
             profile.id = profile.id ?? UUID()
             profile.createdAt = profile.createdAt ?? Date()
         }
-        do { try profile.validate() } catch { message = error.localizedDescription; return false }
+        do { try profile.validate() } catch { message = AppFailure(error); return false }
         guard store != nil else { return false }
         update {
             $0.profile = profile
@@ -108,7 +108,7 @@ final class AppModel {
         do {
             releaseHistory = try ReleaseHistory.bundled()
             releaseHistoryError = nil
-        } catch { releaseHistory = nil; releaseHistoryError = error.localizedDescription }
+        } catch { releaseHistory = nil; releaseHistoryError = AppFailure(error) }
         do {
             let loaded = try Course.bundled()
             try AchievementCatalog.validate(course: loaded)
@@ -116,7 +116,7 @@ final class AppModel {
             course = loaded
             catalog = loadedCatalog
             contentError = nil
-        } catch { course = nil; catalog = nil; contentError = error.localizedDescription }
+        } catch { course = nil; catalog = nil; contentError = AppFailure(error) }
         if let path = ProcessInfo.processInfo.environment["CODEPATH_DATA_DIR"] {
             dataURL = URL(fileURLWithPath: path).appendingPathComponent("progress.json")
         } else {
@@ -137,7 +137,7 @@ final class AppModel {
             if FileManager.default.fileExists(atPath: dataURL.path) { migrateLearningMetadata() }
         } catch {
             store = nil
-            storageError = error.localizedDescription
+            storageError = AppFailure(error)
         }
     }
 
@@ -175,7 +175,7 @@ final class AppModel {
             let earned = AchievementCatalog.all.map(\.id).filter { pendingAwards.contains($0) }
             achievementNotifications.append(contentsOf: earned.filter { !achievementNotifications.contains($0) })
             pendingAwards.removeAll()
-        } catch { saveError = error.localizedDescription }
+        } catch { saveError = AppFailure(error) }
     }
 
     func updateState(_ id: String, _ mutate: (inout ExerciseProgress) -> Void) {
@@ -274,7 +274,7 @@ final class AppModel {
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
             try exportProgress(to: url)
-        } catch { message = "Не удалось экспортировать: \(error.localizedDescription)" }
+        } catch { message = AppFailure(error, operation: .export) }
     }
 
     func exportProgress(to destination: URL) throws {
@@ -293,13 +293,18 @@ final class AppModel {
     }
 
     func importProgress() {
-        guard let store else { return }
+        guard store != nil else { return }
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.json]
         panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let url = panel.url else { return }
+        importProgress(from: url)
+    }
+
+    func importProgress(from source: URL) {
+        guard let store else { return }
         do {
-            try store.importDocument(from: url)
+            try store.importDocument(from: source)
             document = store.document
             pendingAwards.removeAll()
             achievementNotifications.removeAll()
@@ -308,7 +313,7 @@ final class AppModel {
             selectedExerciseID = course?.exercises.first { $0.id == document.lastExerciseID }?.id
                 ?? course?.exercises.first?.id
             migrateLearningMetadata()
-        } catch { message = "Импорт отменён, текущие данные сохранены: \(error.localizedDescription)" }
+        } catch { message = AppFailure(error, operation: .importProgress) }
     }
 
     func reset() {
@@ -322,13 +327,13 @@ final class AppModel {
             saveError = nil
             selectedExerciseID = course?.exercises.first?.id
             page = .home
-        } catch { message = "Сброс не выполнен: \(error.localizedDescription)" }
+        } catch { message = AppFailure(error, operation: .reset) }
     }
 
     func restoreBackup() {
         do {
             try ProgressStore.restoreBackup(at: dataURL)
             loadProgress()
-        } catch { storageError = "Восстановление не выполнено: \(error.localizedDescription)" }
+        } catch { storageError = AppFailure(error, operation: .restore) }
     }
 }

@@ -35,7 +35,7 @@ struct ProfileAvatar: View {
 struct ProfileFields: View {
     @Binding var profile: LocalProfile
     @State private var selectedImage: NSImage?
-    @State private var imageError: String?
+    @State private var imageError: AppFailure?
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 18) {
@@ -62,7 +62,7 @@ struct ProfileFields: View {
                 }
                 Button("Загрузить фото…") { choosePhoto() }
             }
-            if let imageError { Text(imageError).foregroundStyle(.red).font(.caption) }
+            if let imageError { Text(imageError.resource()).foregroundStyle(.red).font(.caption) }
             Text("Один локальный профиль, без регистрации и проверки имени в интернете. Фото хранится внутри локального файла прогресса и его экспорта.")
                 .font(.caption).foregroundStyle(.secondary)
         }
@@ -83,7 +83,7 @@ struct ProfileFields: View {
         panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do { selectedImage = try AvatarPhoto.load(url); imageError = nil }
-        catch { imageError = error.localizedDescription }
+        catch { imageError = AppFailure(error) }
     }
 }
 
@@ -96,7 +96,7 @@ struct EditProfileView: View {
         VStack(alignment: .leading, spacing: 22) {
             Text("Локальный профиль").font(.title.bold())
             ProfileFields(profile: $profile)
-            if failed { Text(model.saveError ?? model.message ?? "Не удалось сохранить профиль.").foregroundStyle(.red) }
+            if failed { FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить профиль.").foregroundStyle(.red) }
             HStack {
                 Button("Отмена") { dismiss() }
                 Spacer()
@@ -161,7 +161,7 @@ struct OnboardingView: View {
                     }
                 }
                 if failed {
-                    Text(model.saveError ?? model.message ?? "Не удалось сохранить настройку. Повторите действие.")
+                    FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить настройку. Повторите действие.")
                         .foregroundStyle(.red).textSelection(.enabled)
                 }
                 Text("Настройка хранится только на этом Mac").font(.caption).foregroundStyle(.secondary)
