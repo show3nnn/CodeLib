@@ -37,15 +37,29 @@ struct AchievementCollectionView: View {
             VStack(alignment: .leading, spacing: 24) {
                 PageHeader(eyebrow: "Коллекция", title: "Не только точки с запятой", subtitle: "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.")
                 let unlocked = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
-                HStack {
-                    Text("Открыто \(unlocked) из \(AchievementCatalog.all.count)").font(.headline)
-                    Spacer()
-                    ProgressView(value: Double(unlocked), total: Double(AchievementCatalog.all.count)).frame(maxWidth: 180)
+                Card {
+                    HStack(spacing: 24) {
+                        ZStack {
+                            Circle().stroke(.green.opacity(0.1), lineWidth: 7)
+                            Circle().trim(from: 0, to: Double(unlocked) / Double(AchievementCatalog.all.count))
+                                .stroke(.green, style: StrokeStyle(lineWidth: 7, lineCap: .round)).rotationEffect(.degrees(-90))
+                            Text("\(unlocked)/\(AchievementCatalog.all.count)").font(.system(size: 15, weight: .semibold, design: .rounded)).monospacedDigit()
+                        }.frame(width: 76, height: 76)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel("Прогресс коллекции")
+                            .accessibilityValue(Text("Открыто \(unlocked) из \(AchievementCatalog.all.count)"))
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Коллекция наград").font(.caption.weight(.semibold)).foregroundStyle(.green)
+                            Text("Открыто \(unlocked) из \(AchievementCatalog.all.count)").font(.system(size: 24, weight: .semibold, design: .rounded)).tracking(-0.4)
+                            Text(unlocked == 0 ? "Первая награда появится за настоящую практику." : "Каждая награда выдаётся один раз и сохраняется в профиле.").font(.callout).foregroundStyle(.secondary)
+                        }
+                        Spacer(minLength: 0)
+                        Picker("Категория", selection: $category) {
+                            Text("Все категории").tag(AchievementCategory?.none)
+                            ForEach(AchievementCategory.allCases, id: \.self) { Text($0.localizedTitle).tag(Optional($0)) }
+                        }.pickerStyle(.menu).labelsHidden().frame(maxWidth: 220)
+                    }
                 }
-                Picker("Категория", selection: $category) {
-                    Text("Все категории").tag(AchievementCategory?.none)
-                    ForEach(AchievementCategory.allCases, id: \.self) { Text($0.localizedTitle).tag(Optional($0)) }
-                }.frame(maxWidth: 320)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 16)], spacing: 16) {
                     ForEach(AchievementCatalog.all.filter { category == nil || $0.category == category }) { item in
                         let earned = model.document.achievements?.awards[item.id]
@@ -54,6 +68,9 @@ struct AchievementCollectionView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 Image(systemName: hidden ? "questionmark.diamond" : item.symbol)
                                     .font(.title).foregroundStyle(earned == nil ? Color.secondary : .green)
+                                    .frame(width: 44, height: 44)
+                                    .background(earned == nil ? Color.primary.opacity(0.05) : Color.green.opacity(0.1),
+                                                in: RoundedRectangle(cornerRadius: 13))
                                 Group {
                                     if hidden { Text("Секретное достижение") }
                                     else { Text(verbatim: item.title()) }
@@ -72,12 +89,13 @@ struct AchievementCollectionView: View {
                                     }.font(.caption).foregroundStyle(.secondary)
                                 } else if !hidden, let course = model.course {
                                     let value = min(item.target, AchievementEngine.value(for: item, document: model.document, course: course))
-                                    ProgressView(value: Double(value), total: Double(item.target))
+                                    ProgressView(value: Double(value), total: Double(item.target)).tint(.green)
                                     Text("\(value) / \(item.target)").font(.caption).foregroundStyle(.secondary)
                                 }
                             }.padding(20).frame(maxWidth: .infinity, minHeight: 210, alignment: .topLeading)
                                 .background(.background, in: RoundedRectangle(cornerRadius: 18))
                                 .overlay { RoundedRectangle(cornerRadius: 18).strokeBorder(earned == nil ? Color.primary.opacity(0.08) : Color.green.opacity(0.45)) }
+                                .contentShape(RoundedRectangle(cornerRadius: 18))
                         }.buttonStyle(.plain)
                     }
                 }
@@ -87,7 +105,9 @@ struct AchievementCollectionView: View {
             if let item = AchievementCatalog.all.first(where: { $0.id == selected }) {
                 let hidden = item.secret && model.document.achievements?.awards[item.id] == nil
                 VStack(spacing: 18) {
-                    Image(systemName: hidden ? "questionmark.diamond" : item.symbol).font(.largeTitle).foregroundStyle(.green)
+                    Image(systemName: hidden ? "questionmark.diamond" : item.symbol)
+                        .font(.system(size: 28, weight: .medium)).foregroundStyle(.green)
+                        .frame(width: 72, height: 72).background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 20))
                     Group {
                         if hidden { Text("Секретное достижение") }
                         else { Text(verbatim: item.title()) }
@@ -97,8 +117,8 @@ struct AchievementCollectionView: View {
                         else { Text(verbatim: item.detail()) }
                     }.multilineTextAlignment(.center)
                     Text("Награда выдаётся один раз и сохраняется в локальном профиле.").font(.caption).foregroundStyle(.secondary)
-                    Button("Закрыть") { selected = nil }
-                }.padding(32).frame(width: 420)
+                    Button("Закрыть") { selected = nil }.buttonStyle(.borderedProminent)
+                }.padding(32).frame(width: 440)
             }
         }
     }

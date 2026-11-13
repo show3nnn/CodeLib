@@ -18,18 +18,23 @@ struct AboutView: View {
     let model: AppModel
     @Environment(\.openWindow) private var openWindow
     var body: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 22) {
             Image(nsImage: NSApplication.shared.applicationIconImage)
                 .resizable().frame(width: 112, height: 112).accessibilityHidden(true)
-            Text("codelib").font(.largeTitle.bold())
+            VStack(spacing: 6) {
+                Text("codelib").font(.system(size: 34, weight: .bold, design: .rounded)).tracking(-1)
+                Text("Лаборатория кода").font(.callout).foregroundStyle(.secondary)
+            }
             ReleaseVersionLabel(release: model.appRelease).font(.callout)
-            Text("Нативная лаборатория программирования")
-            Text("Практический курс C++ для macOS.\nОфлайн, без аккаунтов и телеметрии.")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary)
-            Button("История обновлений") { openWindow(id: "release-history") }
+                .padding(.horizontal, 14).padding(.vertical, 8)
+                .background(Color.primary.opacity(0.05), in: Capsule())
+            Text("Нативная лаборатория программирования.\nПрактический курс C++ для macOS — офлайн, без аккаунтов и телеметрии.")
+                .multilineTextAlignment(.center).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Button("История обновлений", systemImage: "clock.arrow.circlepath") { openWindow(id: "release-history") }
+                .buttonStyle(.bordered).controlSize(.large)
             Text("Код сохраняется как черновик; встроенного исполнения и AI нет.")
                 .font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
-        }.padding(32).frame(minWidth: 440, minHeight: 400)
+        }.padding(36).frame(minWidth: 460, minHeight: 430).background(WorkspaceBackdrop())
     }
 }
 
@@ -41,12 +46,13 @@ struct ReleaseHistoryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Что нового в codelib").font(.largeTitle.bold())
-                ReleaseVersionLabel(release: model.appRelease).foregroundStyle(.secondary)
+                Text("ЧТО НОВОГО В CODELIB").font(.system(size: 10, weight: .bold)).tracking(1.6).foregroundStyle(.green)
+                Text("История обновлений").font(.system(size: 28, weight: .bold)).tracking(-0.7)
+                ReleaseVersionLabel(release: model.appRelease).font(.callout).foregroundStyle(.secondary)
             }.padding(24)
             Divider()
             ScrollView {
-                VStack(alignment: .leading, spacing: 28) {
+                VStack(alignment: .leading, spacing: 20) {
                     if let history = model.releaseHistory {
                         ForEach(history.releases.filter { note in
                             model.appRelease.map { note.version <= $0.version } ?? true
@@ -76,35 +82,43 @@ struct ReleaseHistoryView: View {
                 .disabled(model.appRelease == nil || model.releaseHistory == nil)
                 .buttonStyle(.borderedProminent)
             }.padding(20)
-        }.frame(minWidth: 560, minHeight: 480)
+        }.frame(minWidth: 560, minHeight: 480).background(WorkspaceBackdrop())
     }
 
     private func releaseCard(_ note: ReleaseNote) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("\(note.version.rawValue)\(note.stage.map { " · " + $0.rawValue } ?? "")")
-                .font(.title2.bold())
-            if let date = note.date { Text(date).font(.caption).foregroundStyle(.secondary) }
-            Text(note.title).font(.title3.bold())
-            Text(note.summary).fixedSize(horizontal: false, vertical: true)
-            ForEach(note.features) { feature in
-                HStack(alignment: .top, spacing: 14) {
-                    Image(systemName: feature.symbol).font(.title2).foregroundStyle(.tint)
-                        .frame(width: 32).accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(feature.title).font(.headline)
-                        Text(feature.detail).foregroundStyle(.secondary)
+        Card {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(note.version.rawValue).font(.system(size: 24, weight: .bold, design: .rounded)).tracking(-0.5)
+                    if let stage = note.stage {
+                        Text(stage.rawValue).font(.caption.weight(.semibold)).foregroundStyle(.green)
+                            .padding(.horizontal, 10).padding(.vertical, 4).background(Color.green.opacity(0.1), in: Capsule())
+                    }
+                    Spacer()
+                    if let date = note.date { Text(date).font(.caption).foregroundStyle(.secondary) }
+                }
+                Text(note.title).font(.title3.weight(.semibold))
+                Text(note.summary).fixedSize(horizontal: false, vertical: true)
+                ForEach(note.features) { feature in
+                    HStack(alignment: .top, spacing: 14) {
+                        Image(systemName: feature.symbol).font(.title3).foregroundStyle(.green)
+                            .frame(width: 34, height: 34).background(Color.green.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(feature.title).font(.headline)
+                            Text(feature.detail).foregroundStyle(.secondary)
+                        }
                     }
                 }
-            }
-            if !note.improvements.isEmpty {
-                Text("Улучшения").font(.headline)
-                ForEach(note.improvements, id: \.self) { Text("• " + $0) }
-            }
-            if !note.fixes.isEmpty {
-                Text("Исправления").font(.headline)
-                ForEach(note.fixes, id: \.self) { Text("• " + $0) }
-            }
-            Divider()
-        }.textSelection(.enabled)
+                if !note.improvements.isEmpty {
+                    Text("Улучшения").font(.headline)
+                    ForEach(note.improvements, id: \.self) { Text("• " + $0) }
+                }
+                if !note.fixes.isEmpty {
+                    Text("Исправления").font(.headline)
+                    ForEach(note.fixes, id: \.self) { Text("• " + $0) }
+                }
+            }.textSelection(.enabled)
+        }
     }
 }
