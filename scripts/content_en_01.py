@@ -1,9 +1,10 @@
-"""Reviewed-by-author draft of lesson cpp.first; NOT an available app language.
+"""English draft of section 1; NOT an available app language.
 
 The source snapshot is intentional: update it only after reviewing course changes.
 Code, expected output and grading values are not translated.
 """
 SOURCE_SHA256 = "435ec03a6945a041d489ee395b326d3eeda7966c7e6e31b111b068fdc663ca0e"
+SECTION_ID = "cpp.section.start"
 
 ENTITIES = {
     "cpp-foundations": {
@@ -58,4 +59,104 @@ ENTITIES = {
     },
 }
 
-SKILLS = {"main": "main", "cout": "cout", "компиляция": "compilation"}
+ENTITIES.update({
+    "cpp.lines": {
+        "title": "Lines and sequence",
+        "summary": "Build a multiline message from individual statements.",
+        "theory": 'Statements execute in order, from top to bottom. Separate output operations join their text without adding spaces. To start a new line, put \\n inside a string literal. For example, "A\\nB" contains A, a line break and B. You can write std::cout << "A" << "B"; as one output chain.\n\nSpaces and line breaks in the source file outside quotation marks usually format the code and are not printed. A line break in the output appears only when explicitly requested. These tasks show the required output; a final line break is acceptable when comparing results by hand, but an extra blank line changes the output.',
+        "microscope": "\\n is an escape sequence representing a newline character, not two printed characters. std::endl also ends the line but additionally flushes the stream buffer; \\n is sufficient for ordinary messages in these exercises.",
+        "recap": "Without an explicit separator, messages run together. Sketch the intended output lines first, then add the line breaks.",
+    },
+    "cpp.lines.manifest": {
+        "title": "Cargo manifest", "prompt": "Print three lines: Cargo, then Food, then Tools. Do not add blank lines.",
+        "hints": ["You need two line separators.", "Put \\n between the names."],
+        "explanation": "Two line breaks separate three lines without creating a blank line between them.",
+    },
+    "cpp.lines.joined": {
+        "title": "Joined channels", "prompt": "Predict the program's exact output. Preserve spaces and line breaks.",
+        "hints": ["A new statement does not mean a new output line.", "The only space is before the digit 2."],
+        "explanation": "Air and lock join directly; the space comes only from the final literal.",
+    },
+    "cpp.lines.bridge": {
+        "title": "Repair the display", "prompt": "The display prints DockReady with no separator. Write a program that prints Dock and Ready on separate lines.",
+        "hints": ["You need a separator between the words.", "Use \\n, not a space."],
+        "explanation": "The line break separates the two states without changing the words themselves.",
+    },
+    "cpp.lines.source": {
+        "title": "Source-code whitespace", "prompt": 'Will the output of std::cout << "A"; change if you indent the statement on the next line of the source file?',
+        "choices": {"Да, появится отступ": "Yes, indentation will appear", "Нет, пробелы вне литерала не выводятся": "No, spaces outside the literal are not printed", "Да, появится пустая строка": "Yes, a blank line will appear"},
+        "hints": ["The characters inside quotation marks matter.", "Source formatting and program output are different things."],
+        "explanation": "Indentation makes source code easier to read; it is not an output command.",
+    },
+    "cpp.lines.countdown": {
+        "title": "A countdown without loops", "prompt": "Without using loops yet, print the lines 3, 2, 1, Go! in exactly that order.",
+        "hints": ["There are four lines in total.", "Use three line breaks inside the literal."],
+        "explanation": "The text order follows the execution order. We will study loops later.",
+    },
+    "cpp.escapes": {
+        "title": "Quotes, backslashes and comments", "summary": "Print characters that have special meaning in C++.",
+        "theory": 'Inside a string literal, a double quotation mark ends the text. To print the quotation mark itself, write \\". To print a backslash, write \\\\. The sequence \\t represents a tab, but its visual width depends on where it is displayed; these tasks use ordinary spaces for exact alignment.\n\nA // comment continues to the end of the source line and is not executed. A /* ... */ comment can span several lines. Inside quotation marks, // is just text. Do not hide the only required statements inside a comment.',
+        "microscope": "The compiler interprets escape sequences when processing literals. The length of the source spelling can therefore differ from the number of output characters. Do not use unknown sequences such as \\L: they are not a reliable way to print a backslash.",
+        "recap": 'Use \\" to print a quotation mark and \\\\ to print a backslash. Comments outside strings do not produce output.',
+    },
+    "cpp.escapes.quote": {
+        "title": "A quotation from the robot", "prompt": 'Print exactly Robot: "Hello", including the double quotation marks around Hello.',
+        "hints": ["The outer quotation marks delimit the literal.", "Escape the quotation marks inside it using backslashes."],
+        "explanation": "Escaped quotation marks belong to the text instead of ending the literal.",
+    },
+    "cpp.escapes.comment": {
+        "title": "Comment or message?", "prompt": "Predict the program's exact output. Preserve spaces and line breaks.",
+        "hints": ["Look at what is inside the quotation marks.", "The comment starts only after the closing quotation mark and semicolon."],
+        "explanation": "Inside a string literal, // does not start a comment.",
+    },
+    "cpp.escapes.path": {
+        "title": "Path to the archive", "prompt": "Print exactly C:\\Lab\\notes.txt. This is a practice string, not a file operation.",
+        "hints": ["Double every backslash in the literal.", "Pay particular attention to \\n: without doubling the backslash, it represents a newline."],
+        "explanation": "\\\\ becomes one backslash. The program does not open any files.",
+    },
+    "cpp.escapes.literal": {
+        "title": "Two characters, not a newline", "prompt": "Which spelling inside a literal prints two characters: a backslash followed by the letter n?",
+        "choices": {r"\n": r"\n", r"\\n": r"\\n", r"/n": r"/n"},
+        "hints": ["First produce an ordinary backslash.", "Doubling the backslash removes its escape role for the following n."],
+        "explanation": "In \\\\n, the first two backslashes produce one backslash, followed by the printed n.",
+    },
+    "cpp.escapes.label": {
+        "title": "A label without magic", "prompt": 'Print two lines: "Sample" (including quotation marks), then // checked. Do not use tabs.',
+        "hints": ["The first line has two escaped quotation marks.", "Follow it with \\n and keep // inside the literal."],
+        "explanation": "A string can contain characters that look like C++ syntax. Inside the literal, they are data.",
+    },
+    "cpp.board": {
+        "title": "Mini-project: status board", "summary": "Assemble and check a complete text message.",
+        "theory": "This mini-project combines the program structure, exact output and special characters. Write down the required result first, then identify the line breaks, quotation marks and backslashes. Write the program and compare it with the reference solution. There is no input: the board is static for now.\n\nBefore marking the task complete yourself, check every line: letter case, spaces and punctuation. If you have an external C++ compiler, you can check your code there; codelib does not execute user programs. Editing a draft does not erase an earlier completion mark: the status means that you completed the task previously, not that the current source has been checked again.",
+        "microscope": "Program output and a source file are different representations. Compare the result with the requirements, not the appearance of your code with the reference: different programs can print the same text. Comparing source text is therefore not a correct way to judge solutions.",
+        "recap": "Requirements first, then code, then compare the result. Do not call a program automatically checked when you have only read the reference solution.",
+    },
+    "cpp.board.panel": {
+        "title": "Station panel", "prompt": 'Create a board with three lines: == STATUS ==, Unit: "Orion", Ready. The second line includes quotation marks.',
+        "hints": ["Mark the two line boundaries first.", "The quotation marks around Orion need escaping."],
+        "explanation": "One literal and several output statements are equally valid approaches when they produce the same required result.",
+    },
+    "cpp.board.spacing": {
+        "title": "Space inspection", "prompt": "Predict the program's exact output. Preserve spaces and line breaks.",
+        "hints": ["There are no spaces inside the first pair of brackets.", "On the second line, B has a space on each side."],
+        "explanation": "The << chain does not insert spaces by itself.",
+    },
+    "cpp.board.card": {
+        "title": "Expedition card", "prompt": 'Print four lines: Mission 1, Crew: 2, Path: C:\\Orbit, "Launch". For now, you may write the digits directly inside the text.',
+        "hints": ["Do not confuse the path with an escape sequence.", 'Combine \\\\ for the path, \\n for lines and \\" for quotation marks.'],
+        "explanation": "The digits inside quotation marks are text here; there is no arithmetic yet.",
+    },
+    "cpp.board.review": {
+        "title": "How should solutions be compared?", "prompt": "The reference uses one std::cout statement, while you use three. The output is identical. Is that necessarily an error?",
+        "choices": {"Да, число инструкций должно совпадать": "Yes, the number of statements must match", "Нет, важен требуемый результат, если условие не ограничивает способ": "No, the required result matters unless the task restricts the method", "Да, три инструкции всегда медленнее в три раза": "Yes, three statements are always three times slower"},
+        "hints": ["The task does not restrict the number of statements.", "More than one implementation can be correct."],
+        "explanation": "Comparing source text would reject valid alternatives. Check behavior and the task's constraints instead.",
+    },
+    "cpp.board.repair": {
+        "title": "The board's final check", "prompt": "A friend mixed up the lines. Restore the protocol: OPEN first, then one blank line, then CLOSE.",
+        "hints": ["There must be a separate empty line between the text lines.", "Two consecutive line breaks produce one blank line."],
+        "explanation": "The first line break ends OPEN; the second ends the empty line.",
+    },
+})
+
+SKILLS = {"main": "main", "cout": "cout", "компиляция": "compilation", "последовательность": "sequence", "переносы": "line breaks", "escape": "escape sequences", "комментарии": "comments", "точный вывод": "exact output", "самопроверка": "self-review"}

@@ -182,38 +182,3 @@ struct OnboardingView: View {
             .overlay { RoundedRectangle(cornerRadius: 14).stroke(.gray.opacity(0.4)) }
     }
 }
-
-private struct WelcomeCodeView: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var index = 0
-    @State private var visible = ""
-    @State private var skipped = false
-    private let greetings = [("C++", "std::cout << \"Hello, World!\";"), ("Python", "print(\"Hello, World!\")"), ("JavaScript", "console.log(\"Hello, World!\");"), ("Swift", "print(\"Hello, World!\")"), ("Java", "System.out.println(\"Hello, World!\");")]
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(greetings[index].0).font(.headline)
-            Text(reduceMotion || skipped ? greetings[index].1 : visible)
-                .font(.system(.title3, design: .monospaced)).foregroundStyle(.green)
-                .frame(height: 60, alignment: .leading).accessibilityLabel("Пример строки вывода на \(greetings[index].0)")
-            Text("Примеры строк вывода, не запуск программ и не отдельные курсы.")
-                .font(.caption).foregroundStyle(.secondary)
-            if !skipped && !reduceMotion { Button("Пропустить анимацию") { skipped = true } }
-        }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18))
-            .task(id: skipped || reduceMotion) {
-                guard !skipped, !reduceMotion else { return }
-                do {
-                    for next in greetings.indices {
-                        index = next
-                        visible = ""
-                        for character in greetings[next].1 {
-                            try Task.checkCancellation()
-                            visible.append(character)
-                            try await Task.sleep(for: .milliseconds(35))
-                        }
-                        try await Task.sleep(for: .seconds(1))
-                    }
-                } catch { /* Navigation or Skip cancels the decorative animation. */ }
-            }
-    }
-}

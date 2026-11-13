@@ -50,6 +50,24 @@ struct CourseTranslationTests {
         }
     }
 
+    @Test func firstTwoSectionsHaveNoUntranslatedPresentationFields() throws {
+        let data = try source()
+        let course = try JSONDecoder().decode(Course.self, from: data)
+        let ids = Set([course.id] + course.sections.filter { ["cpp.section.start", "cpp.section.data"].contains($0.id) }.flatMap { section in
+            [section.id] + section.lessons.map(\.id) + section.lessons.flatMap(\.exercises).map(\.id)
+        })
+        let expected = Set(CourseTranslation.sourceTexts(in: course).keys.filter { key in ids.contains { key.hasPrefix($0 + ".") } })
+        let translation = try draft()
+        #expect(Set(translation.texts.keys) == expected)
+        #expect(translation.texts.count == 380)
+        let preview = try translation.developerPreview(from: data)
+        #expect(preview.lessons.first(where: { $0.id == "cpp.tickets" })?.title == "Mini-project: ticket office")
+        for exercise in preview.sections.filter({ ["cpp.section.start", "cpp.section.data"].contains($0.id) }).flatMap(\.lessons).flatMap(\.exercises) where exercise.kind == .choice {
+            #expect(AnswerChecker.check(exercise.answer!, for: exercise) == true)
+            #expect(exercise.choices.allSatisfy { exercise.choiceLabels?[$0] != nil })
+        }
+    }
+
     @Test func progressAndChoiceCheckingSurviveDisplayLanguageChanges() throws {
         let source = try source()
         let base = try JSONDecoder().decode(Course.self, from: source)

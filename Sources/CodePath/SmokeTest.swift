@@ -49,6 +49,13 @@ enum SmokeTest {
                 }
                 check(model.startupRoute == .onboarding, "Fresh installation starts with onboarding")
                 try snapshot(window: window, to: directory.appendingPathComponent("onboarding-welcome.png"))
+                let accessibleWelcome = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 560, height: 340), styleMask: [.titled], backing: .buffered, defer: false)
+                accessibleWelcome.contentView = NSHostingView(rootView: WelcomeCodePanel(reduceMotion: true, reduceTransparency: true))
+                accessibleWelcome.orderFront(nil)
+                await settle()
+                try snapshot(window: accessibleWelcome, to: directory.appendingPathComponent("welcome-reduced-motion-transparency.png"))
+                check(accessibleWelcome.contentView != nil, "Static opaque welcome renders with reduced motion and transparency")
+                accessibleWelcome.orderOut(nil)
                 var setup = OnboardingState()
                 setup.step = .appearance
                 setup.draft = LocalProfile(nickname: "Ученик 🚀", avatar: .leaf)
