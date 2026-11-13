@@ -95,6 +95,11 @@ enum ErrorPresentation {
         case .translationCourseMismatch: "Перевод относится к другому курсу или уже локализованному содержимому"
         case .translationNotReady(let missing, let unknown): "Перевод не готов: отсутствует \(missing) полей, неизвестных полей \(unknown)"
         case .invalidTranslationFields: "В черновике перевода есть пустые или неизвестные поля"
+        case .resourceTranslationUnavailable(let resource, let locale): "Полный перевод ресурса \(resource) для \(locale) пока недоступен"
+        case .invalidResourceTranslationSource: "Перевод ресурса имеет неподдерживаемый формат или устарел"
+        case .resourceTranslationMismatch: "Перевод относится к другому типу ресурса"
+        case .resourceTranslationNotReady(let missing, let unknown): "Перевод ресурса не готов: отсутствует \(missing) полей, неизвестных полей \(unknown)"
+        case .resourceTranslationUnreviewed: "Перевод ресурса ещё не прошёл содержательную рецензию"
         case .invalid(let diagnostic): "\(diagnostic)"
         }
     }

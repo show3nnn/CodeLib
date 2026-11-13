@@ -14,6 +14,8 @@ struct ErrorPresentationTests {
             .invalidAchievements, .missingAchievementSection(id), .invalidAppVersion, .missingReleaseHistory,
             .invalidReleaseHistory, .invalidTranslationSource, .translationCourseMismatch,
             .translationNotReady(missing: 17, unknown: 2), .invalidTranslationFields,
+            .resourceTranslationUnavailable(resource: "catalog", locale: "en"), .invalidResourceTranslationSource,
+            .resourceTranslationMismatch, .resourceTranslationNotReady(missing: 2, unknown: 1), .resourceTranslationUnreviewed,
             .invalid("Техническое сообщение %@\nбез преобразования")
         ]
         for reason in reasons {

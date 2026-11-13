@@ -138,4 +138,9 @@ TEXTS = {
     "Файл данных повреждён или имеет неверную структуру.": "The data file is damaged or has an invalid structure.",
     "Файл прогресса повреждён или содержит недопустимые значения. Файл не изменён.": "The progress file is damaged or contains invalid values. The file has not been changed.",
     "Фотография не соответствует выбранному аватару.": "The photo does not match the selected avatar.",
+    "Перевод относится к другому типу ресурса": "The translation targets a different resource type",
+    "Перевод ресурса ещё не прошёл содержательную рецензию": "The resource translation has not passed a content review yet",
+    "Перевод ресурса имеет неподдерживаемый формат или устарел": "The resource translation format is unsupported or the translation is out of date",
+    "Перевод ресурса не готов: отсутствует %lld полей, неизвестных полей %lld": "Resource translation not ready: %lld missing fields, %lld unknown fields",
+    "Полный перевод ресурса %@ для %@ пока недоступен": "A complete translation of resource %@ for %@ is not available yet",
 }

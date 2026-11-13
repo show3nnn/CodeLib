@@ -1,8 +1,8 @@
 {
   "entries": {
     "%@": [
-      "Sources/CodePath/ErrorPresentation.swift:64",
-      "Sources/CodePath/ErrorPresentation.swift:98"
+      "Sources/CodePath/ErrorPresentation.swift:103",
+      "Sources/CodePath/ErrorPresentation.swift:64"
     ],
     "%@\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии.": [
       "Sources/CodePath/RootView.swift:15"
@@ -550,6 +550,18 @@
     "Перевод относится к другому курсу или уже локализованному содержимому": [
       "Sources/CodePath/ErrorPresentation.swift:95"
     ],
+    "Перевод относится к другому типу ресурса": [
+      "Sources/CodePath/ErrorPresentation.swift:100"
+    ],
+    "Перевод ресурса ещё не прошёл содержательную рецензию": [
+      "Sources/CodePath/ErrorPresentation.swift:102"
+    ],
+    "Перевод ресурса имеет неподдерживаемый формат или устарел": [
+      "Sources/CodePath/ErrorPresentation.swift:99"
+    ],
+    "Перевод ресурса не готов: отсутствует %lld полей, неизвестных полей %lld": [
+      "Sources/CodePath/ErrorPresentation.swift:101"
+    ],
     "Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.": [
       "Sources/CodePath/RootView.swift:18"
     ],
@@ -589,6 +601,9 @@
     ],
     "Полный перевод курса для %@ пока недоступен": [
       "Sources/CodePath/ErrorPresentation.swift:73"
+    ],
+    "Полный перевод ресурса %@ для %@ пока недоступен": [
+      "Sources/CodePath/ErrorPresentation.swift:98"
     ],
     "Получено · %@": [
       "Sources/CodePath/AchievementViews.swift:69"
@@ -890,7 +905,7 @@
     "Sources/CodePath/CodeEditor.swift": "0179bcd9048f6b7570dc586c107138ca704c7dcbb1684ff57dad4364bc13c775",
     "Sources/CodePath/CodePathApp.swift": "468e428b784b0a4717c47b4a05d9972bc8df0c561ddc2e42e2dcb5ce246b6476",
     "Sources/CodePath/DashboardViews.swift": "cbc9c1034d672d30759dea35c73d75e8b070a04d76a89ee1ea808d15350c3873",
-    "Sources/CodePath/ErrorPresentation.swift": "862bb389a30d2c8f612ec62cb2907a43d7af56ad969d51950264139ed329ed03",
+    "Sources/CodePath/ErrorPresentation.swift": "e4cf7c75d596cd96c7abdae5126693995a1868519c6ae85809717594fc8356da",
     "Sources/CodePath/LessonView.swift": "40c5f0cdf57d5afc60afd8aa629c75fbafe7678a4c380ab78f647d56aba8ccb8",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
     "Sources/CodePath/ProfileViews.swift": "1c21089b8abf84a04e9bffbe1db992525e09697300f474ea048e1436347dbbb5",

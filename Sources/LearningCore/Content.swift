@@ -170,6 +170,8 @@ public enum ContentError: LocalizedError, Equatable {
     case invalidProfileName, invalidAvatarPhoto, avatarMismatch, missingCatalog, invalidCatalog
     case invalidAchievements, missingAchievementSection(String), invalidAppVersion, missingReleaseHistory, invalidReleaseHistory
     case invalidTranslationSource, translationCourseMismatch, translationNotReady(missing: Int, unknown: Int), invalidTranslationFields
+    case resourceTranslationUnavailable(resource: String, locale: String), invalidResourceTranslationSource
+    case resourceTranslationMismatch, resourceTranslationNotReady(missing: Int, unknown: Int), resourceTranslationUnreviewed
     /// Opaque developer/legacy diagnostic; never infer a structured reason from its text.
     case invalid(String)
     public var errorDescription: String? {
@@ -200,6 +202,11 @@ public enum ContentError: LocalizedError, Equatable {
         case .translationCourseMismatch: "Перевод относится к другому курсу или уже локализованному содержимому"
         case .translationNotReady(let missing, let unknown): "Перевод не готов: отсутствует \(missing) полей, неизвестных полей \(unknown)"
         case .invalidTranslationFields: "В черновике перевода есть пустые или неизвестные поля"
+        case .resourceTranslationUnavailable(let resource, let locale): "Полный перевод ресурса \(resource) для \(locale) пока недоступен"
+        case .invalidResourceTranslationSource: "Перевод ресурса имеет неподдерживаемый формат или устарел"
+        case .resourceTranslationMismatch: "Перевод относится к другому типу ресурса"
+        case .resourceTranslationNotReady(let missing, let unknown): "Перевод ресурса не готов: отсутствует \(missing) полей, неизвестных полей \(unknown)"
+        case .resourceTranslationUnreviewed: "Перевод ресурса ещё не прошёл содержательную рецензию"
         case .invalid(let message): message
         }
     }

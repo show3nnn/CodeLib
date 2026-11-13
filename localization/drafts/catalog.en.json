@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "locale": "en",
+  "resource": "catalog",
+  "sourceSHA256": "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c",
+  "status": "draft",
+  "texts": {
+    "catalog.cpp-foundations.summary": "Practice, language understanding and console projects.",
+    "catalog.cpp-foundations.title": "C++ — from zero to a confident first year",
+    "catalog.java-future.summary": "A future course. Learning materials are not available yet.",
+    "catalog.java-future.title": "Java",
+    "catalog.javascript-future.summary": "A future course. Learning materials are not available yet.",
+    "catalog.javascript-future.title": "JavaScript",
+    "catalog.python-future.summary": "A future course. Learning materials are not available yet.",
+    "catalog.python-future.title": "Python",
+    "catalog.rust-future.summary": "A future course. Learning materials are not available yet.",
+    "catalog.rust-future.title": "Rust"
+  }
+}

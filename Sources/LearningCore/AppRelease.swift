@@ -77,11 +77,19 @@ public struct ReleaseHistory: Codable, Sendable {
     public let formatVersion: Int
     public let releases: [ReleaseNote]
 
-    public static func bundled() throws -> Self {
+    public static func bundled(locale: CourseLocale = .russian) throws -> Self {
         guard let url = Bundle.module.url(forResource: "releases", withExtension: "json") else {
             throw ContentError.missingReleaseHistory
         }
-        let history = try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
+        let data = try Data(contentsOf: url)
+        if locale != .russian {
+            guard let translationURL = Bundle.module.url(forResource: "releases.\(locale.rawValue)", withExtension: "json") else {
+                throw ContentError.resourceTranslationUnavailable(resource: "releases", locale: locale.rawValue)
+            }
+            let translation = try JSONDecoder().decode(ResourceTranslation.self, from: Data(contentsOf: translationURL))
+            return try translation.applyHistory(to: data)
+        }
+        let history = try JSONDecoder().decode(Self.self, from: data)
         try history.validate()
         return history
     }

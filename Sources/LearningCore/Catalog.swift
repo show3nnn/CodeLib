@@ -16,11 +16,19 @@ public struct CourseCatalog: Codable, Sendable {
     public let version: Int
     public let entries: [CourseListing]
 
-    public static func bundled(availableCourseIDs: Set<String>) throws -> CourseCatalog {
+    public static func bundled(availableCourseIDs: Set<String>, locale: CourseLocale = .russian) throws -> CourseCatalog {
         guard let url = Bundle.module.url(forResource: "catalog", withExtension: "json") else {
             throw ContentError.missingCatalog
         }
-        let catalog = try JSONDecoder().decode(CourseCatalog.self, from: Data(contentsOf: url))
+        let data = try Data(contentsOf: url)
+        if locale != .russian {
+            guard let translationURL = Bundle.module.url(forResource: "catalog.\(locale.rawValue)", withExtension: "json") else {
+                throw ContentError.resourceTranslationUnavailable(resource: "catalog", locale: locale.rawValue)
+            }
+            let translation = try JSONDecoder().decode(ResourceTranslation.self, from: Data(contentsOf: translationURL))
+            return try translation.applyCatalog(to: data, availableCourseIDs: availableCourseIDs)
+        }
+        let catalog = try JSONDecoder().decode(CourseCatalog.self, from: data)
         try catalog.validate(availableCourseIDs: availableCourseIDs)
         return catalog
     }

@@ -2,7 +2,7 @@
   "sourceLanguage": "ru",
   "strings": {
     "%@": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:64; Sources/CodePath/ErrorPresentation.swift:98",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:103; Sources/CodePath/ErrorPresentation.swift:64",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3169,6 +3169,78 @@
         }
       }
     },
+    "Перевод относится к другому типу ресурса": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:100",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The translation targets a different resource type"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод относится к другому типу ресурса"
+          }
+        }
+      }
+    },
+    "Перевод ресурса ещё не прошёл содержательную рецензию": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:102",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The resource translation has not passed a content review yet"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод ресурса ещё не прошёл содержательную рецензию"
+          }
+        }
+      }
+    },
+    "Перевод ресурса имеет неподдерживаемый формат или устарел": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:99",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The resource translation format is unsupported or the translation is out of date"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод ресурса имеет неподдерживаемый формат или устарел"
+          }
+        }
+      }
+    },
+    "Перевод ресурса не готов: отсутствует %lld полей, неизвестных полей %lld": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:101",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resource translation not ready: %lld missing fields, %lld unknown fields"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перевод ресурса не готов: отсутствует %lld полей, неизвестных полей %lld"
+          }
+        }
+      }
+    },
     "Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.": {
       "comment": "Sources/CodePath/RootView.swift:18",
       "extractionState": "manual",
@@ -3399,6 +3471,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Полный перевод курса для %@ пока недоступен"
+          }
+        }
+      }
+    },
+    "Полный перевод ресурса %@ для %@ пока недоступен": {
+      "comment": "Sources/CodePath/ErrorPresentation.swift:98",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A complete translation of resource %@ for %@ is not available yet"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Полный перевод ресурса %@ для %@ пока недоступен"
           }
         }
       }
