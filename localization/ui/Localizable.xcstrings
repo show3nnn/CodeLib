@@ -38,7 +38,7 @@
       }
     },
     "%lld / %lld": {
-      "comment": "Sources/CodePath/AchievementViews.swift:50; Sources/CodePath/WelcomeCodeView.swift:77",
+      "comment": "Sources/CodePath/AchievementViews.swift:75; Sources/CodePath/WelcomeCodeView.swift:77",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -361,6 +361,24 @@
         }
       }
     },
+    "Алгоритмы": {
+      "comment": "Sources/CodePath/AchievementViews.swift:11",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algorithms"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Алгоритмы"
+          }
+        }
+      }
+    },
     "В работе": {
       "comment": "Sources/CodePath/DashboardViews.swift:124",
       "extractionState": "manual",
@@ -560,7 +578,7 @@
       }
     },
     "Все категории": {
-      "comment": "Sources/CodePath/AchievementViews.swift:31",
+      "comment": "Sources/CodePath/AchievementViews.swift:45",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -578,7 +596,7 @@
       }
     },
     "Все награды": {
-      "comment": "Sources/CodePath/AchievementViews.swift:121",
+      "comment": "Sources/CodePath/AchievementViews.swift:152",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -812,7 +830,7 @@
       }
     },
     "Закрыть": {
-      "comment": "Sources/CodePath/AchievementViews.swift:68; Sources/CodePath/ReleaseViews.swift:69",
+      "comment": "Sources/CodePath/AchievementViews.swift:99; Sources/CodePath/ReleaseViews.swift:69",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -830,7 +848,7 @@
       }
     },
     "Закрыть уведомление": {
-      "comment": "Sources/CodePath/AchievementViews.swift:92",
+      "comment": "Sources/CodePath/AchievementViews.swift:123",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1045,6 +1063,24 @@
         }
       }
     },
+    "Исследование": {
+      "comment": "Sources/CodePath/AchievementViews.swift:13",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exploration"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Исследование"
+          }
+        }
+      }
+    },
     "История недоступна": {
       "comment": "Sources/CodePath/ReleaseViews.swift:57",
       "extractionState": "manual",
@@ -1190,7 +1226,7 @@
       }
     },
     "Категория": {
-      "comment": "Sources/CodePath/AchievementViews.swift:30",
+      "comment": "Sources/CodePath/AchievementViews.swift:44",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1262,7 +1298,7 @@
       }
     },
     "Коллекция": {
-      "comment": "Sources/CodePath/AchievementViews.swift:23; Sources/CodePath/AchievementViews.swift:88",
+      "comment": "Sources/CodePath/AchievementViews.swift:119; Sources/CodePath/AchievementViews.swift:37",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1387,6 +1423,24 @@
         }
       }
     },
+    "Мастерство": {
+      "comment": "Sources/CodePath/AchievementViews.swift:14",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mastery"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мастерство"
+          }
+        }
+      }
+    },
     "Масштаб": {
       "comment": "Sources/CodePath/AvatarPhoto.swift:64",
       "extractionState": "manual",
@@ -1442,7 +1496,7 @@
       }
     },
     "Награда выдаётся один раз и сохраняется в локальном профиле.": {
-      "comment": "Sources/CodePath/AchievementViews.swift:67",
+      "comment": "Sources/CodePath/AchievementViews.swift:98",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1460,7 +1514,7 @@
       }
     },
     "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.": {
-      "comment": "Sources/CodePath/AchievementViews.swift:23",
+      "comment": "Sources/CodePath/AchievementViews.swift:37",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1491,6 +1545,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Назад"
+          }
+        }
+      }
+    },
+    "Найдётся во время практики.": {
+      "comment": "Sources/CodePath/AchievementViews.swift:61",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discover it through practice."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Найдётся во время практики."
           }
         }
       }
@@ -1527,6 +1599,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Написание кода проверяется самостоятельно. Встроенного исполнения кода и AI-помощника в этой версии нет."
+          }
+        }
+      }
+    },
+    "Настойчивость": {
+      "comment": "Sources/CodePath/AchievementViews.swift:12",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Persistence"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Настойчивость"
           }
         }
       }
@@ -1712,7 +1802,7 @@
       }
     },
     "Не только точки с запятой": {
-      "comment": "Sources/CodePath/AchievementViews.swift:23",
+      "comment": "Sources/CodePath/AchievementViews.swift:37",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1748,7 +1838,7 @@
       }
     },
     "Недавние достижения": {
-      "comment": "Sources/CodePath/AchievementViews.swift:119",
+      "comment": "Sources/CodePath/AchievementViews.swift:150",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1779,6 +1869,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Немного теории. Много собственного кода. Один понятный шаг за другим."
+          }
+        }
+      }
+    },
+    "Новое достижение · %@": {
+      "comment": "Sources/CodePath/AchievementViews.swift:115",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New achievement · %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Новое достижение · %@"
           }
         }
       }
@@ -1982,7 +2090,7 @@
       }
     },
     "Открыто %lld из %lld": {
-      "comment": "Sources/CodePath/AchievementViews.swift:26",
+      "comment": "Sources/CodePath/AchievementViews.swift:40",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2108,7 +2216,7 @@
       }
     },
     "Первая награда появится за настоящую практику. Коллекция уже доступна.": {
-      "comment": "Sources/CodePath/AchievementViews.swift:124",
+      "comment": "Sources/CodePath/AchievementViews.swift:155",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2121,6 +2229,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Первая награда появится за настоящую практику. Коллекция уже доступна."
+          }
+        }
+      }
+    },
+    "Первые шаги": {
+      "comment": "Sources/CodePath/AchievementViews.swift:9",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First steps"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Первые шаги"
           }
         }
       }
@@ -2359,6 +2485,24 @@
         }
       }
     },
+    "Получено · %@": {
+      "comment": "Sources/CodePath/AchievementViews.swift:69",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earned · %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Получено · %@"
+          }
+        }
+      }
+    },
     "Понятно": {
       "comment": "Sources/CodePath/RootView.swift:32",
       "extractionState": "manual",
@@ -2409,6 +2553,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Последнее занятие: %@"
+          }
+        }
+      }
+    },
+    "Практика": {
+      "comment": "Sources/CodePath/AchievementViews.swift:10",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Practice"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Практика"
           }
         }
       }
@@ -2935,6 +3097,24 @@
         }
       }
     },
+    "Секретное достижение": {
+      "comment": "Sources/CodePath/AchievementViews.swift:57; Sources/CodePath/AchievementViews.swift:91",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Secret achievement"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Секретное достижение"
+          }
+        }
+      }
+    },
     "Системная": {
       "comment": "Sources/CodePath/SettingsView.swift:33",
       "extractionState": "manual",
@@ -3421,6 +3601,24 @@
         }
       }
     },
+    "Условие откроется после получения награды.": {
+      "comment": "Sources/CodePath/AchievementViews.swift:95",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The requirement will be revealed once you earn this achievement."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Условие откроется после получения награды."
+          }
+        }
+      }
+    },
     "Учимся программировать на C++ — офлайн и в своём темпе. Код остаётся черновиком: встроенного запуска и AI нет.": {
       "comment": "Sources/CodePath/ProfileViews.swift:114",
       "extractionState": "manual",
@@ -3471,6 +3669,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Учиться удобно, когда текст читается легко."
+          }
+        }
+      }
+    },
+    "Учтено из прежнего прогресса · %@": {
+      "comment": "Sources/CodePath/AchievementViews.swift:67",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recognized from earlier progress · %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Учтено из прежнего прогресса · %@"
           }
         }
       }

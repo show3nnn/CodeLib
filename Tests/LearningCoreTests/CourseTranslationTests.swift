@@ -50,19 +50,20 @@ struct CourseTranslationTests {
         }
     }
 
-    @Test func firstElevenSectionsHaveNoUntranslatedPresentationFields() throws {
+    @Test func firstFourteenSectionsHaveNoUntranslatedPresentationFields() throws {
         let data = try source()
         let course = try JSONDecoder().decode(Course.self, from: data)
         let selectedIDs: Set<String> = ["cpp.section.start", "cpp.section.data", "cpp.section.expressions", "cpp.section.decisions", "cpp.section.loops",
                                         "cpp.section.functions", "cpp.section.text", "cpp.section.sequences",
-                                        "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership"]
+                                        "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership",
+                                        "cpp.section.objects", "cpp.section.microscope", "cpp.section.datafiles"]
         let ids = Set([course.id] + course.sections.filter { selectedIDs.contains($0.id) }.flatMap { section in
             [section.id] + section.lessons.map(\.id) + section.lessons.flatMap(\.exercises).map(\.id)
         })
         let expected = Set(CourseTranslation.sourceTexts(in: course).keys.filter { key in ids.contains { key.hasPrefix($0 + ".") } })
         let translation = try draft()
         #expect(Set(translation.texts.keys) == expected)
-        #expect(translation.texts.count == 1994)
+        #expect(translation.texts.count == 2437)
         let preview = try translation.developerPreview(from: data)
         #expect(preview.lessons.first(where: { $0.id == "cpp.tickets" })?.title == "Mini-project: ticket office")
         #expect(preview.lessons.first(where: { $0.id == "cpp.telemetry" })?.title == "Assessment: telemetry")
@@ -72,6 +73,9 @@ struct CourseTranslationTests {
         #expect(preview.lessons.first(where: { $0.id == "cpp.tournament" })?.title == "Mini-project: tournament")
         #expect(preview.lessons.first(where: { $0.id == "cpp.lifetime" })?.title == "Lifetime and bounds")
         #expect(preview.lessons.first(where: { $0.id == "cpp.raii" })?.title == "unique_ptr and automatic release")
+        #expect(preview.lessons.first(where: { $0.id == "cpp.encapsulation" })?.title == "Mini-project: a store of records")
+        #expect(preview.lessons.first(where: { $0.id == "cpp.undefined" })?.title == "Undefined behavior")
+        #expect(preview.lessons.first(where: { $0.id == "cpp.files" })?.title == "File streams")
         for exercise in preview.sections.filter({ selectedIDs.contains($0.id) }).flatMap(\.lessons).flatMap(\.exercises) where exercise.kind == .choice {
             #expect(AnswerChecker.check(exercise.answer!, for: exercise) == true)
             #expect(exercise.choices.allSatisfy { exercise.choiceLabels?[$0] != nil })
@@ -111,9 +115,10 @@ struct CourseTranslationTests {
         let base = try JSONDecoder().decode(Course.self, from: data)
         let preview = try draft().developerPreview(from: data)
         let sectionIDs: Set<String> = ["cpp.section.functions", "cpp.section.text", "cpp.section.sequences",
-                                       "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership"]
+                                       "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership",
+                                       "cpp.section.objects", "cpp.section.microscope", "cpp.section.datafiles"]
         let choices = base.sections.filter { sectionIDs.contains($0.id) }.flatMap(\.lessons).flatMap(\.exercises).filter { $0.kind == .choice }
-        #expect(choices.count == 21)
+        #expect(choices.count == 31)
         let folder = root.appendingPathComponent(".build/test-data/locale-roundtrip-\(UUID().uuidString)")
         let store = try ProgressStore(url: folder.appendingPathComponent("progress.json"))
         let profile = LocalProfile(nickname: "Пилот 👩🏽‍💻", avatar: .star)
@@ -152,7 +157,7 @@ struct CourseTranslationTests {
                 let savedAnswer = try #require(reopened.exercises[exercise.id]?.answer)
                 #expect(AnswerChecker.check(savedAnswer, for: projected) == true)
             }
-            #expect(reopened.completedCount(in: course) == 22)
+            #expect(reopened.completedCount(in: course) == 32)
             #expect(reopened.lastExerciseID.flatMap { id in course.exercises.first { $0.id == id } }?.id == "cpp.inventory.compress")
         }
         #expect(reopened.profile == profile)

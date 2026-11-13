@@ -4,6 +4,12 @@ import Testing
 @testable import CodePathApp
 
 @MainActor struct GreetingStyleTests {
+    @Test func categoryResourcesKeepCanonicalCasesAndRussianFallbacks() {
+        let labels = AchievementCategory.allCases.map { String(localized: $0.localizedTitle) }
+        #expect(labels == AchievementCategory.allCases.map(\.title))
+        #expect(Set(labels).count == AchievementCategory.allCases.count)
+    }
+
     @Test func headersAndMetricsKeepLocalizableResourcesAndLiteralUserData() {
         let nickname = "Пилот %@ 👩🏽‍💻"
         let header = PageHeader(eyebrow: "Ваша лаборатория кода", title: "С возвращением, \(nickname)!",

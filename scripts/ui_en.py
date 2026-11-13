@@ -93,4 +93,10 @@ TEXTS = {
     "впереди": "still ahead", "достижений": "achievements", "доступных разделов": "sections available",
     "заданий завершено": "tasks complete", "отмечено вами": "marked by you", "проверено автоматически": "automatically checked",
     "уроков завершено": "lessons complete",
+    "Алгоритмы": "Algorithms", "Исследование": "Exploration", "Мастерство": "Mastery",
+    "Настойчивость": "Persistence", "Первые шаги": "First steps", "Практика": "Practice",
+    "Найдётся во время практики.": "Discover it through practice.", "Новое достижение · %@": "New achievement · %@",
+    "Получено · %@": "Earned · %@", "Секретное достижение": "Secret achievement",
+    "Условие откроется после получения награды.": "The requirement will be revealed once you earn this achievement.",
+    "Учтено из прежнего прогресса · %@": "Recognized from earlier progress · %@",
 }

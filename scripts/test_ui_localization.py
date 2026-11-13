@@ -13,13 +13,16 @@ class UICatalogTests(unittest.TestCase):
         self.assertEqual(manifest["sourceFiles"], source_files(root))
         value = catalog(manifest, ui_en.TEXTS)
         self.assertEqual(value["sourceLanguage"], "ru")
-        self.assertEqual(len(ui_en.TEXTS), 209)
+        self.assertEqual(len(ui_en.TEXTS), 221)
         self.assertEqual(set(value["strings"]), set(ui_en.TEXTS))
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in ui_en.TEXTS.values()))
         self.assertTrue(all(not location.startswith("/") for locations in manifest["entries"].values() for location in locations))
         # These formerly dynamic String parameters must stay visible to Apple's extraction.
         for key in ["С возвращением, %@!", "Ваша лаборатория кода", "уроков завершено",
-                    "проверено автоматически", "Не только точки с запятой", "Первый урок"]:
+                    "проверено автоматически", "Не только точки с запятой", "Первый урок",
+                    "Секретное достижение", "Условие откроется после получения награды.",
+                    "Новое достижение · %@", "Получено · %@", "Учтено из прежнего прогресса · %@",
+                    "Алгоритмы", "Исследование", "Мастерство", "Настойчивость", "Первые шаги", "Практика"]:
             self.assertIn(key, manifest["entries"])
 
     def test_unknown_empty_and_changed_placeholders_are_rejected(self):

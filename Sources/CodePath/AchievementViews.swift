@@ -2,6 +2,20 @@ import AppKit
 import LearningCore
 import SwiftUI
 
+// UI resources stay in the presentation layer; LearningCore has no SwiftUI dependency.
+extension AchievementCategory {
+    var localizedTitle: LocalizedStringResource {
+        switch self {
+        case .firstSteps: "Первые шаги"
+        case .practice: "Практика"
+        case .algorithms: "Алгоритмы"
+        case .persistence: "Настойчивость"
+        case .exploration: "Исследование"
+        case .mastery: "Мастерство"
+        }
+    }
+}
+
 @MainActor
 enum AchievementAudio {
     private static var active: NSSound?
@@ -29,7 +43,7 @@ struct AchievementCollectionView: View {
                 }
                 Picker("Категория", selection: $category) {
                     Text("Все категории").tag(AchievementCategory?.none)
-                    ForEach(AchievementCategory.allCases, id: \.self) { Text($0.title).tag(Optional($0)) }
+                    ForEach(AchievementCategory.allCases, id: \.self) { Text($0.localizedTitle).tag(Optional($0)) }
                 }.frame(maxWidth: 320)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 16)], spacing: 16) {
                     ForEach(AchievementCatalog.all.filter { category == nil || $0.category == category }) { item in
@@ -39,11 +53,22 @@ struct AchievementCollectionView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 Image(systemName: hidden ? "questionmark.diamond" : item.symbol)
                                     .font(.title).foregroundStyle(earned == nil ? Color.secondary : .green)
-                                Text(hidden ? "Секретное достижение" : item.title()).font(.headline)
-                                Text(hidden ? "Найдётся во время практики." : item.detail()).font(.callout).foregroundStyle(.secondary)
+                                Group {
+                                    if hidden { Text("Секретное достижение") }
+                                    else { Text(verbatim: item.title()) }
+                                }.font(.headline)
+                                Group {
+                                    if hidden { Text("Найдётся во время практики.") }
+                                    else { Text(verbatim: item.detail()) }
+                                }.font(.callout).foregroundStyle(.secondary)
                                 if let earned {
-                                    Text((earned.historical ? "Учтено из прежнего прогресса · " : "Получено · ") + earned.recognizedAt.formatted(date: .abbreviated, time: .omitted))
-                                        .font(.caption).foregroundStyle(.secondary)
+                                    Group {
+                                        if earned.historical {
+                                            Text("Учтено из прежнего прогресса · \(earned.recognizedAt.formatted(date: .abbreviated, time: .omitted))")
+                                        } else {
+                                            Text("Получено · \(earned.recognizedAt.formatted(date: .abbreviated, time: .omitted))")
+                                        }
+                                    }.font(.caption).foregroundStyle(.secondary)
                                 } else if !hidden, let course = model.course {
                                     let value = min(item.target, AchievementEngine.value(for: item, document: model.document, course: course))
                                     ProgressView(value: Double(value), total: Double(item.target))
@@ -62,8 +87,14 @@ struct AchievementCollectionView: View {
                 let hidden = item.secret && model.document.achievements?.awards[item.id] == nil
                 VStack(spacing: 18) {
                     Image(systemName: hidden ? "questionmark.diamond" : item.symbol).font(.largeTitle).foregroundStyle(.green)
-                    Text(hidden ? "Секретное достижение" : item.title()).font(.title2.bold())
-                    Text(hidden ? "Условие откроется после получения награды." : item.detail()).multilineTextAlignment(.center)
+                    Group {
+                        if hidden { Text("Секретное достижение") }
+                        else { Text(verbatim: item.title()) }
+                    }.font(.title2.bold())
+                    Group {
+                        if hidden { Text("Условие откроется после получения награды.") }
+                        else { Text(verbatim: item.detail()) }
+                    }.multilineTextAlignment(.center)
                     Text("Награда выдаётся один раз и сохраняется в локальном профиле.").font(.caption).foregroundStyle(.secondary)
                     Button("Закрыть") { selected = nil }
                 }.padding(32).frame(width: 420)
@@ -81,7 +112,7 @@ struct AchievementBanner: View {
                 HStack(spacing: 14) {
                     Image(systemName: award.symbol).font(.title2).foregroundStyle(.green).accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Новое достижение · " + award.title()).font(.headline)
+                        Text("Новое достижение · \(award.title())").font(.headline)
                         Text(award.detail()).font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
