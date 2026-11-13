@@ -38,52 +38,33 @@ struct ProfileFields: View {
     @State private var selectedImage: NSImage?
     @State private var imageError: AppFailure?
     var body: some View {
-        VStack(alignment: .leading, spacing: 22) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 18) {
                 ProfileAvatar(profile: profile, size: 80)
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("НИКНЕЙМ").font(.system(size: 10, weight: .bold)).tracking(1.4).foregroundStyle(.secondary)
-                        Spacer()
-                        Text("\(profile.nickname.count)/30").font(.caption.monospacedDigit()).foregroundStyle(.secondary)
-                    }
+                VStack(alignment: .leading) {
                     TextField("Как к вам обращаться?", text: $profile.nickname)
-                        .textFieldStyle(.roundedBorder).controlSize(.large).accessibilityIdentifier("profile-nickname")
-                    Text("Имя только на вашем Mac. От 1 до 30 символов.")
+                        .textFieldStyle(.roundedBorder).accessibilityIdentifier("profile-nickname")
+                    Text("1–30 символов, включая Unicode. Это имя только на вашем Mac.")
                         .font(.caption).foregroundStyle(.secondary)
                 }
             }
             Text("Аватар").font(.headline)
-            HStack(spacing: 10) {
+            HStack {
                 ForEach(LocalProfile.Avatar.allCases.filter { $0 != .photo }, id: \.self) { avatar in
                     Button {
                         profile.avatar = avatar
                         profile.photo = nil
                     } label: {
-                        Image(systemName: avatar.symbol).font(.system(size: 21, weight: .medium))
-                            .frame(width: 52, height: 52)
-                            .foregroundStyle(profile.avatar == avatar ? Color.green : .secondary)
-                            .background(profile.avatar == avatar ? Color.green.opacity(0.1) : Color.primary.opacity(0.04),
-                                        in: RoundedRectangle(cornerRadius: 15))
-                            .contentShape(RoundedRectangle(cornerRadius: 15))
+                        Image(systemName: avatar.symbol).frame(width: 30, height: 30)
                     }
-                    .buttonStyle(.plain)
                     .help(Text(avatar.localizedTitle))
                     .accessibilityLabel(Text(avatar.localizedTitle))
-                    .accessibilityAddTraits(profile.avatar == avatar ? .isSelected : [])
-                    .overlay { if profile.avatar == avatar { RoundedRectangle(cornerRadius: 15).strokeBorder(.green, lineWidth: 1.5) } }
+                    .overlay { if profile.avatar == avatar { RoundedRectangle(cornerRadius: 6).stroke(.green, lineWidth: 2) } }
                 }
-                Spacer(minLength: 0)
-            }
-            HStack {
-                Button("Загрузить фото…", systemImage: "photo.badge.plus") { choosePhoto() }
-                    .buttonStyle(.bordered).controlSize(.large)
-                if profile.avatar == .photo {
-                    Button("Убрать фото") { profile.photo = nil; profile.avatar = .initial }.buttonStyle(.borderless)
-                }
+                Button("Загрузить фото…") { choosePhoto() }
             }
             if let imageError { FailureText(failure: imageError, fallback: "Не удалось подготовить аватар.").foregroundStyle(.red).font(.caption) }
-            Text("Фото хранится вместе с прогрессом и входит в экспорт. Ничего не загружается в сеть.")
+            Text("Один локальный профиль, без регистрации и проверки имени в интернете. Фото хранится внутри локального файла прогресса и его экспорта.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .sheet(isPresented: Binding(get: { selectedImage != nil }, set: { if !$0 { selectedImage = nil } })) {
@@ -113,23 +94,10 @@ struct EditProfileView: View {
     @State private var failed = false
     @Environment(\.dismiss) private var dismiss
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("ВАШ ПРОФИЛЬ").font(.system(size: 10, weight: .bold)).tracking(1.6).foregroundStyle(.green)
-                Text("Сделайте его своим.").font(.system(size: 28, weight: .bold)).tracking(-0.7)
-                Text("Имя и аватар появятся на главной и в навигации.").foregroundStyle(.secondary)
-            }.padding(24)
-            Divider()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Card { ProfileFields(profile: $profile) }
-                    if failed {
-                        FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить профиль.")
-                            .foregroundStyle(.red).textSelection(.enabled)
-                    }
-                }.padding(24)
-            }
-            Divider()
+        VStack(alignment: .leading, spacing: 22) {
+            Text("Локальный профиль").font(.title.bold())
+            ProfileFields(profile: $profile)
+            if failed { FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить профиль.").foregroundStyle(.red) }
             HStack {
                 Button("Отмена") { dismiss() }
                 Spacer()
@@ -137,8 +105,8 @@ struct EditProfileView: View {
                     profile.nickname = LocalProfile.normalizedName(profile.nickname)
                     if model.saveProfile(profile) { dismiss() } else { failed = true }
                 }.buttonStyle(.borderedProminent)
-            }.controlSize(.large).padding(20)
-        }.frame(width: 600, height: 590).background(WorkspaceBackdrop())
+            }
+        }.padding(28).frame(width: 560)
     }
 }
 
