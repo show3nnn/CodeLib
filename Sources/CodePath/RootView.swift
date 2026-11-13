@@ -8,12 +8,16 @@ struct RootView: View {
     var body: some View {
         Group {
             if let error = model.contentError {
-                ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error.resource()))
+                VStack {
+                    ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error.resource()))
+                    FailureDiagnostics(failure: error)
+                }.padding()
             } else if let error = model.storageError {
                 VStack(spacing: 20) {
                     ContentUnavailableView("Прогресс не открыт", systemImage: "externaldrive.badge.exclamationmark",
                                            description: Text("\(String(localized: error.resource()))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
                     Text(model.dataURL.path).font(.caption).textSelection(.enabled)
+                    FailureDiagnostics(failure: error)
                     Button("Восстановить резервную копию") { model.restoreBackup() }
                     Text("Перед восстановлением исходный файл будет сохранён отдельно. Если резервной копии нет, операция ничего не изменит.")
                         .font(.caption).foregroundStyle(.secondary).frame(maxWidth: 520)
@@ -30,6 +34,9 @@ struct RootView: View {
         }
         .alert("codelib", isPresented: Binding(get: { model.message != nil }, set: { if !$0 { model.message = nil } })) {
             Button("Понятно") { model.message = nil }
+            if let message = model.message, message.diagnostics != nil {
+                Button("Скопировать диагностику") { message.copyDiagnostics() }
+            }
         } message: {
             if let message = model.message { Text(message.resource()) }
         }
@@ -77,6 +84,9 @@ struct RootView: View {
                         Spacer()
                         Button("Повторить") { model.flush() }
                         Button("Экспорт") { model.exportProgress() }
+                        if let error = model.saveError, error.diagnostics != nil {
+                            Button("Скопировать диагностику") { error.copyDiagnostics() }
+                        }
                     }.font(.caption).padding(10).background(.orange.opacity(0.15))
                 }
                 Group {
@@ -107,9 +117,9 @@ struct PageHeader: View {
     let subtitle: LocalizedStringResource
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(eyebrow).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
-            Text(title).font(.largeTitle.bold())
-            Text(subtitle).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Text(PresentationLocale.resource(eyebrow)).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
+            Text(PresentationLocale.resource(title)).font(.largeTitle.bold())
+            Text(PresentationLocale.resource(subtitle)).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }.frame(maxWidth: .infinity, alignment: .leading)
     }
 }

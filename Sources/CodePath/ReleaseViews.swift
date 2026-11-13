@@ -55,7 +55,8 @@ struct ReleaseHistoryView: View {
                         }
                     } else {
                         ContentUnavailableView("История недоступна", systemImage: "exclamationmark.triangle",
-                                               description: Text(model.releaseHistoryError.map { $0.resource() } ?? "Не удалось загрузить ресурс"))
+                                               description: Text(model.releaseHistoryError.map { $0.resource() } ?? PresentationLocale.resource("Не удалось загрузить ресурс")))
+                        if let failure = model.releaseHistoryError { FailureDiagnostics(failure: failure) }
                     }
                 }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
             }

@@ -25,7 +25,7 @@
 
 ## Native UI String Catalog
 
-`ui/Localizable.xcstrings` — настоящий Apple String Catalog **вне app bundle**, переведены **289 из 289 автоматически извлечённых ключей**. Авторские значения: `scripts/ui_en.py`. В 0.1.13 добавлены 5 ключей ошибок перевода ресурсов. `AppFailure` хранит причину и контекст, не готовый текст; `ErrorPresentation` использует типизированные core/фото-ошибки и native ресурсы. Вложенная причина форматируется тем же явным locale; неизвестный NSError остаётся непрозрачной диагностикой, его язык не объявляется управляемым приложением.
+`ui/Localizable.xcstrings` — настоящий Apple String Catalog **вне app bundle**, переведены **303 из 303 автоматически извлечённых ключей**. Авторские значения: `scripts/ui_en.py`. В 0.1.14 добавлены 14 ключей системных summary/диагностики/native quit alert. `AppFailure` хранит причину и контекст, не готовый текст; `ErrorPresentation` использует типизированные core/фото-ошибки и native ресурсы. Вложенная причина форматируется тем же явным locale. Cocoa/POSIX ошибки классифицируются только по domain/code; неизвестные получают нейтральный summary. Исходная системная диагностика доступна отдельно, её язык не объявляется управляемым приложением.
 
 PageHeader/Metric/категории/страницы/виды заданий/статусы/аватары тоже используют native ресурсы. UI-адаптеры не меняют core enum и сохраняемые значения. Регистр заголовков задаётся после локализации через Text.textCase; имя/ID/системная диагностика — параметры, не исходные ключи. Это не всё приложение: данные ресурсов, locale/plural, рецензия и внешняя приёмка ещё не готовы. При изменении UI число ключей изменится; проверка не разрешает оставлять новые ключи непереведёнными.
 
@@ -42,7 +42,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/generate_ui_localization.py --check
 
 ## Каталог и история обновлений
 
-`drafts/catalog.en.json` — **10/10 полей**, `drafts/releases.en.json` — **141/141 поле / 14 версий**. Это полные developer-only **draft**, не reviewed; они не включены в Resources/app. Авторские значения и два явно закреплённых source SHA256 находятся в `scripts/resources_en.py`.
+`drafts/catalog.en.json` — **10/10 полей**, `drafts/releases.en.json` — **151/151 поле / 15 версий**. Это полные developer-only **draft**, не reviewed; они не включены в Resources/app. Авторские значения и два явно закреплённых source SHA256 находятся в `scripts/resources_en.py`.
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/generate_resource_localization.py
@@ -56,3 +56,9 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/generate_resource_localization.py --ch
 Production apply требует полного набора полей, актуального source и reviewed; даже developer preview требует целиком переведённого ресурса, без смешанного fallback. Bundled English пока сообщает о недоступности. Тесты reviewed используют явно синтетические экземпляры, не повышают статус файлов.
 
 **При добавлении новой версии** сначала закончите реальные RU release notes, затем осмысленно обновите их перевод и source SHA256. Старые версии не переписывайте ради локализации; не подменяйте fingerprint автоматически для обхода проверки. Генератор проверяет все версии/feature IDs/элементы списков, защищённые поля и воспроизводимость; `--check` входит в verify.sh. `ResourceTranslationTests` подтверждает метаданные, перестановку списков и неизменность progress/lastViewedRelease/routing при проекции.
+
+## Политика локали (0.1.14)
+
+`PresentationLocale` — единая явная **ru**, пока не пользовательская настройка. Ею связаны сцены SwiftUI, передаваемые LocalizedStringResource, Gregorian-даты профиля/занятий/наград и percent. Часовой пояс остаётся местным; сохранённые Date и study-day keys не переформатируются. Исторические date-only ISO-строки release notes остаются каноническими. Native quit NSAlert форматируется через тот же resource helper; системные файловые панели не объявляются полностью управляемыми этой политикой.
+
+Primary сообщения системных ошибок не зависят от localizedDescription. Отдельные Cocoa/POSIX пары domain/code отображают permission/missing/space/read-only/existing-file, Cocoa cancellation — отмену, остальные — общий ответ. Исходный Error/underlyingError не заменяется; непрозрачные domain/code/description показываются как данные в «Технических сведениях» или копируются по запросу. Никакой отправки. Это не универсальный перевод macOS diagnostics и не доказательство English-приёмки; plural-варианты и полноценный выбор языка ещё впереди.

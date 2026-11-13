@@ -11,6 +11,7 @@ struct CodePathApp: App {
     var body: some Scene {
         Window("codelib", id: "main") {
             RootView(model: model)
+                .environment(\.locale, PresentationLocale.locale)
                 .tint(.green)
                 .preferredColorScheme(model.colorScheme)
                 .onAppear {
@@ -38,13 +39,13 @@ struct CodePathApp: App {
             }
         }
         Settings {
-            SettingsView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
+            SettingsView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
         }
         Window("О codelib", id: "about") {
-            AboutView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
+            AboutView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
         }.windowResizability(.contentSize)
         Window("История обновлений codelib", id: "release-history") {
-            ReleaseHistoryView(model: model).preferredColorScheme(model.colorScheme).tint(.green)
+            ReleaseHistoryView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
         }.defaultSize(width: 680, height: 720)
     }
 }
@@ -68,11 +69,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         model?.flush()
         guard model?.hasUnsavedChanges == true else { return .terminateNow }
-        let alert = NSAlert()
-        alert.messageText = "Изменения не сохранены"
-        alert.informativeText = "Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные."
-        alert.addButton(withTitle: "Остаться")
-        alert.addButton(withTitle: "Выйти без сохранения")
+        let alert = Self.unsavedChangesAlert()
         return alert.runModal() == .alertSecondButtonReturn ? .terminateNow : .terminateCancel
+    }
+
+    static func unsavedChangesAlert() -> NSAlert {
+        let alert = NSAlert()
+        alert.messageText = String(localized: PresentationLocale.resource("Изменения не сохранены"))
+        alert.informativeText = String(localized: PresentationLocale.resource("Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные."))
+        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Остаться")))
+        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Выйти без сохранения")))
+        return alert
     }
 }

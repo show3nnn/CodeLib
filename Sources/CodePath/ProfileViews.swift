@@ -5,13 +5,14 @@ import UniformTypeIdentifiers
 
 extension LocalProfile.Avatar {
     var localizedTitle: LocalizedStringResource {
-        switch self {
+        let result: LocalizedStringResource = switch self {
         case .initial: "Инициал имени"
         case .leaf: "Лист"
         case .mountain: "Горы"
         case .star: "Звезда"
         case .photo: "Фотография"
         }
+        return PresentationLocale.resource(result)
     }
 }
 
@@ -62,7 +63,7 @@ struct ProfileFields: View {
                 }
                 Button("Загрузить фото…") { choosePhoto() }
             }
-            if let imageError { Text(imageError.resource()).foregroundStyle(.red).font(.caption) }
+            if let imageError { FailureText(failure: imageError, fallback: "Не удалось подготовить аватар.").foregroundStyle(.red).font(.caption) }
             Text("Один локальный профиль, без регистрации и проверки имени в интернете. Фото хранится внутри локального файла прогресса и его экспорта.")
                 .font(.caption).foregroundStyle(.secondary)
         }
@@ -184,9 +185,9 @@ struct OnboardingView: View {
         } else { failed = true }
     }
 
-    private func themePreview(_ title: String, dark: Bool) -> some View {
+    private func themePreview(_ title: LocalizedStringResource, dark: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title).font(.headline)
+            Text(PresentationLocale.resource(title)).font(.headline)
             Text("C++ · первый шаг").font(.caption)
             Text("std::cout << 42;").font(.system(.body, design: .monospaced)).foregroundStyle(dark ? .mint : .green)
         }.padding(20).frame(maxWidth: .infinity, alignment: .leading)

@@ -1,6 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-RELEASES_SHA256 = "53e7b791fda8e38edee9b91d414e503a491d9f99a6605cc6e1ed4d97c4167678"
+# Reviewed source change: only the real 0.1.14 note was added and translated below.
+RELEASES_SHA256 = "c0f9266af7d90e9ad77857f0224b0c1bdf340f4d38739e5b7597a08a90f9ceab"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -18,6 +19,17 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.1.14": note("One language for dates and errors",
+        "Continuing CHANGELOG1 §10: the interface uses an explicit Russian locale, and system errors get understandable messages instead of text in an arbitrary macOS language. English is not enabled yet.",
+        {
+            "presentation-locale": ("The app locale, not the system locale", "The main window, Settings, history and About use one Russian locale. Profile, study and award dates, percentages and dynamic text resources are formatted explicitly; the time zone remains local."),
+            "system-errors": ("A reason based on the error code", "Permission failures, missing files, insufficient space, read-only volumes and existing files have separate messages based on Cocoa and POSIX domain/code pairs. Unknown errors use a neutral message without text matching."),
+            "diagnostics": ("Diagnostics on demand", "The original error is retained. Technical text with its domain and code is available separately and copied only at the user's request; it may remain in the system language and is never sent anywhere."),
+        },
+        {
+            "Подписи предпросмотра темы и предупреждение при выходе подготовлены как штатные локализуемые ресурсы Apple.": "Theme preview labels and the quit warning are prepared as native Apple localizable resources.",
+            "Форматирование не меняет сохранённые даты, ключи учебных дней, прогресс или настройки.": "Formatting does not change persisted dates, study-day keys, progress or preferences.",
+        }),
     "0.1.13": note("Catalog and history without losing identity",
         "Continuing CHANGELOG1 §10: text-only English drafts now cover the catalog and the entire release history. The app remains in Russian; the translations are not reviewed and are not bundled.",
         {

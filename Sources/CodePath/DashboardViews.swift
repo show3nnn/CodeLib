@@ -26,7 +26,7 @@ struct HomeView: View {
                             }
                             ProgressView(value: model.fraction)
                             HStack {
-                                Text(model.fraction, format: .percent.precision(.fractionLength(0))).monospacedDigit()
+                                Text(model.fraction, format: PresentationLocale.percent).monospacedDigit()
                                 Text("доступного курса пройдено").foregroundStyle(.secondary)
                                 Spacer()
                                 Button("Продолжить обучение", systemImage: "arrow.right") { model.resume() }
@@ -65,7 +65,7 @@ struct Metric: View {
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: icon).foregroundStyle(.secondary)
                 Text(value).font(.largeTitle.weight(.semibold)).monospacedDigit()
-                Text(label).font(.caption).foregroundStyle(.secondary)
+                Text(PresentationLocale.resource(label)).font(.caption).foregroundStyle(.secondary)
             }
         }
     }
@@ -188,7 +188,7 @@ struct ProgressViewScreen: View {
                                 Text("Первый урок")
                             }
                             if let date = model.document.lastStudyDate {
-                                Text("Последнее занятие: \(date.formatted(date: .abbreviated, time: .shortened))").foregroundStyle(.secondary)
+                                Text("Последнее занятие: \(PresentationLocale.date(date, includeTime: true))").foregroundStyle(.secondary)
                             }
                             Button("Вернуться к заданию") { model.resume() }.buttonStyle(.borderedProminent)
                         }

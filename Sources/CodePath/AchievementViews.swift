@@ -5,7 +5,7 @@ import SwiftUI
 // UI resources stay in the presentation layer; LearningCore has no SwiftUI dependency.
 extension AchievementCategory {
     var localizedTitle: LocalizedStringResource {
-        switch self {
+        let result: LocalizedStringResource = switch self {
         case .firstSteps: "Первые шаги"
         case .practice: "Практика"
         case .algorithms: "Алгоритмы"
@@ -13,6 +13,7 @@ extension AchievementCategory {
         case .exploration: "Исследование"
         case .mastery: "Мастерство"
         }
+        return PresentationLocale.resource(result)
     }
 }
 
@@ -64,9 +65,9 @@ struct AchievementCollectionView: View {
                                 if let earned {
                                     Group {
                                         if earned.historical {
-                                            Text("Учтено из прежнего прогресса · \(earned.recognizedAt.formatted(date: .abbreviated, time: .omitted))")
+                                            Text("Учтено из прежнего прогресса · \(PresentationLocale.date(earned.recognizedAt))")
                                         } else {
-                                            Text("Получено · \(earned.recognizedAt.formatted(date: .abbreviated, time: .omitted))")
+                                            Text("Получено · \(PresentationLocale.date(earned.recognizedAt))")
                                         }
                                     }.font(.caption).foregroundStyle(.secondary)
                                 } else if !hidden, let course = model.course {

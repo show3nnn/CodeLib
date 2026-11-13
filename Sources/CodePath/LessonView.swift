@@ -5,23 +5,25 @@ import LearningCore
 // Display labels are UI resources, never persisted grading values or core dependencies.
 extension ExerciseKind {
     var localizedTitle: LocalizedStringResource {
-        switch self {
+        let result: LocalizedStringResource = switch self {
         case .code: "Написать код"
         case .choice: "Выбрать объяснение"
         case .output: "Предсказать вывод"
         case .number: "Числовой ответ"
         case .text: "Короткий ответ"
         }
+        return PresentationLocale.resource(result)
     }
 }
 
 extension Completion {
     var localizedTitle: LocalizedStringResource {
-        switch self {
+        let result: LocalizedStringResource = switch self {
         case .unfinished: "Не завершено"
         case .automatic: "Проверено автоматически"
         case .selfReviewed: "Отмечено вами"
         }
+        return PresentationLocale.resource(result)
     }
 }
 

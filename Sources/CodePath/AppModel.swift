@@ -82,7 +82,7 @@ final class AppModel {
         case home, catalog, syllabus, lesson, progress, achievements
         var id: String { rawValue }
         var title: LocalizedStringResource {
-            switch self {
+            let result: LocalizedStringResource = switch self {
             case .home: "Мои курсы"
             case .catalog: "Каталог"
             case .syllabus: "Программа C++"
@@ -90,6 +90,7 @@ final class AppModel {
             case .progress: "Мой прогресс"
             case .achievements: "Достижения"
             }
+            return PresentationLocale.resource(result)
         }
         var icon: String {
             switch self {

@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 import LearningCore
 import Testing
 @testable import CodePathApp
@@ -56,8 +57,39 @@ struct ErrorPresentationTests {
             #expect(String(localized: AppFailure(reason).resource()) == expected)
         }
         let opaque = NSError(domain: "custom.domain", code: 7, userInfo: [NSLocalizedDescriptionKey: "Не удалось экспортировать: %@ 🚀"])
-        #expect(String(localized: AppFailure(opaque).resource()) == opaque.localizedDescription)
+        #expect(String(localized: AppFailure(opaque).resource()).contains("системной ошибки"))
+        #expect(AppFailure(opaque).diagnostics == "custom.domain (7)\nНе удалось экспортировать: %@ 🚀")
         #expect((AppFailure(opaque).cause as NSError).domain == "custom.domain")
+    }
+
+    @Test func systemSummariesUseDomainAndCodeNotDescriptionsOrUnderlyingText() {
+        let cases: [(Int, Int32, String)] = [
+            (NSFileReadNoPermissionError, EACCES, "Нет доступа к файлу."),
+            (NSFileReadNoSuchFileError, ENOENT, "Файл или папка не найдены."),
+            (NSFileWriteOutOfSpaceError, ENOSPC, "На диске недостаточно места."),
+            (NSFileWriteVolumeReadOnlyError, EROFS, "Расположение доступно только для чтения."),
+            (NSFileWriteFileExistsError, EEXIST, "Файл уже существует.")
+        ]
+        for (cocoa, posix, expected) in cases {
+            for (domain, code) in [(NSCocoaErrorDomain, cocoa), (NSPOSIXErrorDomain, Int(posix))] {
+                for description in ["Permission denied", "Нет места", "任意の診断 %@ 👩🏽‍💻"] {
+                    let original = NSError(domain: domain, code: code, userInfo: [NSLocalizedDescriptionKey: description])
+                    let failure = AppFailure(original, operation: .export)
+                    #expect(String(localized: failure.resource()).contains(expected))
+                    #expect(!String(localized: failure.resource()).contains(description))
+                    #expect(failure.diagnostics == "\(domain) (\(code))\n\(description)")
+                    #expect(failure.cause as NSError === original)
+                }
+            }
+        }
+        let underlying = NSError(domain: NSPOSIXErrorDomain, code: Int(ENOSPC))
+        let misleading = NSError(domain: "unknown.domain", code: NSFileReadNoPermissionError,
+                                 userInfo: [NSLocalizedDescriptionKey: "Permission denied", NSUnderlyingErrorKey: underlying])
+        #expect(String(localized: AppFailure(misleading).resource()).contains("системной ошибки"))
+        #expect((AppFailure(misleading).cause as NSError).userInfo[NSUnderlyingErrorKey] as? NSError === underlying)
+        #expect(String(localized: AppFailure(NSError(domain: NSCocoaErrorDomain, code: NSUserCancelledError)).resource()) == "Действие отменено.")
+        #expect(AppFailure(StorageError.invalidData).diagnostics == nil)
+        #expect(AppFailure(ContentError.invalid("legacy diagnostic")).diagnostics == nil)
     }
 
     private struct Key: CodingKey {

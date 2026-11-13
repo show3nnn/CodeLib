@@ -1,4 +1,6 @@
 import Foundation
+import AppKit
+import Darwin
 import LearningCore
 import SwiftUI
 
@@ -16,7 +18,7 @@ struct AppFailure {
     }
 
     // Russian is intentional until the complete app has a real language preference.
-    func resource(locale: Locale = Locale(identifier: "ru")) -> LocalizedStringResource {
+    func resource(locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
         let underlying = ErrorPresentation.resource(for: cause, locale: locale)
         guard let operation else { return underlying }
         // Resolve the nested resource using the same explicit locale, not the system language.
@@ -31,6 +33,19 @@ struct AppFailure {
         result.locale = locale
         return result
     }
+
+    /// Opaque diagnostics are available on demand, never used as a localization key.
+    var diagnostics: String? {
+        guard ErrorPresentation.isSystemError(cause) else { return nil }
+        let error = cause as NSError
+        return "\(error.domain) (\(error.code))\n\(error.localizedDescription)"
+    }
+
+    @MainActor func copyDiagnostics() {
+        guard let diagnostics else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(diagnostics, forType: .string)
+    }
 }
 
 enum PhotoFailure: Error {
@@ -38,7 +53,7 @@ enum PhotoFailure: Error {
 }
 
 enum ErrorPresentation {
-    static func resource(for error: any Error, locale: Locale = Locale(identifier: "ru")) -> LocalizedStringResource {
+    static func resource(for error: any Error, locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
         var result: LocalizedStringResource
         switch error {
         case let reason as ContentError:
@@ -60,11 +75,39 @@ enum ErrorPresentation {
         case is DecodingError:
             result = "Файл данных повреждён или имеет неверную структуру."
         default:
-            // System/third-party diagnostics are opaque data, never keys or pattern-matched text.
-            result = "\(error.localizedDescription)"
+            result = system(error as NSError)
         }
         result.locale = locale
         return result
+    }
+
+    static func isSystemError(_ error: any Error) -> Bool {
+        !(error is ContentError || error is StorageError || error is PhotoFailure || error is DecodingError)
+    }
+
+    private static func system(_ error: NSError) -> LocalizedStringResource {
+        // Match documented domain/code pairs only. A misleading description or underlying
+        // error must not change the primary reason; the original Error remains in AppFailure.
+        switch (error.domain, error.code) {
+        case (NSCocoaErrorDomain, NSFileReadNoPermissionError),
+             (NSCocoaErrorDomain, NSFileWriteNoPermissionError),
+             (NSPOSIXErrorDomain, Int(EACCES)), (NSPOSIXErrorDomain, Int(EPERM)):
+            "Нет доступа к файлу. Проверьте разрешения или выберите другое расположение."
+        case (NSCocoaErrorDomain, NSFileNoSuchFileError),
+             (NSCocoaErrorDomain, NSFileReadNoSuchFileError),
+             (NSPOSIXErrorDomain, Int(ENOENT)):
+            "Файл или папка не найдены. Проверьте выбранное расположение."
+        case (NSCocoaErrorDomain, NSFileWriteOutOfSpaceError), (NSPOSIXErrorDomain, Int(ENOSPC)):
+            "На диске недостаточно места. Освободите место и повторите действие."
+        case (NSCocoaErrorDomain, NSFileWriteVolumeReadOnlyError), (NSPOSIXErrorDomain, Int(EROFS)):
+            "Расположение доступно только для чтения. Выберите другое место для записи."
+        case (NSCocoaErrorDomain, NSFileWriteFileExistsError), (NSPOSIXErrorDomain, Int(EEXIST)):
+            "Файл уже существует. Выберите другое имя или расположение."
+        case (NSCocoaErrorDomain, NSUserCancelledError):
+            "Действие отменено."
+        default:
+            "Не удалось выполнить действие из-за системной ошибки. Повторите попытку; технические сведения доступны в диагностике."
+        }
     }
 
     private static func content(_ reason: ContentError) -> LocalizedStringResource {
@@ -109,7 +152,28 @@ struct FailureText: View {
     let failure: AppFailure?
     let fallback: LocalizedStringResource
     var body: some View {
-        if let failure { Text(failure.resource()) }
-        else { Text(fallback) }
+        if let failure {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(failure.resource()).fixedSize(horizontal: false, vertical: true)
+                FailureDiagnostics(failure: failure)
+            }
+        } else { Text(PresentationLocale.resource(fallback)) }
+    }
+}
+
+struct FailureDiagnostics: View {
+    let failure: AppFailure
+    var body: some View {
+        if let diagnostics = failure.diagnostics {
+            DisclosureGroup("Технические сведения") {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Диагностика системы может быть на другом языке. Данные никуда не отправляются.")
+                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                    Text(verbatim: diagnostics).font(.caption.monospaced()).textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Button("Скопировать диагностику") { failure.copyDiagnostics() }
+                }
+            }
+        }
     }
 }

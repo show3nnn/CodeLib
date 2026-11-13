@@ -18,7 +18,7 @@ struct SettingsView: View {
                         Button("Изменить…") { editProfile = true }
                     }
                     if let date = profile.createdAt {
-                        Text("Профиль создан: \(date.formatted(date: .abbreviated, time: .omitted))").font(.caption).foregroundStyle(.secondary)
+                        Text("Профиль создан: \(PresentationLocale.date(date))").font(.caption).foregroundStyle(.secondary)
                     } else {
                         Text("Дата создания прежнего профиля не была сохранена.").font(.caption).foregroundStyle(.secondary)
                     }
