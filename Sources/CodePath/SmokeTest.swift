@@ -175,6 +175,14 @@ enum SmokeTest {
                 let restored = try ProgressStore(url: model.dataURL)
                 check(restored.document.exercises[first.id]?.draft == first.starter + "// smoke: черновик 🚀\n", "A new store reads actual editor text")
                 check(restored.document.lastExerciseID == first.id, "Last exercise is durable")
+                model.openLesson(course.lessons[0])
+                check(model.exercise?.id == first.id, "Opening a lesson keeps its saved exercise")
+                check(course.studySections(query: "вместимость рейса", status: .all, progress: model.document).flatMap(\.lessons).contains(where: { $0.id == "cpp.binarylab" }), "Syllabus search finds exercise titles")
+                model.page = .syllabus
+                await settle()
+                try snapshot(window: window, to: directory.appendingPathComponent("syllabus-filters-dark.png"))
+                check(window.contentView != nil, "Syllabus with status filters renders")
+                model.open(first)
             }
         } catch { failures.append(error.localizedDescription) }
         let report: [String: Any] = ["checks": checks, "failures": failures, "reopen": reopen]

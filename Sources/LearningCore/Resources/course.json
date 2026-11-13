@@ -9405,6 +9405,950 @@
           ]
         }
       ]
+    },
+    {
+      "id": "cpp.section.algorithm-lab",
+      "title": "17. Алгоритмический практикум",
+      "summary": "Суммы отрезков, окна, два указателя и поиск по ответу — с явными инвариантами.",
+      "lessons": [
+        {
+          "id": "cpp.prefixlab",
+          "title": "Префиксные суммы и полуинтервалы",
+          "summary": "От одного прохода к множеству запросов без повторного суммирования.",
+          "minutes": 30,
+          "prerequisites": [
+            "cpp.capstone"
+          ],
+          "theory": "Полуинтервал [l,r) включает l, но не r; его длина r-l. Для массива из n элементов разрешены границы 0≤l≤r≤n, в том числе пустой отрезок. Заведём p размера n+1: p[0]=0, p[i+1]=p[i]+a[i]. Тогда p[i] хранит сумму первых i элементов, а сумма [l,r) равна p[r]-p[l]. Построение занимает O(n), каждый запрос O(1), память O(n). Отрицательные элементы не мешают формуле.\n\nТем же способом считают признаки: вместо a[i] прибавляют 1 для чётного элемента, иначе 0. Для равновесного индекса i сумма слева p[i], справа p[n]-p[i+1]; сам элемент не относится ни к одной стороне.\n\nОбратная идея — разностный массив: прибавление d к [l,r) отмечаем diff[l]+=d, diff[r]-=d, затем накапливаем поправку слева направо. Для отметки в r=n нужен размер n+1. Здесь массивы до 1000 элементов, значения и поправки до миллиона, не более 1000 обновлений. long long с запасом покрывает эти суммы; произвольное знаковое переполнение всё равно недопустимо.",
+          "example": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{4, -2, 7};\n    std::vector<long long> p(a.size() + 1, 0);\n    for (std::size_t i = 0; i < a.size(); ++i) { p[i + 1] = p[i] + a[i]; }\n    std::cout << p[3] - p[1];\n}\n",
+          "microscope": "Равенство p[i+1]-p[i]=a[i] объясняет корректность вычитания: общий префикс сокращается. Это не предположение о положительности. Для разностей инвариант другой: накопленная поправка в позиции i равна сумме всех обновлений, покрывающих i. Пустой [l,l) ничего не меняет.",
+          "recap": "Запишите смысл p[i], проверьте пустой отрезок, весь массив и последнюю границу n. Не смешивайте включённую правую границу с исключённой.",
+          "exercises": [
+            {
+              "id": "cpp.prefixlab.build",
+              "title": "Журнал накоплений",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Выведите n+1 чисел p[0]…p[n] через один пробел, без обязательного переноса в конце.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::vector<long long> p(n + 1, 0);\n    for (int i = 0; i < n; ++i) { p[i + 1] = p[i] + a[i]; }\n    for (int i = 0; i <= n; ++i) { if (i) { std::cout << \" \"; } std::cout << p[i]; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Нулевой префикс нужно вывести тоже.",
+                "Элемент a[i] добавляет новое значение p[i+1], не меняет p[i]."
+              ],
+              "explanation": "Добавочная нулевая ячейка устраняет особый случай запроса от начала массива.",
+              "difficulty": 2,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": [
+                {
+                  "input": "3 4 -2 7",
+                  "output": "0 4 2 9"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "3 -2 -3 5",
+                  "output": "0 -2 -5 0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.prefixlab.queries",
+              "title": "Суммы по запросам",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Затем q (0…1000) и q пар l r (0≤l≤r≤n). Для каждого [l,r) выведите сумму на отдельной строке.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::vector<long long> p(n + 1, 0);\n    for (int i = 0; i < n; ++i) { p[i + 1] = p[i] + a[i]; }\n    int q = 0; std::cin >> q;\n    while (q--) { int l = 0, r = 0; std::cin >> l >> r; std::cout << p[r] - p[l] << \"\\n\"; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Постройте префиксы один раз перед всеми запросами.",
+                "Правый индекс уже указывает в p: используйте p[r]-p[l]."
+              ],
+              "explanation": "Пустые отрезки автоматически дают ноль; общая сложность O(n+q).",
+              "difficulty": 2,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": [
+                {
+                  "input": "3 4 -2 7 4 0 3 1 3 2 2 0 0",
+                  "output": "9\n5\n0\n0\n"
+                },
+                {
+                  "input": "0 1 0 0",
+                  "output": "0\n"
+                },
+                {
+                  "input": "1 -8 0",
+                  "output": ""
+                }
+              ]
+            },
+            {
+              "id": "cpp.prefixlab.even",
+              "title": "Чётные на отрезке",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Затем q (0…1000), q пар l r (0≤l≤r≤n). Выведите число чётных элементов каждого [l,r), каждый ответ с новой строки. Ноль и отрицательные чётные учитываются.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::vector<int> p(n + 1, 0);\n    for (int i = 0; i < n; ++i) { p[i + 1] = p[i] + (a[i] % 2 == 0); }\n    int q = 0; std::cin >> q;\n    while (q--) { int l = 0, r = 0; std::cin >> l >> r; std::cout << p[r] - p[l] << \"\\n\"; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Суммируйте индикаторы, а не сами значения.",
+                "Проверка x%2==0 верна и для отрицательных чётных."
+              ],
+              "explanation": "Префикс может хранить количество любого независимо проверяемого признака.",
+              "difficulty": 2,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": [
+                {
+                  "input": "4 -2 -3 0 7 3 0 4 1 3 3 3",
+                  "output": "2\n1\n0\n"
+                },
+                {
+                  "input": "0 1 0 0",
+                  "output": "0\n"
+                },
+                {
+                  "input": "2 2 4 1 0 2",
+                  "output": "2\n"
+                }
+              ]
+            },
+            {
+              "id": "cpp.prefixlab.balance",
+              "title": "Равновесная позиция",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Выведите наименьший индекс i, где суммы строго слева и строго справа одинаковы; если такого индекса нет, -1. Для пустого массива ответ -1.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::vector<long long> p(n + 1, 0);\n    for (int i = 0; i < n; ++i) { p[i + 1] = p[i] + a[i]; }\n    int answer = -1;\n    for (int i = 0; i < n; ++i) { if (p[i] == p[n] - p[i + 1]) { answer = i; break; } }\n    std::cout << answer;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Сам a[i] не входит ни в левую, ни в правую сумму.",
+                "Правая сумма начинается после i: p[n]-p[i+1]."
+              ],
+              "explanation": "Один элемент всегда равновесен: с обеих сторон пустые суммы. Первый найденный индекс минимален.",
+              "difficulty": 2,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": [
+                {
+                  "input": "3 2 9 2",
+                  "output": "1"
+                },
+                {
+                  "input": "1 -7",
+                  "output": "0"
+                },
+                {
+                  "input": "0",
+                  "output": "-1"
+                },
+                {
+                  "input": "3 1 2 3",
+                  "output": "-1"
+                },
+                {
+                  "input": "3 0 0 0",
+                  "output": "0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.prefixlab.updates",
+              "title": "Пакет поправок",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Затем q (0…1000) и q троек l r d: прибавьте d (−1000000…1000000) к каждому элементу [l,r), где 0≤l≤r≤n. Выведите итоговый массив через пробел; для n=0 выведите Empty.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::vector<long long> diff(n + 1, 0);\n    int q = 0; std::cin >> q;\n    while (q--) { int l = 0, r = 0; long long d = 0; std::cin >> l >> r >> d; diff[l] += d; diff[r] -= d; }\n    long long add = 0;\n    for (int i = 0; i < n; ++i) { add += diff[i]; a[i] += add; }\n    if (n == 0) { std::cout << \"Empty\"; }\n    for (int i = 0; i < n; ++i) { if (i) { std::cout << \" \"; } std::cout << a[i]; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Отмечайте начало и конец поправки, а не обновляйте каждый элемент вложенным циклом.",
+                "diff имеет n+1 ячейку; накопите add и прибавьте к исходному a[i]."
+              ],
+              "explanation": "Перекрывающиеся поправки складываются, пустое обновление само себя отменяет.",
+              "difficulty": 3,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": [
+                {
+                  "input": "4 1 2 3 4 3 0 2 5 1 4 -2 2 2 99",
+                  "output": "6 5 1 2"
+                },
+                {
+                  "input": "0 1 0 0 10",
+                  "output": "Empty"
+                },
+                {
+                  "input": "2 0 0 2 0 2 3 0 2 -3",
+                  "output": "0 0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.prefixlab.meaning",
+              "title": "Что хранит префикс?",
+              "kind": "choice",
+              "prompt": "p[0]=0, p[i+1]=p[i]+a[i]. Как вычислить сумму полуинтервала [l,r)?",
+              "starter": "",
+              "solution": "",
+              "answer": "p[r]-p[l]",
+              "choices": [
+                "p[r]-p[l]",
+                "p[r]-p[l]+a[r]",
+                "p[r-1]-p[l] во всех случаях"
+              ],
+              "hints": [
+                "p[r] включает элементы с индексами меньше r.",
+                "Вычтите первые l элементов, не обращаясь к a[r]."
+              ],
+              "explanation": "Индекс r может быть равен n, а отрезок может быть пустым; формула p[r]-p[l] покрывает оба случая.",
+              "difficulty": 1,
+              "skills": [
+                "префиксные суммы",
+                "полуинтервалы",
+                "разностный массив"
+              ],
+              "testCases": []
+            }
+          ]
+        },
+        {
+          "id": "cpp.windowlab",
+          "title": "Скользящее окно",
+          "summary": "Поддерживайте состояние отрезка, а не считайте его заново.",
+          "minutes": 35,
+          "prerequisites": [
+            "cpp.prefixlab"
+          ],
+          "theory": "Для окна фиксированной длины k сначала суммируют первые k элементов. При сдвиге вправо добавляют новый a[right] и вычитают уходящий a[right-k]. Отрицательные значения допустимы: длина не зависит от суммы. Для максимума нельзя начинать best=0, если все суммы могут быть отрицательными: возьмите первое настоящее окно.\n\nПеременная длина требует дополнительных свойств. Для неотрицательных элементов расширение окна не уменьшает сумму, удаление слева не увеличивает. Если сумма больше limit, двигаем левую границу до допустимости. Для кратчайшего окна с суммой хотя бы target при достаточной сумме записываем длину и продолжаем сжимать. Оба указателя идут только вправо, поэтому работа O(n), а не O(n²).\n\nЧтобы посчитать все непустые отрезки с суммой ≤limit, после сжатия прибавляем right-left+1: все такие начала между left и right допустимы. Нули важны: у [0,0,0] при limit=0 есть шесть отрезков. Для задач переменной длины ниже вход неотрицательный; переносить метод на произвольные отрицательные числа нельзя.",
+          "example": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{2, 1, 4, 3};\n    int k = 2, sum = a[0] + a[1];\n    std::cout << sum;\n    for (int r = k; r < 4; ++r) { sum += a[r] - a[r - k]; std::cout << \" \" << sum; }\n}\n",
+          "microscope": "Общий вложенный while сам по себе не означает квадратичность: каждый элемент входит и выходит не более одного раза. Но линейность не доказывает корректность! Для [5,-4] и limit=1 раннее удаление 5 теряет допустимый отрезок длины 2; монотонность нарушена.",
+          "recap": "Разделяйте фиксированную и переменную длину. Проверяйте k=n, отсутствие полного окна, нули, невозможную цель и точное равенство границе.",
+          "exercises": [
+            {
+              "id": "cpp.windowlab.fixedmax",
+              "title": "Пиковая нагрузка",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Здесь n≥1. После массива дан k (1…n). Выведите максимальную сумму ровно k соседних элементов. Отрицательные значения допустимы.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int k = 0; std::cin >> k;\n    long long sum = 0; for (int i = 0; i < k; ++i) { sum += a[i]; }\n    long long best = sum;\n    for (int r = k; r < n; ++r) { sum += a[r] - a[r-k]; if (sum > best) { best = sum; } }\n    std::cout << best;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Первый кандидат — сумма первых k элементов.",
+                "При сдвиге прибавьте входящий и вычтите уходящий элемент."
+              ],
+              "explanation": "Инициализация реальным окном сохраняет правильный ответ на полностью отрицательном массиве.",
+              "difficulty": 2,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": [
+                {
+                  "input": "5 2 -1 5 -3 4 2",
+                  "output": "4"
+                },
+                {
+                  "input": "3 -5 -2 -8 2",
+                  "output": "-7"
+                },
+                {
+                  "input": "1 9 1",
+                  "output": "9"
+                },
+                {
+                  "input": "3 1 2 3 3",
+                  "output": "6"
+                }
+              ]
+            },
+            {
+              "id": "cpp.windowlab.fixedcount",
+              "title": "Число удачных смен",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). После массива даны k (1…1000) и threshold (−1000000000…1000000000). Посчитайте окна ровно k элементов с суммой ≥threshold. Если k>n, ответ 0.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int k = 0; long long threshold = 0; std::cin >> k >> threshold;\n    long long sum = 0; int count = 0;\n    for (int r = 0; r < n; ++r) { sum += a[r]; if (r >= k) { sum -= a[r-k]; } if (r+1 >= k && sum >= threshold) { ++count; } }\n    std::cout << count;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Не учитывайте окно, пока не набралось k элементов.",
+                "Условие r+1>=k отделяет подготовку от полных окон."
+              ],
+              "explanation": "Фиксированное окно работает со знаковыми элементами, потому что его границы задаются длиной.",
+              "difficulty": 2,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": [
+                {
+                  "input": "4 1 2 3 4 2 5",
+                  "output": "2"
+                },
+                {
+                  "input": "0 1 0",
+                  "output": "0"
+                },
+                {
+                  "input": "2 -2 -2 3 -100",
+                  "output": "0"
+                },
+                {
+                  "input": "3 0 0 0 1 0",
+                  "output": "3"
+                }
+              ]
+            },
+            {
+              "id": "cpp.windowlab.longest",
+              "title": "Самый длинный бюджет",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). В этой задаче элементы неотрицательны. После массива дан limit (0…1000000000). Выведите максимальную длину отрезка с суммой ≤limit; пустой отрезок допустим и имеет длину 0.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long limit = 0; std::cin >> limit;\n    long long sum = 0; int left = 0, best = 0;\n    for (int right = 0; right < n; ++right) { sum += a[right]; while (left <= right && sum > limit) { sum -= a[left++]; } int length = right-left+1; if (length > best) { best = length; } }\n    std::cout << best;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Сдвигайте left, пока сумма слишком велика.",
+                "После сжатия длина равна right-left+1, иногда нулю."
+              ],
+              "explanation": "Неотрицательность гарантирует, что отброшенное начало не станет лучше при последующем расширении.",
+              "difficulty": 2,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": [
+                {
+                  "input": "5 2 1 3 1 1 5",
+                  "output": "3"
+                },
+                {
+                  "input": "3 0 0 0 0",
+                  "output": "3"
+                },
+                {
+                  "input": "2 4 5 1",
+                  "output": "0"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.windowlab.shortest",
+              "title": "Минимальная дозагрузка",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Элементы неотрицательны. После массива дан target (1…1000000000). Найдите минимальную длину непустого отрезка с суммой ≥target; если такого нет, выведите 0.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long target = 0; std::cin >> target;\n    long long sum = 0; int left = 0, best = n+1;\n    for (int right = 0; right < n; ++right) { sum += a[right]; while (left <= right && sum >= target) { int length = right-left+1; if (length < best) { best = length; } sum -= a[left++]; } }\n    std::cout << (best == n+1 ? 0 : best);\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Когда сумма уже достаточна, пытайтесь сократить окно.",
+                "Записывайте длину до удаления очередного левого элемента."
+              ],
+              "explanation": "Цель строго положительна, поэтому пустое окно не засчитывается; ноль в ответе означает отсутствие решения.",
+              "difficulty": 2,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": [
+                {
+                  "input": "6 2 3 1 2 4 3 7",
+                  "output": "2"
+                },
+                {
+                  "input": "3 0 0 0 1",
+                  "output": "0"
+                },
+                {
+                  "input": "3 0 5 0 5",
+                  "output": "1"
+                },
+                {
+                  "input": "0 1",
+                  "output": "0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.windowlab.allcount",
+              "title": "Все допустимые отрезки",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Элементы неотрицательны. После массива дан limit (0…1000000000). Посчитайте все непустые отрезки с суммой ≤limit. Используйте long long для счётчика.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long limit = 0; std::cin >> limit;\n    long long sum = 0, count = 0; int left = 0;\n    for (int right = 0; right < n; ++right) { sum += a[right]; while (left <= right && sum > limit) { sum -= a[left++]; } count += right-left+1; }\n    std::cout << count;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Зафиксируйте правый конец после сжатия.",
+                "Подходящие начала — все индексы от left до right включительно."
+              ],
+              "explanation": "Каждый непустой отрезок учитывается ровно один раз по своему правому концу.",
+              "difficulty": 3,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": [
+                {
+                  "input": "3 0 0 0 0",
+                  "output": "6"
+                },
+                {
+                  "input": "3 1 2 3 3",
+                  "output": "4"
+                },
+                {
+                  "input": "0 4",
+                  "output": "0"
+                },
+                {
+                  "input": "2 8 9 1",
+                  "output": "0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.windowlab.negative",
+              "title": "Граница применимости окна",
+              "kind": "choice",
+              "prompt": "Алгоритм удаляет элементы слева, как только сумма превысила limit. Можно ли так искать самый длинный допустимый отрезок при произвольных отрицательных элементах?",
+              "starter": "",
+              "solution": "",
+              "answer": "Нет: будущий отрицательный элемент может сделать ранее отброшенный отрезок допустимым",
+              "choices": [
+                "Нет: будущий отрицательный элемент может сделать ранее отброшенный отрезок допустимым",
+                "Да: вложенный while всегда гарантирует корректность",
+                "Да, если использовать long long вместо int"
+              ],
+              "hints": [
+                "Рассмотрите [5,-4] и limit=1.",
+                "После удаления 5 алгоритм уже не восстановит начало отрезка длины 2."
+              ],
+              "explanation": "Тип числа влияет на диапазон, но не восстанавливает потерянное свойство монотонности.",
+              "difficulty": 1,
+              "skills": [
+                "скользящее окно",
+                "монотонность",
+                "амортизированная сложность"
+              ],
+              "testCases": []
+            }
+          ]
+        },
+        {
+          "id": "cpp.pointerslab",
+          "title": "Два указателя без потери кандидатов",
+          "summary": "Используйте порядок и инвариант для линейного прохода.",
+          "minutes": 35,
+          "prerequisites": [
+            "cpp.windowlab"
+          ],
+          "theory": "В отсортированном массиве ищем пару разных индексов с заданной суммой. Указатели left=0, right=n-1. Если сумма мала, left увеличиваем: с текущим левым элементом и любым меньшим правым сумма тоже слишком мала. Если велика, right уменьшаем по симметричной причине. Останавливаемся при left≥right: один элемент не образует пару с собой. Здесь «указатель» означает индекс, не сырой адрес C++.\n\nСлияние двух отсортированных массивов берёт меньший из текущих элементов, пока один массив не закончится; затем дописывается хвост другого. Для пересечения равные элементы попадают в результат, а повторы можно пропускать. Предусловие сортировки обязательно: произвольный вход разрушает доказательство.\n\nЕсли a[left]+a[right]≤limit, то подходят все пары текущего left с индексами от left+1 до right: их right-left. Это считает пары индексов, а не разные пары значений. Другая разновидность двух границ — окно без повторов: map хранит частоты, а левый край движется до исчезновения дубликата. Оно работает и с отрицательными значениями, потому что ограничение относится к повторению, не к сумме.",
+          "example": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{1, 3, 5, 8};\n    int left = 0, right = 3;\n    while (left < right) {\n        int sum = a[left] + a[right];\n        if (sum == 8) { std::cout << left << \" \" << right; break; }\n        if (sum < 8) { ++left; } else { --right; }\n    }\n}\n",
+          "microscope": "Два указателя — не универсальный рецепт. Нужно объяснить, почему шаг отбрасывает только невозможные кандидаты. Сортировка может менять исходные индексы; ниже требуют наличие, количество или значения, а не номера в первоначальном несортированном вводе.",
+          "recap": "Проверьте пустые массивы, единственный элемент, дубликаты, пары равных значений на разных позициях и хвост при слиянии.",
+          "exercises": [
+            {
+              "id": "cpp.pointerslab.pair",
+              "title": "Пара к заказу",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован неубывающе. После него дан target (−2000000…2000000). Выведите Yes, если существуют разные индексы с суммой target, иначе No.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long target = 0; std::cin >> target;\n    int left = 0, right = n-1; bool found = false;\n    while (left < right) { long long sum = a[left]+a[right]; if (sum == target) { found = true; break; } if (sum < target) { ++left; } else { --right; } }\n    std::cout << (found ? \"Yes\" : \"No\");\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Используйте left<right, не left<=right.",
+                "Малую сумму увеличивают сдвигом левой границы вправо."
+              ],
+              "explanation": "Два одинаковых значения допустимы, если находятся на разных позициях.",
+              "difficulty": 2,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "4 1 3 5 8 8",
+                  "output": "Yes"
+                },
+                {
+                  "input": "1 4 8",
+                  "output": "No"
+                },
+                {
+                  "input": "2 4 4 8",
+                  "output": "Yes"
+                },
+                {
+                  "input": "0 0",
+                  "output": "No"
+                },
+                {
+                  "input": "3 -5 -2 4 -7",
+                  "output": "Yes"
+                }
+              ]
+            },
+            {
+              "id": "cpp.pointerslab.intersection",
+              "title": "Общие коды без повторов",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем m (0…1000) и m отсортированных элементов того же диапазона. Выведите общие значения по возрастанию без повторов; если их нет, Empty.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int m = 0; std::cin >> m; std::vector<long long> b(m); for (auto& x : b) { std::cin >> x; }\n    std::vector<long long> result; int i = 0, j = 0;\n    while (i < n && j < m) { if (a[i] < b[j]) { ++i; } else if (b[j] < a[i]) { ++j; } else { if (result.empty() || result.back() != a[i]) { result.push_back(a[i]); } ++i; ++j; } }\n    if (result.empty()) { std::cout << \"Empty\"; }\n    for (std::size_t k = 0; k < result.size(); ++k) { if (k) { std::cout << \" \"; } std::cout << result[k]; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "При неравенстве двигайте указатель на меньший элемент.",
+                "Перед добавлением равного значения сравните его с последним уже выведенным."
+              ],
+              "explanation": "Одновременный проход находит общие значения за O(n+m), дубликаты результата удаляются явно.",
+              "difficulty": 2,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "5 1 1 2 4 4 4 1 1 3 4",
+                  "output": "1 4"
+                },
+                {
+                  "input": "0 2 1 2",
+                  "output": "Empty"
+                },
+                {
+                  "input": "2 -2 0 2 -2 0",
+                  "output": "-2 0"
+                },
+                {
+                  "input": "1 1 1 2",
+                  "output": "Empty"
+                }
+              ]
+            },
+            {
+              "id": "cpp.pointerslab.merge",
+              "title": "Слияние телеметрии",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем m (0…1000) и m отсортированных элементов того же диапазона. Объедините оба массива в отсортированную последовательность, сохранив все повторы. Пустой результат обозначьте Empty.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int m = 0; std::cin >> m; std::vector<long long> b(m); for (auto& x : b) { std::cin >> x; }\n    std::vector<long long> result; int i = 0, j = 0;\n    while (i < n && j < m) { if (a[i] <= b[j]) { result.push_back(a[i++]); } else { result.push_back(b[j++]); } }\n    while (i < n) { result.push_back(a[i++]); }\n    while (j < m) { result.push_back(b[j++]); }\n    if (result.empty()) { std::cout << \"Empty\"; }\n    for (std::size_t k = 0; k < result.size(); ++k) { if (k) { std::cout << \" \"; } std::cout << result[k]; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "После общего while одна последовательность может ещё содержать элементы.",
+                "Добавьте оба хвоста отдельными циклами."
+              ],
+              "explanation": "В отличие от пересечения, слияние сохраняет каждое вхождение из обоих входов.",
+              "difficulty": 2,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "3 1 3 3 4 0 3 7 8",
+                  "output": "0 1 3 3 3 7 8"
+                },
+                {
+                  "input": "0 0",
+                  "output": "Empty"
+                },
+                {
+                  "input": "0 2 -1 2",
+                  "output": "-1 2"
+                },
+                {
+                  "input": "2 4 9 0",
+                  "output": "4 9"
+                }
+              ]
+            },
+            {
+              "id": "cpp.pointerslab.paircount",
+              "title": "Сколько пар укладывается?",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем limit (−2000000…2000000). Посчитайте пары индексов i<j с a[i]+a[j]≤limit. Равные значения на разных позициях образуют разные пары.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long limit = 0; std::cin >> limit;\n    int left = 0, right = n-1; long long count = 0;\n    while (left < right) { if (a[left]+a[right] <= limit) { count += right-left; ++left; } else { --right; } }\n    std::cout << count;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Если пара с самым правым подходящая, подходят и все промежуточные правые индексы.",
+                "Добавьте right-left и лишь затем увеличьте left."
+              ],
+              "explanation": "Перебор группами не теряет кратность одинаковых значений.",
+              "difficulty": 3,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "4 1 2 3 4 5",
+                  "output": "4"
+                },
+                {
+                  "input": "4 2 2 2 2 4",
+                  "output": "6"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "3 -3 -2 5 -4",
+                  "output": "1"
+                }
+              ]
+            },
+            {
+              "id": "cpp.pointerslab.distinct",
+              "title": "Отрезок без повторов",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив не обязательно отсортирован. Выведите максимальную длину непрерывного отрезка, где все значения различны. Для пустого массива ответ 0.",
+              "starter": "#include <iostream>\n#include <vector>\n#include <map>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n#include <map>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    std::map<long long, int> count; int left = 0, best = 0;\n    for (int right = 0; right < n; ++right) { ++count[a[right]]; while (count[a[right]] > 1) { --count[a[left++]]; } int length = right-left+1; if (length > best) { best = length; } }\n    std::cout << best;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Перед расширением все старые значения в окне уже уникальны.",
+                "Нарушить уникальность мог только новый a[right]; уменьшайте его частоту удалениями слева."
+              ],
+              "explanation": "Границы сдвигаются O(n) раз, но операции std::map стоят O(log n): итог O(n log n), а не строго O(n).",
+              "difficulty": 3,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "6 1 2 1 3 2 4",
+                  "output": "4"
+                },
+                {
+                  "input": "3 7 7 7",
+                  "output": "1"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "4 -1 0 2 3",
+                  "output": "4"
+                }
+              ]
+            },
+            {
+              "id": "cpp.pointerslab.trace",
+              "title": "Протокол движения границ",
+              "kind": "output",
+              "prompt": "Предскажите точный вывод программы. Сохраните пробелы и переносы строк.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{1, 3, 5, 8};\n    int left = 0, right = 3, checks = 0;\n    while (left < right) {\n        ++checks;\n        int sum = a[left] + a[right];\n        if (sum == 8) { break; }\n        if (sum < 8) { ++left; } else { --right; }\n    }\n    std::cout << checks << \" \" << left << \" \" << right;\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{1, 3, 5, 8};\n    int left = 0, right = 3, checks = 0;\n    while (left < right) {\n        ++checks;\n        int sum = a[left] + a[right];\n        if (sum == 8) { break; }\n        if (sum < 8) { ++left; } else { --right; }\n    }\n    std::cout << checks << \" \" << left << \" \" << right;\n}\n",
+              "answer": "3 1 2",
+              "choices": [],
+              "hints": [
+                "В первой проверке сумма 9, во второй 6.",
+                "Третья проверка получает 3+5 и выходит до изменения границ."
+              ],
+              "explanation": "Проверяются пары (0,3), (0,2), (1,2); счётчик включает удачную проверку.",
+              "difficulty": 1,
+              "skills": [
+                "два указателя",
+                "отсортированные последовательности",
+                "инварианты"
+              ],
+              "testCases": [
+                {
+                  "input": "",
+                  "output": "3 1 2"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cpp.binarylab",
+          "title": "Бинарный поиск и поиск по ответу",
+          "summary": "Ищите границу монотонного условия, включая отсутствие решения.",
+          "minutes": 40,
+          "prerequisites": [
+            "cpp.pointerslab"
+          ],
+          "theory": "Для отсортированного массива ищем первый индекс со значением ≥x. Держим полуинтервал кандидатов [low,high), сначала [0,n). Пока low<high, mid=low+(high-low)/2. Если a[mid]<x, граница строго правее: low=mid+1; иначе high=mid. При завершении low — ответ, иногда n. Индекс n обозначает позицию вставки и не разрешает читать a[n]. Размер области строго уменьшается.\n\nstd::lower_bound даёт первый элемент ≥x, std::upper_bound — первый >x; оба требуют подходящего упорядочения диапазона. На vector число сравнений O(log n); расстояние между upper_bound и lower_bound равно числу x. Для отрезка значений [lo,hi] используйте upper_bound(hi)-lower_bound(lo), но сначала обработайте lo>hi.\n\nБинарный поиск применим и к ответу. Для перевозки положительных весов в исходном порядке за не более days дней проверка вместимости C жадно заполняет текущий день, начиная следующий при превышении C. Если перевозка возможна при C, возможна и при большей вместимости. Нижняя граница — максимальный вес, верхняя — сумма. Для пустого груза ответ 0. Сложность O(n log S), где S — сумма весов; нужна корректная проверка монотонного предиката, а не только знакомый цикл.",
+          "example": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> a{2, 4, 4, 9};\n    int low = 0, high = 4;\n    while (low < high) { int mid = low + (high-low)/2; if (a[mid] < 4) { low = mid+1; } else { high = mid; } }\n    std::cout << low;\n}\n",
+          "microscope": "Формула mid=low+(high-low)/2 избегает переполнения low+high при неотрицательных границах подходящего целого типа; она не обещает безопасности для любых произвольных знаковых границ. В поиске вместимости используем long long, а вход ограничен n≤1000 и весом≤1000000.",
+          "recap": "Проверьте пустой массив, все равные значения, ответ на первом элементе и после последнего. Для поиска по ответу отдельно докажите монотонность и правильность проверки.",
+          "exercises": [
+            {
+              "id": "cpp.binarylab.lower",
+              "title": "Первая подходящая отметка",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем x (−1000000…1000000). Реализуйте бинарный поиск вручную и выведите первый индекс с a[i]≥x или n, если такого нет.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long x = 0; std::cin >> x; int low = 0, high = n;\n    while (low < high) { int mid = low+(high-low)/2; if (a[mid] < x) { low = mid+1; } else { high = mid; } }\n    std::cout << low;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Начните с high=n, не обращаясь к a[high].",
+                "При равенстве ищите левее: high=mid."
+              ],
+              "explanation": "Индекс n корректен как ответ поиска, но не как индекс чтения элемента.",
+              "difficulty": 2,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": [
+                {
+                  "input": "4 2 4 4 9 4",
+                  "output": "1"
+                },
+                {
+                  "input": "0 5",
+                  "output": "0"
+                },
+                {
+                  "input": "2 1 2 3",
+                  "output": "2"
+                },
+                {
+                  "input": "3 5 5 5 0",
+                  "output": "0"
+                }
+              ]
+            },
+            {
+              "id": "cpp.binarylab.last",
+              "title": "Последняя допустимая отметка",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем x (−1000000…1000000). Найдите вручную последний индекс с a[i]≤x; если такого нет, -1.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long x = 0; std::cin >> x; int low = 0, high = n;\n    while (low < high) { int mid = low+(high-low)/2; if (a[mid] <= x) { low = mid+1; } else { high = mid; } }\n    std::cout << low-1;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Сначала найдите первый элемент строго больше x.",
+                "Предыдущая позиция — ответ; low=0 даёт -1."
+              ],
+              "explanation": "Строгость сравнения определяет, по какую сторону останутся дубликаты.",
+              "difficulty": 2,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": [
+                {
+                  "input": "4 2 4 4 9 4",
+                  "output": "2"
+                },
+                {
+                  "input": "0 5",
+                  "output": "-1"
+                },
+                {
+                  "input": "2 3 4 1",
+                  "output": "-1"
+                },
+                {
+                  "input": "2 3 4 9",
+                  "output": "1"
+                }
+              ]
+            },
+            {
+              "id": "cpp.binarylab.frequency",
+              "title": "Частота по двум границам",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем x (−1000000…1000000). Через std::lower_bound и std::upper_bound выведите количество вхождений x.",
+              "starter": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    long long x = 0; std::cin >> x;\n    auto first = std::lower_bound(a.begin(), a.end(), x);\n    auto last = std::upper_bound(a.begin(), a.end(), x);\n    std::cout << last-first;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Один поиск возвращает начало блока одинаковых значений, другой — его конец.",
+                "На vector итераторы можно вычитать; разность равна длине полуинтервала."
+              ],
+              "explanation": "Если x отсутствует, обе позиции совпадают и результат равен нулю.",
+              "difficulty": 2,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": [
+                {
+                  "input": "5 1 4 4 4 9 4",
+                  "output": "3"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "2 1 3 2",
+                  "output": "0"
+                },
+                {
+                  "input": "3 7 7 7 7",
+                  "output": "3"
+                }
+              ]
+            },
+            {
+              "id": "cpp.binarylab.valueinterval",
+              "title": "Запросы диапазонов значений",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Массив отсортирован. Затем q (0…1000) пар lo hi (оба в пределах ±1000000). Для каждой пары выведите число элементов со значением lo≤a[i]≤hi на отдельной строке; при lo>hi ответ 0.",
+              "starter": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int q = 0; std::cin >> q;\n    while (q--) { long long lo = 0, hi = 0; std::cin >> lo >> hi; if (lo > hi) { std::cout << \"0\\n\"; continue; } auto first = std::lower_bound(a.begin(), a.end(), lo); auto last = std::upper_bound(a.begin(), a.end(), hi); std::cout << last-first << \"\\n\"; }\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Правая граница значений включена, поэтому нужен upper_bound(hi).",
+                "Обработайте перевёрнутые границы до вычитания итераторов."
+              ],
+              "explanation": "Это диапазон значений, не индексов: ответ находится двумя поисками за O(log n) на запрос.",
+              "difficulty": 3,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": [
+                {
+                  "input": "5 1 2 2 5 9 4 2 5 3 4 9 1 -1 10",
+                  "output": "3\n0\n0\n5\n"
+                },
+                {
+                  "input": "0 1 0 0",
+                  "output": "0\n"
+                },
+                {
+                  "input": "1 4 0",
+                  "output": ""
+                }
+              ]
+            },
+            {
+              "id": "cpp.binarylab.capacity",
+              "title": "Мини-проект: вместимость рейса",
+              "kind": "code",
+              "prompt": "Сначала n (0…1000) и n целых элементов (−1000000…1000000). Здесь все элементы — положительные веса (1…1000000). Затем days (1…1000). Каждый день перевозят подряд идущую группу ещё не отправленных грузов; порядок не меняют, груз не делят. Найдите минимальную целую вместимость, позволяющую отправить всё не более чем за days дней. Для n=0 ответ 0.",
+              "starter": "#include <iostream>\n#include <vector>\n\nint main() {\n    // Напишите решение здесь\n}\n",
+              "solution": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    std::vector<long long> a(n);\n    for (auto& x : a) { std::cin >> x; }\n    int days = 0; std::cin >> days;\n    long long low = 0, high = 0;\n    for (long long weight : a) { if (weight > low) { low = weight; } high += weight; }\n    while (low < high) { long long mid = low+(high-low)/2, load = 0; int used = 1; for (long long weight : a) { if (load+weight > mid) { ++used; load = 0; } load += weight; } if (used <= days) { high = mid; } else { low = mid+1; } }\n    std::cout << low;\n}\n",
+              "answer": null,
+              "choices": [],
+              "hints": [
+                "Для заданной вместимости заполняйте текущий день до первого не помещающегося груза.",
+                "Ищите первую допустимую вместимость между максимальным весом и общей суммой."
+              ],
+              "explanation": "Жадная проверка берёт самый длинный возможный префикс дня; меньшая группа не может уменьшить число дней для оставшегося суффикса. Монотонность позволяет бинарный поиск.",
+              "difficulty": 3,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": [
+                {
+                  "input": "5 1 2 3 4 5 2",
+                  "output": "9"
+                },
+                {
+                  "input": "1 7 3",
+                  "output": "7"
+                },
+                {
+                  "input": "0 2",
+                  "output": "0"
+                },
+                {
+                  "input": "3 2 8 3 1",
+                  "output": "13"
+                },
+                {
+                  "input": "3 2 8 3 10",
+                  "output": "8"
+                }
+              ]
+            },
+            {
+              "id": "cpp.binarylab.predicate",
+              "title": "Почему возможен поиск по ответу?",
+              "kind": "choice",
+              "prompt": "Грузы положительны, порядок фиксирован. Какое свойство проверки вместимости C позволяет бинарный поиск?",
+              "starter": "",
+              "solution": "",
+              "answer": "Если вместимости C хватает, любой большей тоже хватает",
+              "choices": [
+                "Если вместимости C хватает, любой большей тоже хватает",
+                "Число дней всегда равно числу грузов",
+                "Допустимость меняется с Yes на No и обратно при увеличении C"
+              ],
+              "hints": [
+                "Старое распределение по дням остаётся возможным при большей вместимости.",
+                "Допустимые вместимости образуют суффикс числового диапазона."
+              ],
+              "explanation": "У проверки есть одна граница перехода от недопустимых значений к допустимым; это и есть предмет поиска.",
+              "difficulty": 1,
+              "skills": [
+                "бинарный поиск",
+                "lower_bound",
+                "поиск по ответу"
+              ],
+              "testCases": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -49,6 +49,7 @@ public struct ProgressDocument: Codable, Sendable {
     public var schemaVersion = 1
     public var exercises: [String: ExerciseProgress] = [:]
     public var lastExerciseID: String?
+    public var lessonPositions: [String: String]?
     public var lastStudyDate: Date?
     public var preferences = Preferences()
     public var lastViewedRelease: NumericVersion?

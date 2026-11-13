@@ -123,9 +123,6 @@ public struct CourseTranslation: Codable, Sendable {
         let course = Course(id: source.id, version: source.version, title: text(source.id, "title", source.title), language: source.language,
                             availability: source.availability, summary: text(source.id, "summary", source.summary), sections: sections)
         try course.validate()
-        guard course.exercises.allSatisfy({ exercise in
-            Set(exercise.choices.map { exercise.choiceLabel(for: $0) }).count == exercise.choices.count
-        }) else { throw ContentError.invalid("Перевод сделал варианты ответа неразличимыми") }
         return course
     }
 }

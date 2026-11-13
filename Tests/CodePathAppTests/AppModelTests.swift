@@ -82,6 +82,19 @@ struct AppModelTests {
         #expect(AppModel().document.profile?.nickname == "Имя")
     }
 
+    @Test func openingLessonKeepsItsSavedTaskAcrossRelaunch() throws {
+        _ = try setup()
+        let model = AppModel()
+        let lesson = try #require(model.course?.lessons.first)
+        model.open(lesson.exercises[2])
+        let other = try #require(model.course?.lessons.dropFirst().first)
+        model.open(other.exercises[1])
+        let reopened = AppModel()
+        reopened.openLesson(lesson)
+        #expect(reopened.exercise?.id == lesson.exercises[2].id)
+        #expect(reopened.document.lastExerciseID == lesson.exercises[2].id)
+    }
+
     @Test func codeIsNeverAutomaticallyChecked() throws {
         _ = try setup()
         let model = AppModel()

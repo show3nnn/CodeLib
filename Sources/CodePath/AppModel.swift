@@ -168,12 +168,26 @@ final class AppModel {
         selectedExerciseID = exercise.id
         page = .lesson
         message = nil
-        update { $0.lastExerciseID = exercise.id; $0.lastStudyDate = Date() }
+        let lessonID = course?.lesson(containing: exercise.id)?.id
+        update {
+            $0.lastExerciseID = exercise.id
+            $0.lastStudyDate = Date()
+            if let lessonID {
+                var positions = $0.lessonPositions ?? [:]
+                positions[lessonID] = exercise.id
+                $0.lessonPositions = positions
+            }
+        }
     }
 
     func resume() {
         guard let course, let exercise = course.exercises.first(where: { $0.id == document.lastExerciseID })
                 ?? course.exercises.first else { return }
+        open(exercise)
+    }
+
+    func openLesson(_ lesson: Lesson) {
+        guard let exercise = document.resumeExercise(in: lesson) else { return }
         open(exercise)
     }
 

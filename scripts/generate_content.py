@@ -19,6 +19,7 @@ import content_13
 import content_14
 import content_15
 import content_16
+import content_17
 
 def main():
     parser = argparse.ArgumentParser()
@@ -28,7 +29,7 @@ def main():
                 + content_04.sections() + content_05.sections() + content_06.sections()
                 + content_07.sections() + content_08.sections() + content_09.sections() + content_10.sections()
                 + content_11.sections() + content_12.sections() + content_13.sections() + content_14.sections()
-                + content_15.sections() + content_16.sections())
+                + content_15.sections() + content_16.sections() + content_17.sections())
     previous = None
     for section in sections:
         for lesson in section["lessons"]:

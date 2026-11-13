@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Developer-only reference checks. Never part of the application or user-code execution."""
 import concurrent.futures
+import argparse
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
+from algorithm_lab_cases import cases as algorithm_lab_cases
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / ".build/content-check"
@@ -51,13 +53,23 @@ def check(item):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     course = json.loads((ROOT / "Sources/LearningCore/Resources/course.json").read_text())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--section", choices=[section["id"] for section in course["sections"]], help="Проверить один раздел, не перезаписывая общий отчёт")
+    args = parser.parse_args()
     items = []
+    differential = algorithm_lab_cases()
+    all_ids = {task["id"] for section in course["sections"] for lesson in section["lessons"] for task in lesson["exercises"] if task["solution"]}
+    missing = set(differential) - all_ids
+    if missing:
+        raise ValueError(f"Неизвестные ID дифференциальных проверок: {sorted(missing)}")
     for section in course["sections"]:
+        if args.section and section["id"] != args.section:
+            continue
         for lesson in section["lessons"]:
             items.append((lesson["id"] + ".example", lesson["example"], []))
             for task in lesson["exercises"]:
                 if task["solution"]:
-                    items.append((task["id"], task["solution"], task["testCases"]))
+                    items.append((task["id"], task["solution"], task["testCases"] + differential.get(task["id"], [])))
     failures = []
     runs = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
@@ -71,7 +83,8 @@ def main():
                     message += "\n" + error.stderr
                 failures.append(message)
     report = dict(sourcePrograms=len(items), standards=["c++17", "c++20"], executedCases=runs, failures=failures)
-    (OUT / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    report_name = f"report-{args.section}.json" if args.section else "report.json"
+    (OUT / report_name).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return bool(failures)
 

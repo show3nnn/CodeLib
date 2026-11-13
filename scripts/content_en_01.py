@@ -3,7 +3,7 @@
 The source snapshot is intentional: update it only after reviewing course changes.
 Code, expected output and grading values are not translated.
 """
-SOURCE_SHA256 = "0ab334aeb4dbeff2ba073ff22e718bc0e148dfd835c9353192ae06aed84b5343"
+SOURCE_SHA256 = "435ec03a6945a041d489ee395b326d3eeda7966c7e6e31b111b068fdc663ca0e"
 
 ENTITIES = {
     "cpp-foundations": {

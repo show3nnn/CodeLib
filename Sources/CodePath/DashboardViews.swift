@@ -108,21 +108,29 @@ struct CatalogView: View {
 struct SyllabusView: View {
     @Bindable var model: AppModel
     @State private var search = ""
+    @State private var status: LessonStatusFilter = .all
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 22) {
                 PageHeader(eyebrow: "C++17 · практика", title: "Шаги к самостоятельному коду", subtitle: "Все доступные темы открыты. Возвращайтесь к теории и задачам без потери результатов.")
                 if let course = model.course {
-                    ForEach(course.sections) { section in
-                        let lessons = section.lessons.filter { search.isEmpty || $0.title.localizedCaseInsensitiveContains(search) || $0.summary.localizedCaseInsensitiveContains(search) }
-                        if !lessons.isEmpty {
+                    Picker("Состояние урока", selection: $status) {
+                        Text("Все").tag(LessonStatusFilter.all)
+                        Text("Не начаты").tag(LessonStatusFilter.notStarted)
+                        Text("В работе").tag(LessonStatusFilter.inProgress)
+                        Text("Завершены").tag(LessonStatusFilter.completed)
+                    }.pickerStyle(.segmented)
+                    let sections = course.studySections(query: search, status: status, progress: model.document)
+                    ForEach(sections) { group in
+                        let section = group.section
+                        let lessons = group.lessons
                             Card {
                                 VStack(alignment: .leading, spacing: 14) {
                                     Text(section.title).font(.title2.bold())
                                     Text(section.summary).foregroundStyle(.secondary)
                                     ForEach(lessons) { lesson in
                                         Button {
-                                            if let first = lesson.exercises.first { model.open(first) }
+                                            model.openLesson(lesson)
                                         } label: {
                                             HStack(spacing: 14) {
                                                 Image(systemName: model.document.lessonCompleted(lesson) ? "checkmark.circle.fill" : "circle")
@@ -141,14 +149,15 @@ struct SyllabusView: View {
                                     }
                                 }
                             }
-                        }
                     }
-                    if !search.isEmpty && !course.lessons.contains(where: { $0.title.localizedCaseInsensitiveContains(search) || $0.summary.localizedCaseInsensitiveContains(search) }) {
-                        ContentUnavailableView.search(text: search)
+                    if sections.isEmpty {
+                        ContentUnavailableView("Уроки не найдены", systemImage: "line.3.horizontal.decrease.circle",
+                                               description: Text("Измените запрос или фильтр состояния."))
+                        Button("Сбросить поиск и фильтр") { search = ""; status = .all }
                     }
                 }
             }.padding(32).frame(maxWidth: 1080).frame(maxWidth: .infinity)
-        }.searchable(text: $search, prompt: "Найти тему")
+        }.searchable(text: $search, prompt: "Тема, раздел, задание или навык")
     }
 }
 

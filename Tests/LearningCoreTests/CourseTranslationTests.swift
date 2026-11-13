@@ -97,7 +97,7 @@ struct CourseTranslationTests {
         // Identity texts are a synthetic complete fixture, not a claimed English translation.
         let complete = translation(completeTexts)
         #expect(try complete.coverage(for: data).isComplete)
-        #expect(try complete.apply(to: data).exercises.count == 272)
+        #expect(try complete.apply(to: data).exercises.count == Course.bundled().exercises.count)
         let course = try Course.bundled()
         let choice = try #require(course.exercises.first { $0.kind == .choice })
         var indistinguishable = completeTexts
