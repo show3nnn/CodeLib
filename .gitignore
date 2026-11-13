@@ -69,3 +69,10 @@ dist/
 # macOS
 .DS_Store
 *.xcuserstate
+
+# Локальные Python-кеши и файлы окружения не публикуются
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example

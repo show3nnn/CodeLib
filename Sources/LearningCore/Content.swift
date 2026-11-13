@@ -11,11 +11,19 @@ public struct Course: Codable, Sendable, Identifiable {
     public var lessons: [Lesson] { sections.flatMap(\.lessons) }
     public var exercises: [Exercise] { lessons.flatMap(\.exercises) }
 
-    public static func bundled() throws -> Course {
+    public static func bundled(locale: CourseLocale = .russian) throws -> Course {
         guard let url = Bundle.module.url(forResource: "course", withExtension: "json") else {
             throw ContentError.invalid("Отсутствует ресурс курса")
         }
-        let course = try JSONDecoder().decode(Course.self, from: Data(contentsOf: url))
+        let data = try Data(contentsOf: url)
+        if locale != .russian {
+            guard let translationURL = Bundle.module.url(forResource: "course.\(locale.rawValue)", withExtension: "json") else {
+                throw ContentError.invalid("Полный перевод курса для \(locale.rawValue) пока недоступен")
+            }
+            let translation = try JSONDecoder().decode(CourseTranslation.self, from: Data(contentsOf: translationURL))
+            return try translation.apply(to: data)
+        }
+        let course = try JSONDecoder().decode(Course.self, from: data)
         try course.validate()
         return course
     }
@@ -64,6 +72,12 @@ public struct Course: Codable, Sendable, Identifiable {
                             guard exercise.choices.count >= 2, Set(exercise.choices).count == exercise.choices.count,
                                   exercise.choices.contains(answer) else {
                                 throw ContentError.invalid("Неверные варианты: \(exercise.id)")
+                            }
+                            if let labels = exercise.choiceLabels {
+                                guard Set(labels.keys) == Set(exercise.choices), Set(labels.values).count == labels.count,
+                                      labels.values.allSatisfy({ !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) else {
+                                    throw ContentError.invalid("Неверные переводы вариантов: \(exercise.id)")
+                                }
                             }
                         }
                         if exercise.kind == .number, Double(answer)?.isFinite != true {
@@ -137,6 +151,10 @@ public struct Exercise: Codable, Sendable, Identifiable {
     public let solution: String
     public let answer: String?
     public let choices: [String]
+    /// Canonical choice values remain unchanged for existing progress and checking.
+    public let choiceLabels: [String: String]?
+    public func choiceLabel(for value: String) -> String { choiceLabels?[value] ?? value }
+    public var answerLabel: String? { answer.map { kind == .choice ? choiceLabel(for: $0) : $0 } }
     public let hints: [String]
     public let explanation: String
     public let difficulty: Int

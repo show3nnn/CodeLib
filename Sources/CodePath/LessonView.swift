@@ -160,7 +160,7 @@ private struct ExerciseView: View {
                         Text(exercise.explanation).textSelection(.enabled)
                         if exercise.kind == .code {
                             CodeBlock(code: exercise.solution, fontSize: model.document.preferences.codeSize)
-                        } else { Text("Ответ: \(exercise.answer ?? "")").font(.system(.body, design: .monospaced)).textSelection(.enabled) }
+                        } else { Text("Ответ: \(exercise.answerLabel ?? "")").font(.system(.body, design: .monospaced)).textSelection(.enabled) }
                     }
                 }.font(.system(size: model.document.preferences.textSize))
             }
@@ -197,7 +197,7 @@ private struct ExerciseView: View {
             if exercise.kind == .choice {
                 Picker("Ваш ответ", selection: answer) {
                     Text("Выберите вариант").tag("")
-                    ForEach(exercise.choices, id: \.self) { Text($0).tag($0) }
+                    ForEach(exercise.choices, id: \.self) { Text(exercise.choiceLabel(for: $0)).tag($0) }
                 }.pickerStyle(.radioGroup)
             } else if exercise.kind == .output {
                 Text("Ваш прогноз вывода").font(.headline)
