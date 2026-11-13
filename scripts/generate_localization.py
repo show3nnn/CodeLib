@@ -5,9 +5,12 @@ import json
 from pathlib import Path
 import content_en_01
 import content_en_02
+import content_en_03
+import content_en_04
+import content_en_05
 from localization_tools import digest, entities, source_texts, value_key
 
-AUTHORS = [content_en_01, content_en_02]
+AUTHORS = [content_en_01, content_en_02, content_en_03, content_en_04, content_en_05]
 
 
 def build_texts(course, source):

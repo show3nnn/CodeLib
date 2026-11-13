@@ -7,9 +7,9 @@ from repository_check import forbidden
 
 class RepositoryToolsTests(unittest.TestCase):
     def test_publication_paths(self):
-        for name in ["dist/codelib.app/Contents/Info.plist", ".build/data", ".local-data/progress.json", "x/__pycache__/a.pyc", ".env.local", "x/.DS_Store"]:
+        for name in ["dist/codelib.app/Contents/Info.plist", ".build/data", ".local-data/progress.json", "x/__pycache__/a.pyc", ".env.local", "x/.DS_Store", "localization/ui/SettingsView.stringsdata"]:
             self.assertTrue(forbidden(name), name)
-        for name in ["Sources/LearningCore/Resources/course.json", "localization/drafts/course.en.json", "packaging/CodePath.icns", ".env.example"]:
+        for name in ["Sources/LearningCore/Resources/course.json", "localization/drafts/course.en.json", "localization/ui/Localizable.xcstrings", "packaging/CodePath.icns", ".env.example"]:
             self.assertFalse(forbidden(name), name)
 
     def test_cleanup_preserves_recent_incomplete_and_unknown_runs(self):

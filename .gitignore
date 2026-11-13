@@ -69,6 +69,7 @@ dist/
 # macOS
 .DS_Store
 *.xcuserstate
+*.stringsdata
 
 # Локальные Python-кеши и файлы окружения не публикуются
 __pycache__/

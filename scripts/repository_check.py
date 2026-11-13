@@ -10,7 +10,7 @@ def forbidden(path):
         return True
     if any(part.endswith((".app", ".xcresult")) for part in item.parts):
         return True
-    return item.name == ".DS_Store" or item.suffix in {".pyc", ".pyo", ".xcuserstate"} or (item.name.startswith(".env") and item.name != ".env.example")
+    return item.name == ".DS_Store" or item.suffix in {".pyc", ".pyo", ".xcuserstate", ".stringsdata"} or (item.name.startswith(".env") and item.name != ".env.example")
 
 
 def main():
