@@ -29,64 +29,107 @@ extension Completion {
 
 struct LessonView: View {
     @Bindable var model: AppModel
-    @State private var showTheory = true
+    @State var showTheory = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if let lesson = model.lesson, let exercise = model.exercise {
             VStack(spacing: 0) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(lesson.title).font(.headline)
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(lesson.title).font(.system(size: 19, weight: .semibold)).tracking(-0.3)
                         Text("\(lesson.exercises.filter { model.document.completed($0.id) }.count) из \(lesson.exercises.count) заданий завершено")
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Button(showTheory ? "Скрыть теорию" : "Теория", systemImage: "book") { showTheory.toggle() }
-                }.padding()
+                    Button(showTheory ? "Скрыть теорию" : "Теория", systemImage: "book.closed") { showTheory.toggle() }
+                        .buttonStyle(.bordered).tint(showTheory ? .green : .secondary)
+                        .accessibilityIdentifier("lesson.theory")
+                }.padding(.horizontal, 24).padding(.top, 20).padding(.bottom, 16)
+                ScrollViewReader { taskProxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(Array(lesson.exercises.enumerated()), id: \.element.id) { index, task in
                             Button {
                                 model.open(task)
                             } label: {
-                                HStack(spacing: 5) {
-                                    if model.document.completed(task.id) { Image(systemName: "checkmark") }
-                                    Text("\(index + 1). \(task.title)")
-                                }
+                                HStack(spacing: 8) {
+                                    Text(String(format: "%02d", index + 1)).monospacedDigit()
+                                    if task.id == exercise.id { Text(task.title).lineLimit(1) }
+                                    if model.document.completed(task.id) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
+                                }.font(.system(size: 12, weight: .medium)).padding(.horizontal, 12).padding(.vertical, 10)
+                                    .foregroundStyle(task.id == exercise.id ? Color.primary : .secondary)
+                                    .background(task.id == exercise.id ? Color.green.opacity(0.12) : Color.primary.opacity(0.035), in: Capsule())
+                                    .overlay { Capsule().strokeBorder(task.id == exercise.id ? Color.green.opacity(0.35) : .clear) }
+                                    .contentShape(Capsule())
                             }
-                            .buttonStyle(.bordered)
-                            .tint(task.id == exercise.id ? .accentColor : .secondary)
+                            .buttonStyle(.plain).help(task.title)
+                            .accessibilityLabel("Задание \(index + 1): \(task.title)")
                             .accessibilityAddTraits(task.id == exercise.id ? .isSelected : [])
+                            .id(task.id)
                         }
-                    }.padding(.horizontal).padding(.bottom, 12)
+                    }.padding(.horizontal, 24).padding(.bottom, 16)
+                }
+                .onAppear { taskProxy.scrollTo(exercise.id, anchor: .center) }
+                .onChange(of: exercise.id) { _, id in taskProxy.scrollTo(id, anchor: .center) }
                 }
                 Divider()
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 24) {
-                            Color.clear.frame(height: 0).id("top")
-                            if showTheory {
-                                TheoryView(lesson: lesson, preferences: model.document.preferences)
+                GeometryReader { geometry in
+                    HStack(spacing: 0) {
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                VStack(alignment: .leading, spacing: 24) {
+                                    Color.clear.frame(height: 0).id("top")
+                                    ExerciseView(model: model, exercise: exercise).id(exercise.id)
+                                }.padding(24).frame(maxWidth: 980).frame(maxWidth: .infinity)
                             }
-                            ExerciseView(model: model, exercise: exercise).id(exercise.id)
-                        }.padding(24).frame(maxWidth: 1040).frame(maxWidth: .infinity)
+                            .onChange(of: exercise.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
+                        }.frame(minWidth: 0, maxWidth: .infinity)
+                        if showTheory && geometry.size.width >= 850 {
+                            Divider()
+                            ScrollView {
+                                TheoryView(lesson: lesson, preferences: model.document.preferences).padding(24)
+                            }.frame(width: 310).background(.background)
+                        }
+                    }.animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: showTheory)
+                    .sheet(isPresented: Binding(get: { showTheory && geometry.size.width < 850 },
+                                                set: { if !$0 { showTheory = false } })) {
+                        VStack(spacing: 0) {
+                            HStack {
+                                Text(lesson.title).font(.headline)
+                                Spacer()
+                                Button("К заданию", systemImage: "xmark") { showTheory = false }
+                            }.padding(20)
+                            Divider()
+                            ScrollView {
+                                TheoryView(lesson: lesson, preferences: model.document.preferences).padding(24)
+                            }
+                        }.frame(minWidth: 440, idealWidth: 560, minHeight: 420, idealHeight: 620)
                     }
-                    .onChange(of: exercise.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
                 }
                 Divider()
                 HStack {
                     Button("Назад", systemImage: "chevron.left") { model.move(-1) }
+                        .buttonStyle(.bordered)
                         .disabled(model.course?.adjacent(to: exercise.id, offset: -1) == nil)
                     Spacer()
                     Label(model.hasUnsavedChanges ? "Не сохранено" : "Сохранено локально", systemImage: model.hasUnsavedChanges ? "exclamationmark.triangle" : "internaldrive")
                         .font(.caption).foregroundStyle(.secondary)
                     Spacer()
                     Button("Далее", systemImage: "chevron.right") { model.move(1) }
+                        .buttonStyle(.borderedProminent)
                         .disabled(model.course?.adjacent(to: exercise.id, offset: 1) == nil)
-                }.padding(14)
+                }.controlSize(.large).padding(.horizontal, 24).padding(.vertical, 12).background(.bar)
             }
         } else {
-            ContentUnavailableView("Выберите урок", systemImage: "book", description: Text("Откройте программу курса или продолжите с последнего места."))
+            ContentUnavailableView {
+                Label("Выберите урок", systemImage: "book")
+            } description: {
+                Text("Откройте программу курса или продолжите с последнего места.")
+            } actions: {
+                Button("Продолжить обучение") { model.resume() }.buttonStyle(.borderedProminent)
+                Button("Программа курса") { model.page = .syllabus }
+            }
         }
     }
 }
@@ -96,7 +139,8 @@ private struct TheoryView: View {
     let preferences: Preferences
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text("Коротко о главном").font(.title2.bold())
+            Label("Теория", systemImage: "book.closed").font(.caption.weight(.semibold)).foregroundStyle(.green)
+            Text("Коротко о главном").font(.system(size: 24, weight: .bold)).tracking(-0.6)
             Text(lesson.theory).font(.system(size: preferences.textSize)).lineSpacing(5).textSelection(.enabled)
                 .fixedSize(horizontal: false, vertical: true)
             CodeBlock(code: lesson.example, fontSize: preferences.codeSize)
@@ -105,7 +149,6 @@ private struct TheoryView: View {
                     .textSelection(.enabled).padding(.top, 10)
             } label: { Label("C++ под микроскопом", systemImage: "magnifyingglass").font(.headline) }
             Text(lesson.recap).font(.system(size: preferences.textSize)).foregroundStyle(.secondary)
-            Divider()
         }
     }
 }
@@ -129,13 +172,23 @@ private struct ExerciseView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack {
-                Text(exercise.kind.localizedTitle).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(1.5).foregroundStyle(.tint)
-                Spacer()
-                Text("Сложность \(exercise.difficulty)/3").font(.caption).foregroundStyle(.secondary)
+            Card {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text(exercise.kind.localizedTitle).textCase(.uppercase).font(.system(size: 10, weight: .bold)).tracking(1.5).foregroundStyle(.green)
+                        Spacer()
+                        HStack(spacing: 4) {
+                            ForEach(1...3, id: \.self) { level in
+                                Capsule().fill(level <= exercise.difficulty ? Color.green : Color.primary.opacity(0.1))
+                                    .frame(width: 12, height: 4)
+                            }
+                        }.accessibilityLabel("Сложность \(exercise.difficulty) из 3")
+                    }
+                    Text(exercise.title).font(.system(size: 28, weight: .bold)).tracking(-0.7)
+                    Text(exercise.prompt).font(.system(size: model.document.preferences.textSize))
+                        .lineSpacing(4).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
+                }
             }
-            Text(exercise.title).font(.title.bold())
-            Text(exercise.prompt).font(.system(size: model.document.preferences.textSize)).lineSpacing(4).textSelection(.enabled)
             if !exercise.testCases.isEmpty && exercise.kind == .code {
                 DisclosureGroup("Примеры входа и выхода") {
                     ForEach(Array(exercise.testCases.enumerated()), id: \.offset) { index, test in
@@ -161,7 +214,8 @@ private struct ExerciseView: View {
                 }
             }
             responseArea
-            completionArea
+            completionArea.padding(20).frame(maxWidth: .infinity, alignment: .leading)
+                .background(.green.opacity(0.045), in: RoundedRectangle(cornerRadius: 20))
             Card {
                 VStack(alignment: .leading, spacing: 14) {
                     Label("Сначала попробуйте самостоятельно", systemImage: "lightbulb").font(.headline)
@@ -203,24 +257,36 @@ private struct ExerciseView: View {
 
     @ViewBuilder private var responseArea: some View {
         if exercise.kind == .code {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Ваш код · C++17").font(.headline)
-                    Spacer()
-                    Button("Сбросить код", systemImage: "arrow.counterclockwise") { showResetCodeConfirmation = true }
-                        .disabled(draft.wrappedValue == exercise.starter)
-                    Button("Копировать", systemImage: "doc.on.doc") {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(draft.wrappedValue, forType: .string)
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(spacing: 0) {
+                    HStack(spacing: 12) {
+                        Label("main.cpp", systemImage: "curlybraces").font(.system(size: 12, weight: .medium, design: .monospaced))
+                        Spacer(minLength: 0)
+                        Button("Сбросить", systemImage: "arrow.counterclockwise") { showResetCodeConfirmation = true }
+                            .disabled(draft.wrappedValue == exercise.starter).help("Вернуть стартовый код с подтверждением")
+                        Button("Копировать", systemImage: "doc.on.doc") {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(draft.wrappedValue, forType: .string)
+                        }
+                    }.buttonStyle(.borderless).controlSize(.small).padding(14).background(.primary.opacity(0.035))
+                    Divider()
+                    CodeEditor(text: draft, fontSize: model.document.preferences.codeSize,
+                               syntaxHighlighting: model.document.preferences.syntaxHighlighting,
+                               showLineNumbers: model.document.preferences.showLineNumbers)
+                        .frame(minHeight: 320, idealHeight: 400)
+                        .accessibilityIdentifier("lesson.editor")
+                    Divider()
+                    HStack {
+                        Text("C++17").font(.system(.caption, design: .monospaced))
+                        Spacer()
+                        Label("Черновик · без запуска кода", systemImage: "doc.text")
+                            .font(.caption)
                     }
-                }
-                CodeEditor(text: draft, fontSize: model.document.preferences.codeSize,
-                           syntaxHighlighting: model.document.preferences.syntaxHighlighting,
-                           showLineNumbers: model.document.preferences.showLineNumbers)
-                    .frame(minHeight: 300, idealHeight: 360)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .overlay { RoundedRectangle(cornerRadius: 10).strokeBorder(.primary.opacity(0.12)) }
-                Text("Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ · Длинные строки переносятся · Компилятора в этой версии нет")
+                    .foregroundStyle(.secondary).padding(.horizontal, 14).padding(.vertical, 10)
+                }.background(Color(nsColor: .textBackgroundColor))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.primary.opacity(0.1)) }
+                Text("Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ")
                     .font(.caption).foregroundStyle(.secondary)
             }
         } else {
@@ -245,7 +311,7 @@ private struct ExerciseView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 if exercise.kind == .code {
-                    Button("Я проверил(а) решение — отметить выполненным", systemImage: "checkmark") { model.selfComplete() }
+                    Button("Отметить выполненным", systemImage: "checkmark") { model.selfComplete() }
                         .buttonStyle(.borderedProminent).disabled(state.completion == .selfReviewed)
                 } else {
                     Button("Проверить ответ", systemImage: "checkmark.circle") { model.check() }
@@ -256,6 +322,10 @@ private struct ExerciseView: View {
                     Spacer()
                     Button("Повторить") { showRepeatConfirmation = true }
                 }
+            }
+            if exercise.kind == .code && state.completion == .unfinished {
+                Text("Самопроверка: сравните результат с условием и разбором. Приложение пока не компилирует и не проверяет ваш код.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if state.completion != .unfinished {
                 Label { Text(state.completion.localizedTitle) } icon: {

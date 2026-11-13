@@ -5,57 +5,138 @@ struct HomeView: View {
     @Bindable var model: AppModel
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 26) {
-                HStack(spacing: 20) {
-                    PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { LocalizedStringResource("С возвращением, \($0.nickname)!") } ?? "Хороший день, чтобы разобраться.",
-                               subtitle: "Немного теории. Много собственного кода. Один понятный шаг за другим.")
-                    if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 72) }
+            VStack(alignment: .leading, spacing: 28) {
+                HStack(alignment: .center, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("ВАША ЛАБОРАТОРИЯ").font(.system(size: 10, weight: .bold)).tracking(2).foregroundStyle(.green)
+                        Text(model.document.profile.map { "С возвращением, \($0.nickname)." } ?? "Хороший день для кода.")
+                            .font(.system(size: 30, weight: .bold)).tracking(-0.8)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("Один понятный шаг. Ещё немного собственного кода.")
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                    if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 54) }
                 }
                 if let course = model.course {
-                    Card {
-                        VStack(alignment: .leading, spacing: 18) {
-                            HStack(alignment: .top) {
-                                Image(systemName: "curlybraces").font(.system(size: 38, weight: .medium)).foregroundStyle(.tint)
-                                    .frame(width: 76, height: 76).background(.tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 18))
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("C++").font(.title.bold())
-                                    Text("С нуля до уверенного первого курса").font(.title3)
-                                    Text("Сейчас: \(model.lesson?.title ?? course.lessons.first?.title ?? "")").foregroundStyle(.secondary)
-                                }
-                                Spacer()
-                            }
-                            ProgressView(value: model.fraction)
-                            HStack {
-                                Text(model.fraction, format: PresentationLocale.percent).monospacedDigit()
-                                Text("доступного курса пройдено").foregroundStyle(.secondary)
-                                Spacer()
-                                Button("Продолжить обучение", systemImage: "arrow.right") { model.resume() }
-                                    .buttonStyle(.borderedProminent).controlSize(.large)
-                            }
-                        }
-                    }
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 170))], spacing: 16) {
-                        Metric(value: "\(course.lessons.filter { model.document.lessonCompleted($0) }.count)", label: "уроков завершено", icon: "book.closed")
+                    courseHero(course)
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 14) {
                         Metric(value: "\(model.document.completedCount(in: course))", label: "заданий завершено", icon: "checkmark.circle")
-                        Metric(value: "\(course.sections.count)", label: "доступных разделов", icon: "square.stack")
+                        Metric(value: "\(course.lessons.filter { model.document.lessonCompleted($0) }.count)", label: "уроков завершено", icon: "book.closed")
+                        Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
+                    }
+                    HStack {
+                        Text("Следующий шаг").font(.system(size: 21, weight: .bold)).tracking(-0.4)
+                        Spacer()
+                        Button("Вся программа", systemImage: "arrow.up.right") { model.page = .syllabus }.buttonStyle(.plain).foregroundStyle(.green)
+                    }
+                    if let lesson = model.lesson ?? course.lessons.first {
+                        Button { model.openLesson(lesson) } label: {
+                            Card {
+                                HStack(spacing: 18) {
+                                    Image(systemName: "arrow.turn.down.right").font(.title2).foregroundStyle(.green)
+                                        .frame(width: 48, height: 48).background(.green.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        Text(lesson.title).font(.headline)
+                                        Text(lesson.summary).font(.callout).foregroundStyle(.secondary).lineLimit(2)
+                                        Text("\(lesson.exercises.count) заданий · ~\(lesson.minutes) мин")
+                                            .font(.caption).foregroundStyle(.secondary)
+                                    }
+                                    Spacer(minLength: 0)
+                                    Image(systemName: "arrow.right").foregroundStyle(.green)
+                                }
+                            }.contentShape(RoundedRectangle(cornerRadius: 22))
+                        }.buttonStyle(.plain).accessibilityHint("Открыть урок с сохранённого задания")
                     }
                     RecentAchievementsView(model: model)
-                    Card {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Label("От первой строки до своего проекта", systemImage: "leaf").font(.headline)
-                            Text("Доступно: \(course.sections.count) разделов, \(course.lessons.count) уроков, \(course.exercises.count) заданий. Код, теория, контрольные и мини-проекты — от main до файлов и итогового диспетчера запасов. Все результаты остаются на вашем Mac.")
-                                .foregroundStyle(.secondary)
-                            Button("Открыть программу") { model.page = .syllabus }
-                        }
-                    }
-                    FutureCourses(entries: model.catalog?.entries.filter { $0.availability == .comingSoon } ?? [])
+                    HStack(spacing: 8) {
+                        Image(systemName: "lock.shield")
+                        Text("Ваш темп. Ваши данные. Всё остаётся на этом Mac.")
+                    }.font(.caption).foregroundStyle(.secondary)
                 }
-            }.padding(32).frame(maxWidth: 1080)
-                .frame(maxWidth: .infinity)
-        }.background(Color(nsColor: .windowBackgroundColor))
+            }.padding(32).frame(maxWidth: 1120).frame(maxWidth: .infinity)
+        }
+    }
+
+    private func courseHero(_ course: Course) -> some View {
+        VStack(alignment: .leading, spacing: 26) {
+            HStack {
+                Label("АКТИВНЫЙ КУРС", systemImage: "circle.fill")
+                    .font(.system(size: 10, weight: .bold)).tracking(1.5).foregroundStyle(.mint)
+                Spacer()
+                Text("C++17 / C++20").font(.system(size: 11, design: .monospaced)).foregroundStyle(.white.opacity(0.55))
+            }
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 28) {
+                    heroIntroduction.frame(minWidth: 300, maxWidth: .infinity, alignment: .leading)
+                    CourseArtwork().frame(width: 210, height: 170).accessibilityHidden(true)
+                }
+                heroIntroduction
+            }
+            Divider().overlay(.white.opacity(0.12))
+            HStack(alignment: .center, spacing: 20) {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text("Прогресс курса").foregroundStyle(.white.opacity(0.65))
+                        Spacer()
+                        Text(model.fraction, format: PresentationLocale.percent).foregroundStyle(.mint).monospacedDigit()
+                    }.font(.caption.weight(.medium))
+                    ProgressView(value: model.fraction).tint(.mint)
+                    Text("\(course.sections.count) разделов · \(course.lessons.count) уроков · \(course.exercises.count) заданий")
+                        .font(.caption).foregroundStyle(.white.opacity(0.55))
+                }
+            }
+        }.padding(28)
+            .background {
+                RoundedRectangle(cornerRadius: 26).fill(Color(red: 0.055, green: 0.085, blue: 0.075))
+                    .overlay(alignment: .topTrailing) {
+                        RadialGradient(colors: [.green.opacity(0.18), .clear], center: .topTrailing, startRadius: 0, endRadius: 420)
+                    }.clipShape(RoundedRectangle(cornerRadius: 26))
+            }
+            .overlay { RoundedRectangle(cornerRadius: 26).strokeBorder(.white.opacity(0.10)) }
+    }
+
+    private var heroIntroduction: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("C++ с нуля.\nДо своего проекта.")
+                .font(.system(size: 37, weight: .semibold)).tracking(-1.2).foregroundStyle(.white)
+                .fixedSize(horizontal: false, vertical: true)
+            if let course = model.course {
+                let section = course.sections.first { section in section.lessons.contains { $0.id == model.lesson?.id } }
+                Text(section?.title ?? "От первой строки к самостоятельному коду")
+                    .font(.callout).foregroundStyle(.white.opacity(0.65)).fixedSize(horizontal: false, vertical: true)
+            }
+            Button { model.resume() } label: {
+                Label("Продолжить обучение", systemImage: "arrow.right").font(.headline)
+                    .foregroundStyle(.black).padding(.horizontal, 18).padding(.vertical, 12)
+                    .background(Color.mint, in: Capsule())
+                    .contentShape(Capsule())
+            }.buttonStyle(.plain)
+                .accessibilityIdentifier("home.resume")
+        }
     }
 }
 
+private struct CourseArtwork: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 6) {
+                ForEach(0..<3) { _ in Circle().fill(.white.opacity(0.18)).frame(width: 5, height: 5) }
+                Spacer()
+                Text("hello.cpp").font(.system(size: 10, design: .monospaced)).foregroundStyle(.white.opacity(0.45))
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                Text("int main() {").foregroundStyle(.white.opacity(0.9))
+                Text("  // Начни здесь").foregroundStyle(.white.opacity(0.4))
+                Text("  std::cout").foregroundStyle(.mint)
+                Text("    << \"Hello!\";").foregroundStyle(.white.opacity(0.9))
+                Text("}").foregroundStyle(.mint)
+            }.font(.system(size: 14, weight: .medium, design: .monospaced))
+        }.padding(20).background(.black.opacity(0.25), in: RoundedRectangle(cornerRadius: 18))
+            .overlay { RoundedRectangle(cornerRadius: 18).strokeBorder(.white.opacity(0.12)) }
+            .rotationEffect(.degrees(-3))
+    }
+}
 struct Metric: View {
     let value: String
     let label: LocalizedStringResource
@@ -63,8 +144,11 @@ struct Metric: View {
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 8) {
-                Image(systemName: icon).foregroundStyle(.secondary)
-                Text(value).font(.largeTitle.weight(.semibold)).monospacedDigit()
+                HStack {
+                    Image(systemName: icon).foregroundStyle(.green)
+                    Spacer()
+                    Text(value).font(.system(size: 30, weight: .semibold, design: .rounded)).monospacedDigit()
+                }
                 Text(PresentationLocale.resource(label)).font(.caption).foregroundStyle(.secondary)
             }
         }
@@ -79,9 +163,18 @@ struct FutureCourses: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 12) {
                 ForEach(entries) { entry in
                     Card {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(entry.title).font(.headline)
-                            Text("Скоро").font(.caption).foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 20) {
+                            HStack {
+                                Text(entry.language == "JavaScript" ? "JS" : String(entry.language.prefix(2)))
+                                    .font(.system(size: 22, weight: .semibold, design: .monospaced))
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Image(systemName: "lock").font(.caption).foregroundStyle(.tertiary)
+                            }
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(entry.title).font(.headline)
+                                Text("Скоро").font(.caption.weight(.medium)).foregroundStyle(.secondary)
+                            }
                         }
                     }.accessibilityElement(children: .combine)
                 }
@@ -95,17 +188,41 @@ struct CatalogView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
-                PageHeader(eyebrow: "Каталог", title: "Один язык. Настоящее понимание.", subtitle: "Начните с C++. Другие направления пока недоступны и не содержат вымышленных уроков.")
+                PageHeader(eyebrow: "Каталог курсов", title: "Большие идеи начинаются\nс первой строки.", subtitle: "Выберите своё направление. Учитесь в собственном темпе.")
                 Card {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Label("C++", systemImage: "curlybraces").font(.largeTitle.bold())
-                        Text(model.course?.summary ?? "")
-                        Button("Изучить программу", systemImage: "list.bullet") { model.page = .syllabus }.buttonStyle(.borderedProminent)
+                    VStack(alignment: .leading, spacing: 24) {
+                        HStack(alignment: .top, spacing: 20) {
+                            Image(systemName: "curlybraces").font(.system(size: 40, weight: .medium))
+                                .foregroundStyle(.green).frame(width: 84, height: 84)
+                                .background(.green.opacity(0.09), in: RoundedRectangle(cornerRadius: 22))
+                            VStack(alignment: .leading, spacing: 8) {
+                                Label("Доступен сейчас", systemImage: "checkmark.circle.fill")
+                                    .font(.caption.weight(.medium)).foregroundStyle(.green)
+                                Text("C++").font(.system(size: 34, weight: .bold)).tracking(-1)
+                                Text("С нуля до своего проекта").font(.title3.weight(.medium))
+                            }
+                        }
+                        Text(model.course?.summary ?? "").foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                        if let course = model.course {
+                            Text("\(course.sections.count) разделов  /  \(course.lessons.count) уроков  /  \(course.exercises.count) заданий")
+                                .font(.caption.monospaced()).foregroundStyle(.secondary)
+                        }
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 12) { catalogActions }
+                            VStack(alignment: .leading, spacing: 12) { catalogActions }
+                        }
                     }
                 }
                 FutureCourses(entries: model.catalog?.entries.filter { $0.availability == .comingSoon } ?? [])
             }.padding(32).frame(maxWidth: 1040).frame(maxWidth: .infinity)
         }
+    }
+
+    @ViewBuilder private var catalogActions: some View {
+        Button("Продолжить обучение", systemImage: "arrow.right") { model.resume() }
+            .buttonStyle(.borderedProminent).controlSize(.large)
+        Button("Изучить программу", systemImage: "list.bullet") { model.page = .syllabus }
+            .buttonStyle(.bordered).controlSize(.large)
     }
 }
 

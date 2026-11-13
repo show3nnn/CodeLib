@@ -1,5 +1,6 @@
 # Project context
 
+- Current user priority: visible UI redesign, delivered vertically (home/navigation → lesson/editor → other screens). English work is frozen: preserve drafts; defer extraction/generation/translation checks during this redesign unless required to unblock the build. Do not bump versions or rewrite release notes for small changes. Use targeted UI/persistence checks; do not run reference C++ compilation for presentation-only changes.
 - `MASTER_PROMPT.md` is the Russian product specification. It is now plain UTF-8 (previously RTF); read it directly. Consult it before implementation; the constraints below are not the full specification.
 - Start with `PROJECT_PLAN.md` (resume point) and `VERIFICATION.md` (verified vs blocked checks). XCUITest automation and full visual/accessibility acceptance are not equivalent to the internal UI smoke test.
 

@@ -1,5 +1,6 @@
 import SwiftUI
 import LearningCore
+import AppKit
 
 struct RootView: View {
     @Bindable var model: AppModel
@@ -45,33 +46,61 @@ struct RootView: View {
     private var workspace: some View {
         NavigationSplitView {
             List(selection: $model.page) {
-                if let profile = model.document.profile {
-                    HStack {
-                        ProfileAvatar(profile: profile, size: 34)
-                        Text(profile.nickname).font(.headline)
-                    }.padding(.vertical, 6)
+                Section("Пространство") {
+                    navigationRow(.home)
+                    navigationRow(.catalog)
                 }
-                Section("codelib") {
-                    ForEach(AppModel.Page.allCases) { page in
-                        Label { Text(page.title) } icon: { Image(systemName: page.icon) }.tag(page)
+                Section("Практика") {
+                    navigationRow(.syllabus)
+                    navigationRow(.lesson)
+                }
+                Section("Ваш результат") {
+                    navigationRow(.progress)
+                    navigationRow(.achievements)
+                }
+            }.listStyle(.sidebar)
+            .safeAreaInset(edge: .top, spacing: 0) {
+                HStack(spacing: 10) {
+                    Image(nsImage: NSApp.applicationIconImage).resizable().frame(width: 38, height: 38)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("codelib").font(.system(size: 24, weight: .bold, design: .rounded)).tracking(-1)
+                        Text("Лаборатория кода").font(.caption).foregroundStyle(.secondary)
                     }
-                }
-                if let course = model.course {
-                    Section("Учиться в своём темпе") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("C++ · первый курс").font(.headline)
-                            ProgressView(value: model.fraction)
+                    Spacer()
+                }.padding(.horizontal, 18).padding(.top, 12).padding(.bottom, 24)
+            }
+            .navigationSplitViewColumnWidth(min: 210, ideal: 240, max: 290)
+            .safeAreaInset(edge: .bottom) {
+                VStack(alignment: .leading, spacing: 18) {
+                    if let course = model.course {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("ВАШ C++").font(.system(size: 10, weight: .bold)).tracking(1.5)
+                                Spacer()
+                                Text(model.fraction, format: PresentationLocale.percent).monospacedDigit()
+                            }.foregroundStyle(.secondary)
+                            ProgressView(value: model.fraction).tint(.green)
                             Text("\(model.document.completedCount(in: course)) из \(course.exercises.count) заданий")
                                 .font(.caption).foregroundStyle(.secondary)
-                            Text("Офлайн · только на вашем Mac").font(.caption2).foregroundStyle(.secondary)
-                        }.padding(.vertical, 8)
+                        }
                     }
-                }
+                    SettingsLink {
+                        HStack(spacing: 10) {
+                            if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 32) }
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(model.document.profile?.nickname ?? "Ваш профиль").font(.headline).lineLimit(1)
+                                Text("Профиль и настройки").font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 0)
+                            Image(systemName: "gearshape").foregroundStyle(.secondary)
+                        }.foregroundStyle(Color.primary).padding(12).contentShape(RoundedRectangle(cornerRadius: 16))
+                    }.buttonStyle(.plain).modifier(WorkspaceGlass())
+                }.padding(16)
             }
-            .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 280)
-            .safeAreaInset(edge: .bottom) {
-                SettingsLink { Label("Настройки", systemImage: "gearshape") }
-                    .buttonStyle(.plain).padding().frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(nsColor: .windowBackgroundColor))
+            .onChange(of: model.page) { _, page in
+                if page == .lesson && model.exercise == nil { model.resume() }
             }
         } detail: {
             VStack(spacing: 0) {
@@ -100,14 +129,27 @@ struct RootView: View {
                     }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 AchievementBanner(model: model)
-            }
+            }.background(WorkspaceBackdrop())
             .navigationTitle(Text(model.page.title))
             .toolbar {
                 if model.page != .lesson {
+                    ToolbarItem {
+                        Label("На вашем Mac", systemImage: "internaldrive")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                     ToolbarItem { Button("Продолжить", systemImage: "arrow.right.circle") { model.resume() } }
                 }
             }
         }
+    }
+
+    private func navigationRow(_ page: AppModel.Page) -> some View {
+        Label {
+            Text(page.title).font(.system(size: 14, weight: model.page == page ? .semibold : .medium))
+        } icon: {
+            Image(systemName: page.icon).symbolVariant(model.page == page ? .fill : .none)
+                .foregroundStyle(model.page == page ? Color.green : .secondary)
+        }.padding(.vertical, 7).tag(page)
     }
 }
 
@@ -118,7 +160,7 @@ struct PageHeader: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(PresentationLocale.resource(eyebrow)).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
-            Text(PresentationLocale.resource(title)).font(.largeTitle.bold())
+            Text(PresentationLocale.resource(title)).font(.system(size: 32, weight: .bold)).tracking(-0.8)
             Text(PresentationLocale.resource(subtitle)).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }.frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -127,8 +169,33 @@ struct PageHeader: View {
 struct Card<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
-        content.padding(22).frame(maxWidth: .infinity, alignment: .leading)
-            .background(.background, in: RoundedRectangle(cornerRadius: 18))
-            .overlay { RoundedRectangle(cornerRadius: 18).strokeBorder(.primary.opacity(0.08)) }
+        content.padding(24).frame(maxWidth: .infinity, alignment: .leading)
+            .background(.background, in: RoundedRectangle(cornerRadius: 22))
+            .overlay { RoundedRectangle(cornerRadius: 22).strokeBorder(.primary.opacity(0.07)) }
+    }
+}
+
+/// Static, inexpensive color wash; readable content surfaces remain opaque.
+struct WorkspaceBackdrop: View {
+    @Environment(\.colorScheme) private var scheme
+    var body: some View {
+        Color(nsColor: .windowBackgroundColor)
+            .overlay(alignment: .topTrailing) {
+                RadialGradient(colors: [.green.opacity(scheme == .dark ? 0.075 : 0.05), .clear],
+                               center: .topTrailing, startRadius: 0, endRadius: 650)
+            }.ignoresSafeArea()
+    }
+}
+
+struct WorkspaceGlass: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    func body(content: Content) -> some View {
+        if reduceTransparency {
+            content.background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16))
+        } else {
+            content
+                .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16))
+                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+        }
     }
 }

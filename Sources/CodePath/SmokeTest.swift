@@ -1,5 +1,6 @@
 #if DEBUG
 import AppKit
+import CoreGraphics
 import LearningCore
 import SwiftUI
 
@@ -95,7 +96,35 @@ enum SmokeTest {
                     try snapshot(window: window, to: directory.appendingPathComponent("\(page.rawValue)-light.png"))
                     check(window.contentView != nil, "Rendered page: \(page.rawValue)")
                 }
+                model.page = .home
+                model.update { $0.preferences.theme = "dark" }
+                await settle()
+                try snapshot(window: window, to: directory.appendingPathComponent("home-dark.png"))
+                window.setContentSize(NSSize(width: 760, height: 700))
+                await settle()
+                try snapshot(window: window, to: directory.appendingPathComponent("home-compact-dark.png"))
+                check(window.contentLayoutRect.width >= 750, "Redesigned home keeps compact native navigation")
+                window.setContentSize(NSSize(width: 1180, height: 800))
+                model.update { $0.preferences.theme = "light" }
                 model.open(first)
+                await settle()
+                let theoryWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1120, height: 740), styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+                theoryWindow.contentView = NSHostingView(rootView: LessonView(model: model, showTheory: true)
+                    .environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).background(WorkspaceBackdrop()))
+                theoryWindow.orderFront(nil)
+                await settle()
+                check(findEditor(in: theoryWindow.contentView)?.string == first.starter, "Theory side panel leaves the real editor and draft intact")
+                try snapshot(window: theoryWindow, to: directory.appendingPathComponent("lesson-theory-wide.png"))
+                theoryWindow.setContentSize(NSSize(width: 760, height: 660))
+                await settle()
+                if let sheet = theoryWindow.attachedSheet {
+                    check(true, "Compact lesson opens theory in a native sheet")
+                    try snapshot(window: sheet, to: directory.appendingPathComponent("lesson-theory-sheet.png"))
+                    theoryWindow.endSheet(sheet)
+                    sheet.orderOut(nil)
+                } else { failures.append("Compact lesson opens theory in a native sheet") }
+                theoryWindow.orderOut(nil)
+                window.makeKeyAndOrderFront(nil)
                 await settle()
                 if let editor = findEditor(in: window.contentView) {
                     window.makeFirstResponder(editor)
@@ -245,6 +274,17 @@ enum SmokeTest {
     }
 
     private static func snapshot(window: NSWindow, to url: URL) throws {
+        window.displayIfNeeded()
+        // cacheDisplay omits composited native sidebars/glass. Capture the actual window
+        // when already permitted; never request or change system permissions in smoke.
+        if CGPreflightScreenCaptureAccess() {
+            let capture = Process()
+            capture.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+            capture.arguments = ["-x", "-o", "-l\(window.windowNumber)", url.path]
+            try capture.run()
+            capture.waitUntilExit()
+            if capture.terminationStatus == 0 { return }
+        }
         guard let view = window.contentView else { throw ContentError.invalid("Window content missing") }
         try snapshot(view: view, to: url)
     }

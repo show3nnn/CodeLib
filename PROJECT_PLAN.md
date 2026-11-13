@@ -1,6 +1,11 @@
 # codelib — план и журнал разработки
 
 ## Точка продолжения
+**Единое визуальное обновление, версия пока 0.1.14/build15. Этапы A/B реализованы:** новая главная/навигация/каталог; экран задания с редактором сразу, теорией справа или в native sheet, компактной лентой заданий и новым editor chrome. `dist/codelib.app` и Xcode Release собраны; packaged launch без stderr. Swift103 и UI313+14+18 прошли (ввод/undo/перезапуск/все уроки/теория wide+compact). Логи `.build/redesign-{tests,workspace,build,xcode}.log`, снимки `.build/ui-smoke/run-20261113-225503/screenshots/`; cacheDisplay неполно снимает composited native-панели, внешняя visual/VoiceOver/fullscreen-приёмка не заявлена.
+
+**Следующий приоритет — C:** профиль/настройки/статистика в том же стиле, затем оставшиеся экраны. По прямому указанию пользователя English/генераторы/extraction заморожены (source manifest намеренно не обновляется); C++-проверки для UI не запускать, версии/README/release notes по мелочам не менять. Курс, LearningCore, механика NSTextView и переводы не изменены. Не возвращаться к старому плану локализации ниже.
+
+### Предыдущий завершённый технический этап
 Завершён этап **0.1.14 Alpha / build 15** после 72b8a2e. PresentationLocale задаёт ru для всех сцен, динамических ресурсов, дат (Gregorian/местный timezone) и percent. Native quit NSAlert и themePreview используют ресурсы. Неизвестные системные ошибки больше не выводят localizedDescription как primary: Cocoa/POSIX domain/code mapping + generic fallback, исходная диагностика сохраняется отдельно, disclosure/copy по запросу без отправки. Core/progress/Date/studyDays не менялись.
 
 Финальная полная регрессия: **103 Swift (69 ядра +34 приложения), 13 Python, 300 C++-исходников /1514 executions, 310+14+18 UI-checks**, без ошибок. Реальный Xcode extraction/xcstringstool успешен: **303/303** ключа (14 новых); число в Python-тесте больше не заморожено. Новая RU-запись/EN-draft 0.1.14: history151/151 поле /15 версий, source SHA пересмотрен после перевода.
