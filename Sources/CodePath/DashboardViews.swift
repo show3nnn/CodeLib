@@ -284,59 +284,142 @@ struct SyllabusView: View {
 
 struct ProgressViewScreen: View {
     @Bindable var model: AppModel
+    @State private var showAllReview = false
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                PageHeader(eyebrow: "Ваш путь", title: "Знания складываются из практики", subtitle: "Автоматическая проверка и самостоятельные отметки учитываются отдельно.")
+            VStack(alignment: .leading, spacing: 28) {
+                PageHeader(eyebrow: "Ваш результат", title: "Практика становится навыком.", subtitle: "Не гонка за цифрами. Ваш путь от первой строки к самостоятельному коду.")
                 if let course = model.course {
                     let finished = course.exercises.filter { model.document.completed($0.id) }
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 170))], spacing: 16) {
+                    let completedLessons = course.lessons.filter { model.document.lessonCompleted($0) }.count
+                    Card {
+                        VStack(alignment: .leading, spacing: 22) {
+                            HStack(spacing: 24) {
+                                ZStack {
+                                    Circle().stroke(.green.opacity(0.1), lineWidth: 7)
+                                    Circle().trim(from: 0, to: model.fraction).stroke(.green, style: StrokeStyle(lineWidth: 7, lineCap: .round))
+                                        .rotationEffect(.degrees(-90))
+                                    Text(model.fraction, format: PresentationLocale.percent)
+                                        .font(.system(size: 21, weight: .semibold, design: .rounded)).monospacedDigit()
+                                }.frame(width: 88, height: 88)
+                                    .accessibilityElement(children: .ignore)
+                                    .accessibilityLabel("Прогресс курса")
+                                    .accessibilityValue(Text(model.fraction, format: PresentationLocale.percent))
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("C++ · ваш путь").font(.caption.weight(.semibold)).foregroundStyle(.green)
+                                    Text("\(finished.count) из \(course.exercises.count)")
+                                        .font(.system(size: 30, weight: .semibold, design: .rounded)).tracking(-0.7)
+                                    Text("заданий завершено").font(.callout).foregroundStyle(.secondary)
+                                }
+                                Spacer(minLength: 0)
+                            }
+                            Divider()
+                            ViewThatFits(in: .horizontal) {
+                                HStack(spacing: 20) { topicCounts(course, completedLessons: completedLessons) }
+                                VStack(alignment: .leading, spacing: 10) { topicCounts(course, completedLessons: completedLessons) }
+                            }.font(.callout).foregroundStyle(.secondary)
+                        }
+                    }
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 14) {
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .automatic }.count)", label: "проверено автоматически", icon: "checkmark.seal")
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .selfReviewed }.count)", label: "отмечено вами", icon: "person.crop.circle.badge.checkmark")
                         Metric(value: "\(course.exercises.count - finished.count)", label: "впереди", icon: "arrow.forward.circle")
                         Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
                     }
+                    Text("Автоматически проверяются только однозначные ответы. Самостоятельные отметки кода учитываются отдельно и не означают запуск C++.")
+                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Card {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Продолжить с последнего места").font(.headline)
+                        VStack(alignment: .leading, spacing: 14) {
+                            Label("Вернуться к практике", systemImage: "arrow.turn.down.right").font(.headline)
                             if let lesson = model.lesson {
-                                Text(verbatim: lesson.title)
+                                Text(verbatim: lesson.title).font(.title3.weight(.medium))
                             } else {
                                 Text("Первый урок")
                             }
                             if let date = model.document.lastStudyDate {
-                                Text("Последнее занятие: \(PresentationLocale.date(date, includeTime: true))").foregroundStyle(.secondary)
+                                Text("Последнее занятие: \(PresentationLocale.date(date, includeTime: true))").font(.callout).foregroundStyle(.secondary)
                             }
-                            Button("Вернуться к заданию") { model.resume() }.buttonStyle(.borderedProminent)
+                            Button("Продолжить практику", systemImage: "arrow.right") { model.resume() }
+                                .buttonStyle(.borderedProminent).controlSize(.large)
                         }
                     }
-                    Text("Стоит повторить").font(.title2.bold())
+                    HStack {
+                        Text("Стоит повторить").font(.system(size: 21, weight: .bold)).tracking(-0.4)
+                        Spacer()
+                        Image(systemName: "arrow.counterclockwise").foregroundStyle(.green)
+                    }
                     let review = course.exercises.filter {
                         let state = model.state(for: $0.id)
                         return state.lastCorrect == false || state.hintLevel >= 2
                     }
                     if review.isEmpty {
-                        Text("Здесь появятся задания с ошибками или раскрытыми подробными подсказками.").foregroundStyle(.secondary)
+                        Card {
+                            HStack(alignment: .top, spacing: 14) {
+                                Image(systemName: "checkmark.circle").font(.title2).foregroundStyle(.green)
+                                Text("Здесь появятся задания с ошибками или подробными подсказками. Пока можно двигаться дальше.")
+                                    .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
                     } else {
-                        ForEach(review) { task in
-                            Button { model.open(task) } label: {
-                                Label(task.title, systemImage: "arrow.counterclockwise").frame(maxWidth: .infinity, alignment: .leading).padding(10)
-                            }.buttonStyle(.bordered)
+                        Card {
+                            VStack(alignment: .leading, spacing: 0) {
+                                ForEach(Array(showAllReview ? review : Array(review.prefix(5)))) { task in
+                                    Button { model.open(task) } label: {
+                                        HStack(spacing: 14) {
+                                            Image(systemName: "arrow.counterclockwise").foregroundStyle(.green)
+                                            Text(task.title).font(.callout.weight(.medium))
+                                            Spacer()
+                                            Image(systemName: "arrow.up.right").foregroundStyle(.secondary)
+                                        }.padding(.vertical, 12).contentShape(Rectangle())
+                                    }.buttonStyle(.plain)
+                                }
+                                if review.count > 5 {
+                                    Divider().padding(.vertical, 8)
+                                    Button(showAllReview ? "Показать меньше" : "Все задания для повторения (\(review.count))") { showAllReview.toggle() }
+                                }
+                            }
                         }
                     }
-                    Text("По разделам").font(.title2.bold())
-                    ForEach(course.sections) { section in
-                        let tasks = section.lessons.flatMap(\.exercises)
-                        Card {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text(section.title).font(.headline)
-                                ProgressView(value: Double(tasks.filter { model.document.completed($0.id) }.count), total: Double(tasks.count))
-                                Text("\(tasks.filter { model.document.completed($0.id) }.count) из \(tasks.count)").font(.caption).foregroundStyle(.secondary)
-                            }
+                    HStack {
+                        Text("По разделам").font(.system(size: 21, weight: .bold)).tracking(-0.4)
+                        Spacer()
+                        Button("Вся программа", systemImage: "arrow.up.right") { model.page = .syllabus }.buttonStyle(.plain).foregroundStyle(.green)
+                    }
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 280))], spacing: 14) {
+                        ForEach(course.sections) { section in
+                            let tasks = section.lessons.flatMap(\.exercises)
+                            let done = tasks.filter { model.document.completed($0.id) }.count
+                            Button {
+                                if let lesson = section.lessons.first(where: { !model.document.lessonCompleted($0) }) ?? section.lessons.first {
+                                    model.openLesson(lesson)
+                                }
+                            } label: {
+                                Card {
+                                    VStack(alignment: .leading, spacing: 16) {
+                                        HStack(alignment: .top, spacing: 12) {
+                                            Text(section.title).font(.headline).fixedSize(horizontal: false, vertical: true)
+                                            Spacer(minLength: 0)
+                                            Image(systemName: done == tasks.count ? "checkmark.circle.fill" : "arrow.up.right")
+                                                .foregroundStyle(done == tasks.count ? Color.green : .secondary)
+                                        }.frame(minHeight: 44, alignment: .top)
+                                        ProgressView(value: Double(done), total: Double(tasks.count)).tint(.green)
+                                        HStack {
+                                            Text("\(done) из \(tasks.count) заданий")
+                                            Spacer(minLength: 0)
+                                            Text("\(section.lessons.filter { model.document.lessonCompleted($0) }.count)/\(section.lessons.count) уроков")
+                                        }.font(.caption).foregroundStyle(.secondary)
+                                    }
+                                }.contentShape(RoundedRectangle(cornerRadius: 22))
+                             }.buttonStyle(.plain).accessibilityHint("Продолжить или повторить раздел")
                         }
                     }
                 }
             }.padding(32).frame(maxWidth: 1080).frame(maxWidth: .infinity)
         }
+    }
+
+    @ViewBuilder private func topicCounts(_ course: Course, completedLessons: Int) -> some View {
+        Label("\(completedLessons)/\(course.lessons.count) уроков", systemImage: "book.closed")
+        Label("\(course.sections.filter { section in section.lessons.allSatisfy { model.document.lessonCompleted($0) } }.count)/\(course.sections.count) разделов", systemImage: "square.stack")
     }
 }
