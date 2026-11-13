@@ -20,13 +20,13 @@ class LocalizationAuthoringTests(unittest.TestCase):
         return SimpleNamespace(__name__="test-author", SOURCE_SHA256=author.SOURCE_SHA256,
                                SECTION_ID=author.SECTION_ID, ENTITIES=copy.deepcopy(author.ENTITIES), SKILLS=dict(author.SKILLS))
 
-    def test_eight_complete_sections_and_english_prose(self):
+    def test_eleven_complete_sections_and_english_prose(self):
         texts, expected = generator.build_texts(self.course, self.source)
-        self.assertEqual(len(texts), 1554)
+        self.assertEqual(len(texts), 1994)
         self.assertEqual(len(expected), 2904)
         selected = [s for s in self.course["sections"] if s["id"] in {a.SECTION_ID for a in generator.AUTHORS}]
-        self.assertEqual(sum(len(s["lessons"]) for s in selected), 32)
-        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 160)
+        self.assertEqual(sum(len(s["lessons"]) for s in selected), 43)
+        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 204)
         self.assertEqual(set(texts), set(source_texts(dict(self.course, sections=selected))))
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in texts.values()))
 

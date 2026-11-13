@@ -7,7 +7,7 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
                 HStack(spacing: 20) {
-                    PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { "С возвращением, \($0.nickname)!" } ?? "Хороший день, чтобы разобраться.",
+                    PageHeader(eyebrow: "Ваша лаборатория кода", title: model.document.profile.map { LocalizedStringResource("С возвращением, \($0.nickname)!") } ?? "Хороший день, чтобы разобраться.",
                                subtitle: "Немного теории. Много собственного кода. Один понятный шаг за другим.")
                     if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 72) }
                 }
@@ -58,7 +58,7 @@ struct HomeView: View {
 
 struct Metric: View {
     let value: String
-    let label: String
+    let label: LocalizedStringResource
     let icon: String
     var body: some View {
         Card {
@@ -182,7 +182,11 @@ struct ProgressViewScreen: View {
                     Card {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Продолжить с последнего места").font(.headline)
-                            Text(model.lesson?.title ?? "Первый урок")
+                            if let lesson = model.lesson {
+                                Text(verbatim: lesson.title)
+                            } else {
+                                Text("Первый урок")
+                            }
                             if let date = model.document.lastStudyDate {
                                 Text("Последнее занятие: \(date.formatted(date: .abbreviated, time: .shortened))").foregroundStyle(.secondary)
                             }

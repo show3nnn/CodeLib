@@ -97,12 +97,12 @@ struct RootView: View {
 }
 
 struct PageHeader: View {
-    let eyebrow: String
-    let title: String
-    let subtitle: String
+    let eyebrow: LocalizedStringResource
+    let title: LocalizedStringResource
+    let subtitle: LocalizedStringResource
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(eyebrow.uppercased()).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
+            Text(eyebrow).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
             Text(title).font(.largeTitle.bold())
             Text(subtitle).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }.frame(maxWidth: .infinity, alignment: .leading)
