@@ -8,9 +8,12 @@ import content_en_02
 import content_en_03
 import content_en_04
 import content_en_05
+import content_en_06
+import content_en_07
+import content_en_08
 from localization_tools import digest, entities, source_texts, value_key
 
-AUTHORS = [content_en_01, content_en_02, content_en_03, content_en_04, content_en_05]
+AUTHORS = [content_en_01, content_en_02, content_en_03, content_en_04, content_en_05, content_en_06, content_en_07, content_en_08]
 
 
 def build_texts(course, source):

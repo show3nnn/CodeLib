@@ -5,6 +5,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:9",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · build %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -17,6 +23,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:83",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@%@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -47,6 +59,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:213",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -59,6 +77,12 @@
       "comment": "Sources/CodePath/RootView.swift:55",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld tasks"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -71,6 +95,12 @@
       "comment": "Sources/CodePath/LessonView.swift:15",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld tasks complete"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -83,6 +113,12 @@
       "comment": "Sources/CodePath/LessonView.swift:29",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld. %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -95,6 +131,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:147",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld/%lld · ~%lld min"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -125,6 +167,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:101; Sources/CodePath/DashboardViews.swift:21",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C++"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -137,6 +185,12 @@
       "comment": "Sources/CodePath/RootView.swift:53",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C++ · your first course"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -167,6 +221,12 @@
       "comment": "Sources/CodePath/LessonView.swift:81",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C++ under the microscope"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -197,6 +257,12 @@
       "comment": "Sources/CodePath/LessonView.swift:198",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab / Shift+Tab — indent / outdent · Control+Tab — leave the editor · Enter preserves indentation · Long lines wrap · No compiler in this version"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -263,6 +329,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:124",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In progress"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -275,6 +347,12 @@
       "comment": "Sources/CodePath/LessonView.swift:183",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your code · C++17"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -287,6 +365,12 @@
       "comment": "Sources/CodePath/LessonView.swift:204; Sources/CodePath/LessonView.swift:214",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your answer"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -299,6 +383,12 @@
       "comment": "Sources/CodePath/LessonView.swift:209",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your predicted output"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -311,6 +401,12 @@
       "comment": "Sources/CodePath/LessonView.swift:246",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correct. %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -323,6 +419,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:189",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return to the task"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -335,6 +437,12 @@
       "comment": "Sources/CodePath/RootView.swift:17",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore backup"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -347,6 +455,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:122",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -359,6 +473,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:31",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All categories"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -371,6 +491,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:121",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All achievements"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -383,6 +509,12 @@
       "comment": "Sources/CodePath/LessonView.swift:205",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose an option"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -395,6 +527,12 @@
       "comment": "Sources/CodePath/LessonView.swift:64",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a lesson"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -425,6 +563,12 @@
       "comment": "Sources/CodePath/LessonView.swift:120",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -509,6 +653,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:46",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available: %lld sections, %lld lessons, %lld tasks. Code, theory, assessments and mini-projects — from main to files and the final supplies dispatcher. All results stay on your Mac."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -521,6 +671,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:125",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completed"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -551,6 +707,12 @@
       "comment": "Sources/CodePath/LessonView.swift:239",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This task was completed earlier. Your current edited answer has not been confirmed yet."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -563,6 +725,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:68; Sources/CodePath/ReleaseViews.swift:69",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -575,6 +743,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:92",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dismiss notification"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -605,6 +779,12 @@
       "comment": "Sources/CodePath/LessonView.swift:174",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace the draft with starter code?"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -635,6 +815,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:198",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tasks with incorrect answers or detailed hints you have opened will appear here."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -647,6 +833,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:159",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change your search or status filter."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -677,6 +869,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:103",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explore the syllabus"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -725,6 +923,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:103",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fixes"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -737,6 +941,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:57",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release history unavailable"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -785,6 +995,12 @@
       "comment": "Sources/CodePath/LessonView.swift:124",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source file: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -851,6 +1067,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:30",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Category"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -863,6 +1085,12 @@
       "comment": "Sources/CodePath/CodeEditor.swift:150",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C++ code"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -875,6 +1103,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:30",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code is saved as a draft; there is no built-in execution or AI."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -905,6 +1139,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:88",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collection"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -935,6 +1175,12 @@
       "comment": "Sources/CodePath/LessonView.swift:187",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -965,6 +1211,12 @@
       "comment": "Sources/CodePath/LessonView.swift:74",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key points"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1031,6 +1283,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:12",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version metadata unavailable"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1043,6 +1301,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:78",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On the horizon"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1055,6 +1319,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:67",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each achievement is earned once and saved in your local profile."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1085,6 +1355,12 @@
       "comment": "Sources/CodePath/LessonView.swift:144",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nudge"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1133,6 +1409,12 @@
       "comment": "Sources/CodePath/RootView.swift:64",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1163,6 +1445,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:26",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A native programming lab"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1211,6 +1499,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:123",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not started"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1223,6 +1517,12 @@
       "comment": "Sources/CodePath/LessonView.swift:56",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not saved"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1235,6 +1535,12 @@
       "comment": "Sources/CodePath/RootView.swift:71",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not saved: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1247,6 +1553,12 @@
       "comment": "Sources/CodePath/RootView.swift:11",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to load the course"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1259,6 +1571,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:119",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent achievements"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1289,6 +1607,12 @@
       "comment": "Sources/CodePath/LessonView.swift:152",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I need a nudge"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1355,6 +1679,12 @@
       "comment": "Sources/CodePath/LessonView.swift:130",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected file: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1367,6 +1697,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:45",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From your first line to your own project"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1379,6 +1715,12 @@
       "comment": "Sources/CodePath/LessonView.swift:164",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Answer: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1409,6 +1751,12 @@
       "comment": "Sources/CodePath/LessonView.swift:64",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the syllabus or continue where you left off."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1421,6 +1769,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:26",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld unlocked"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1433,6 +1787,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:48",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the syllabus"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1445,6 +1805,12 @@
       "comment": "Sources/CodePath/LessonView.swift:157",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show explanation and answer"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1475,6 +1841,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:70",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark as read"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1487,6 +1859,12 @@
       "comment": "Sources/CodePath/RootView.swift:57",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline · only on your Mac"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1517,6 +1895,12 @@
       "comment": "Sources/CodePath/AchievementViews.swift:124",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earn your first achievement through real practice. The collection is already available."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1529,6 +1913,12 @@
       "comment": "Sources/CodePath/RootView.swift:18",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The original file will be saved separately before restoring. If no backup exists, nothing will change."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1577,6 +1967,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:206",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By section"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1589,6 +1985,12 @@
       "comment": "Sources/CodePath/LessonView.swift:232; Sources/CodePath/RootView.swift:73",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1601,6 +2003,12 @@
       "comment": "Sources/CodePath/LessonView.swift:169",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try the task again?"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1613,6 +2021,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:70",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry saving"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1661,6 +2075,12 @@
       "comment": "Sources/CodePath/LessonView.swift:148",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hint"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1691,6 +2111,12 @@
       "comment": "Sources/CodePath/LessonView.swift:246",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not a match yet. Check the requirements, format and values; you can reveal a nudge."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1703,6 +2129,12 @@
       "comment": "Sources/CodePath/RootView.swift:32",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1715,6 +2147,12 @@
       "comment": "Sources/CodePath/LessonView.swift:251",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attempts: %lld"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1727,6 +2165,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:187",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last studied: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1739,6 +2183,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:27",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A hands-on C++ course for macOS.\nOffline, with no accounts or telemetry."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1787,6 +2237,12 @@
       "comment": "Sources/CodePath/LessonView.swift:118",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Example %lld · input"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1817,6 +2273,12 @@
       "comment": "Sources/CodePath/LessonView.swift:115",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Input and output examples"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1847,6 +2309,12 @@
       "comment": "Sources/CodePath/LessonView.swift:226",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check answer"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1859,6 +2327,12 @@
       "comment": "Sources/CodePath/LessonView.swift:212",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predicted program output"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1871,6 +2345,12 @@
       "comment": "Sources/CodePath/RootView.swift:14",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progress not loaded"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1901,6 +2381,12 @@
       "comment": "Sources/CodePath/RootView.swift:92",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1931,6 +2417,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:184",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue where you left off"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -1997,6 +2489,12 @@
       "comment": "Sources/CodePath/LessonView.swift:160",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explanation"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2009,6 +2507,12 @@
       "comment": "Sources/CodePath/LessonView.swift:152",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reveal hint"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2039,6 +2543,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:22",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From zero to a confident first year"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2051,6 +2561,12 @@
       "comment": "Sources/CodePath/LessonView.swift:175; Sources/CodePath/LessonView.swift:185",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset code"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2063,6 +2579,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:160",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear search and filter"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2147,6 +2669,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:23",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current: %@"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2177,6 +2705,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:84",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coming soon"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2189,6 +2723,12 @@
       "comment": "Sources/CodePath/LessonView.swift:19",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide theory"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2219,6 +2759,12 @@
       "comment": "Sources/CodePath/LessonView.swift:110",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Difficulty %lld/3"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2231,6 +2777,12 @@
       "comment": "Sources/CodePath/LessonView.swift:142",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try it yourself first"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2243,6 +2795,12 @@
       "comment": "Sources/CodePath/LessonView.swift:170",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark as unfinished"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2255,6 +2813,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:121",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesson status"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2267,6 +2831,12 @@
       "comment": "Sources/CodePath/LessonView.swift:56",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved locally"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2333,6 +2903,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:192",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Worth reviewing"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2399,6 +2975,12 @@
       "comment": "Sources/CodePath/LessonView.swift:176",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your current draft will be replaced. Your previous self-review mark and hint history will remain; this does not check the new text."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2429,6 +3011,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:164",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topic, section, task or skill"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2441,6 +3029,12 @@
       "comment": "Sources/CodePath/LessonView.swift:19",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theory"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2471,6 +3065,12 @@
       "comment": "Sources/CodePath/CodeEditor.swift:116",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outdent"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2519,6 +3119,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:99",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Improvements"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2531,6 +3137,12 @@
       "comment": "Sources/CodePath/LessonView.swift:253",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lesson complete. Great work! Review the material or move on."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2543,6 +3155,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:158",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No lessons found"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2573,6 +3191,12 @@
       "comment": "Sources/CodePath/RootView.swift:51",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn at your own pace"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2603,6 +3227,12 @@
       "comment": "Sources/CodePath/LessonView.swift:173",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your draft, answers and hint history will remain. You can complete the task again."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2615,6 +3245,12 @@
       "comment": "Sources/CodePath/ReleaseViews.swift:44",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's new in codelib"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2627,6 +3263,12 @@
       "comment": "Sources/CodePath/RootView.swift:74",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2657,6 +3299,12 @@
       "comment": "Sources/CodePath/LessonView.swift:242",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is your own mark, not an automatic check. Code edits are not rechecked."
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2669,6 +3317,12 @@
       "comment": "Sources/CodePath/LessonView.swift:223",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I've reviewed my solution — mark complete"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
@@ -2681,6 +3335,12 @@
       "comment": "Sources/CodePath/DashboardViews.swift:30",
       "extractionState": "manual",
       "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "of the available course complete"
+          }
+        },
         "ru": {
           "stringUnit": {
             "state": "translated",
