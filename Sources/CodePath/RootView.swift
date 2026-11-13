@@ -44,7 +44,7 @@ struct RootView: View {
                 }
                 Section("codelib") {
                     ForEach(AppModel.Page.allCases) { page in
-                        Label(page.title, systemImage: page.icon).tag(page)
+                        Label { Text(page.title) } icon: { Image(systemName: page.icon) }.tag(page)
                     }
                 }
                 if let course = model.course {
@@ -86,7 +86,7 @@ struct RootView: View {
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 AchievementBanner(model: model)
             }
-            .navigationTitle(model.page.title)
+            .navigationTitle(Text(model.page.title))
             .toolbar {
                 if model.page != .lesson {
                     ToolbarItem { Button("Продолжить", systemImage: "arrow.right.circle") { model.resume() } }

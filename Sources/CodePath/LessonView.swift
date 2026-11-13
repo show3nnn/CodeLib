@@ -2,6 +2,29 @@ import SwiftUI
 import AppKit
 import LearningCore
 
+// Display labels are UI resources, never persisted grading values or core dependencies.
+extension ExerciseKind {
+    var localizedTitle: LocalizedStringResource {
+        switch self {
+        case .code: "Написать код"
+        case .choice: "Выбрать объяснение"
+        case .output: "Предсказать вывод"
+        case .number: "Числовой ответ"
+        case .text: "Короткий ответ"
+        }
+    }
+}
+
+extension Completion {
+    var localizedTitle: LocalizedStringResource {
+        switch self {
+        case .unfinished: "Не завершено"
+        case .automatic: "Проверено автоматически"
+        case .selfReviewed: "Отмечено вами"
+        }
+    }
+}
+
 struct LessonView: View {
     @Bindable var model: AppModel
     @State private var showTheory = true
@@ -105,7 +128,7 @@ private struct ExerciseView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Text(exercise.kind.title.uppercased()).font(.caption.weight(.semibold)).tracking(1.5).foregroundStyle(.tint)
+                Text(exercise.kind.localizedTitle).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(1.5).foregroundStyle(.tint)
                 Spacer()
                 Text("Сложность \(exercise.difficulty)/3").font(.caption).foregroundStyle(.secondary)
             }
@@ -233,7 +256,9 @@ private struct ExerciseView: View {
                 }
             }
             if state.completion != .unfinished {
-                Label(state.completion.title, systemImage: state.completion == .automatic ? "checkmark.seal.fill" : "person.crop.circle.badge.checkmark")
+                Label { Text(state.completion.localizedTitle) } icon: {
+                    Image(systemName: state.completion == .automatic ? "checkmark.seal.fill" : "person.crop.circle.badge.checkmark")
+                }
                     .foregroundStyle(.green).font(.subheadline.weight(.medium))
                 if state.completion == .automatic && state.lastCorrect != true {
                     Text("Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.").font(.caption).foregroundStyle(.secondary)

@@ -4,6 +4,20 @@ import Testing
 @testable import CodePathApp
 
 @MainActor struct GreetingStyleTests {
+    @Test func navigationTaskStatusAndAvatarLabelsStaySeparateFromStableValues() {
+        #expect(AppModel.Page.allCases.map(\.rawValue) == ["home", "catalog", "syllabus", "lesson", "progress", "achievements"])
+        #expect(AppModel.Page.allCases.map { String(localized: $0.title) } == ["Мои курсы", "Каталог", "Программа C++", "Обучение", "Мой прогресс", "Достижения"])
+        for kind in [ExerciseKind.code, .choice, .output, .number, .text] {
+            #expect(String(localized: kind.localizedTitle) == kind.title)
+        }
+        for status in [Completion.unfinished, .automatic, .selfReviewed] {
+            #expect(String(localized: status.localizedTitle) == status.title)
+        }
+        for avatar in LocalProfile.Avatar.allCases {
+            #expect(String(localized: avatar.localizedTitle) == avatar.title)
+        }
+    }
+
     @Test func categoryResourcesKeepCanonicalCasesAndRussianFallbacks() {
         let labels = AchievementCategory.allCases.map { String(localized: $0.localizedTitle) }
         #expect(labels == AchievementCategory.allCases.map(\.title))

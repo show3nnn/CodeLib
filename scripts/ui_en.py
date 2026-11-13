@@ -99,4 +99,9 @@ TEXTS = {
     "Получено · %@": "Earned · %@", "Секретное достижение": "Secret achievement",
     "Условие откроется после получения награды.": "The requirement will be revealed once you earn this achievement.",
     "Учтено из прежнего прогресса · %@": "Recognized from earlier progress · %@",
+    "Выбрать объяснение": "Choose an explanation", "Горы": "Mountains", "Достижения": "Achievements", "Звезда": "Star",
+    "Инициал имени": "Name initial", "Короткий ответ": "Short answer", "Лист": "Leaf", "Мои курсы": "My courses",
+    "Мой прогресс": "My progress", "Написать код": "Write code", "Не завершено": "Not complete", "Отмечено вами": "Marked by you",
+    "Предсказать вывод": "Predict output", "Проверено автоматически": "Automatically checked", "Программа C++": "C++ syllabus",
+    "Фотография": "Photo", "Числовой ответ": "Numeric answer",
 }

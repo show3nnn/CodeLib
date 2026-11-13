@@ -81,7 +81,7 @@ final class AppModel {
     enum Page: String, CaseIterable, Identifiable {
         case home, catalog, syllabus, lesson, progress, achievements
         var id: String { rawValue }
-        var title: String {
+        var title: LocalizedStringResource {
             switch self {
             case .home: "Мои курсы"
             case .catalog: "Каталог"

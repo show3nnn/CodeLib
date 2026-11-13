@@ -17,16 +17,16 @@
       "Sources/CodePath/RootView.swift:55"
     ],
     "%lld из %lld заданий завершено": [
-      "Sources/CodePath/LessonView.swift:15"
+      "Sources/CodePath/LessonView.swift:38"
     ],
     "%lld. %@": [
-      "Sources/CodePath/LessonView.swift:29"
+      "Sources/CodePath/LessonView.swift:52"
     ],
     "%lld/%lld · ~%lld мин": [
       "Sources/CodePath/DashboardViews.swift:147"
     ],
     "1–30 символов, включая Unicode. Это имя только на вашем Mac.": [
-      "Sources/CodePath/ProfileViews.swift:34"
+      "Sources/CodePath/ProfileViews.swift:46"
     ],
     "C++": [
       "Sources/CodePath/DashboardViews.swift:101",
@@ -36,10 +36,10 @@
       "Sources/CodePath/RootView.swift:53"
     ],
     "C++ · первый шаг": [
-      "Sources/CodePath/ProfileViews.swift:178"
+      "Sources/CodePath/ProfileViews.swift:190"
     ],
     "C++ под микроскопом": [
-      "Sources/CodePath/LessonView.swift:81"
+      "Sources/CodePath/LessonView.swift:104"
     ],
     "C++17 · практика": [
       "Sources/CodePath/DashboardViews.swift:119"
@@ -48,20 +48,20 @@
       "Sources/CodePath/WelcomeCodeView.swift:84"
     ],
     "Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ · Длинные строки переносятся · Компилятора в этой версии нет": [
-      "Sources/CodePath/LessonView.swift:198"
+      "Sources/CodePath/LessonView.swift:221"
     ],
     "codelib": [
       "Sources/CodePath/CodePathApp.swift:12",
-      "Sources/CodePath/ProfileViews.swift:109",
+      "Sources/CodePath/ProfileViews.swift:121",
       "Sources/CodePath/ReleaseViews.swift:24",
       "Sources/CodePath/RootView.swift:31",
       "Sources/CodePath/RootView.swift:45"
     ],
     "std::cout << 42;": [
-      "Sources/CodePath/ProfileViews.swift:179"
+      "Sources/CodePath/ProfileViews.swift:191"
     ],
     "Аватар": [
-      "Sources/CodePath/ProfileViews.swift:38"
+      "Sources/CodePath/ProfileViews.swift:50"
     ],
     "Автоматическая проверка и самостоятельные отметки учитываются отдельно.": [
       "Sources/CodePath/DashboardViews.swift:173"
@@ -73,14 +73,14 @@
       "Sources/CodePath/DashboardViews.swift:124"
     ],
     "Ваш код · C++17": [
-      "Sources/CodePath/LessonView.swift:183"
+      "Sources/CodePath/LessonView.swift:206"
     ],
     "Ваш ответ": [
-      "Sources/CodePath/LessonView.swift:204",
-      "Sources/CodePath/LessonView.swift:214"
+      "Sources/CodePath/LessonView.swift:227",
+      "Sources/CodePath/LessonView.swift:237"
     ],
     "Ваш прогноз вывода": [
-      "Sources/CodePath/LessonView.swift:209"
+      "Sources/CodePath/LessonView.swift:232"
     ],
     "Ваш путь": [
       "Sources/CodePath/DashboardViews.swift:173"
@@ -89,7 +89,7 @@
       "Sources/CodePath/DashboardViews.swift:10"
     ],
     "Верно. %@": [
-      "Sources/CodePath/LessonView.swift:246"
+      "Sources/CodePath/LessonView.swift:271"
     ],
     "Вернуться к заданию": [
       "Sources/CodePath/DashboardViews.swift:193"
@@ -110,29 +110,38 @@
       "Sources/CodePath/AchievementViews.swift:152"
     ],
     "Выберите вариант": [
-      "Sources/CodePath/LessonView.swift:205"
+      "Sources/CodePath/LessonView.swift:228"
     ],
     "Выберите урок": [
-      "Sources/CodePath/LessonView.swift:64"
+      "Sources/CodePath/LessonView.swift:87"
+    ],
+    "Выбрать объяснение": [
+      "Sources/CodePath/LessonView.swift:10"
     ],
     "Выбрать файл и заменить": [
       "Sources/CodePath/SettingsView.swift:99"
     ],
     "Вывод": [
-      "Sources/CodePath/LessonView.swift:120"
+      "Sources/CodePath/LessonView.swift:143"
+    ],
+    "Горы": [
+      "Sources/CodePath/ProfileViews.swift:11"
     ],
     "Далее": [
-      "Sources/CodePath/LessonView.swift:59",
-      "Sources/CodePath/ProfileViews.swift:125"
+      "Sources/CodePath/LessonView.swift:82",
+      "Sources/CodePath/ProfileViews.swift:137"
     ],
     "Дата создания прежнего профиля не была сохранена.": [
       "Sources/CodePath/SettingsView.swift:23"
     ],
     "Добавим ваш профиль": [
-      "Sources/CodePath/ProfileViews.swift:119"
+      "Sources/CodePath/ProfileViews.swift:131"
     ],
     "Добро пожаловать в codelib": [
-      "Sources/CodePath/ProfileViews.swift:112"
+      "Sources/CodePath/ProfileViews.swift:124"
+    ],
+    "Достижения": [
+      "Sources/CodePath/AppModel.swift:91"
     ],
     "Доступно: %lld разделов, %lld уроков, %lld заданий. Код, теория, контрольные и мини-проекты — от main до файлов и итогового диспетчера запасов. Все результаты остаются на вашем Mac.": [
       "Sources/CodePath/DashboardViews.swift:46"
@@ -141,10 +150,10 @@
       "Sources/CodePath/DashboardViews.swift:125"
     ],
     "Загрузить фото…": [
-      "Sources/CodePath/ProfileViews.swift:51"
+      "Sources/CodePath/ProfileViews.swift:63"
     ],
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": [
-      "Sources/CodePath/LessonView.swift:239"
+      "Sources/CodePath/LessonView.swift:264"
     ],
     "Закрыть": [
       "Sources/CodePath/AchievementViews.swift:99",
@@ -157,7 +166,10 @@
       "Sources/CodePath/SettingsView.swift:98"
     ],
     "Заменить черновик стартовым кодом?": [
-      "Sources/CodePath/LessonView.swift:174"
+      "Sources/CodePath/LessonView.swift:197"
+    ],
+    "Звезда": [
+      "Sources/CodePath/ProfileViews.swift:12"
     ],
     "Звуки достижений": [
       "Sources/CodePath/SettingsView.swift:65"
@@ -180,6 +192,9 @@
     "Импорт…": [
       "Sources/CodePath/SettingsView.swift:76"
     ],
+    "Инициал имени": [
+      "Sources/CodePath/ProfileViews.swift:9"
+    ],
     "Использовать фото": [
       "Sources/CodePath/AvatarPhoto.swift:71"
     ],
@@ -201,18 +216,19 @@
       "Sources/CodePath/CodePathApp.swift:46"
     ],
     "Исходный файл: %@": [
-      "Sources/CodePath/LessonView.swift:124"
+      "Sources/CodePath/LessonView.swift:147"
     ],
     "Кадрирование аватара": [
       "Sources/CodePath/AvatarPhoto.swift:58"
     ],
     "Как в macOS": [
-      "Sources/CodePath/ProfileViews.swift:133"
+      "Sources/CodePath/ProfileViews.swift:145"
     ],
     "Как к вам обращаться?": [
-      "Sources/CodePath/ProfileViews.swift:32"
+      "Sources/CodePath/ProfileViews.swift:44"
     ],
     "Каталог": [
+      "Sources/CodePath/AppModel.swift:87",
       "Sources/CodePath/DashboardViews.swift:98"
     ],
     "Категория": [
@@ -232,22 +248,28 @@
       "Sources/CodePath/AchievementViews.swift:37"
     ],
     "Комфортное оформление": [
-      "Sources/CodePath/ProfileViews.swift:131"
+      "Sources/CodePath/ProfileViews.swift:143"
     ],
     "Копировать": [
-      "Sources/CodePath/LessonView.swift:187"
+      "Sources/CodePath/LessonView.swift:210"
     ],
     "Короткий оригинальный звук при получении награды. Громкость зависит от macOS.": [
       "Sources/CodePath/SettingsView.swift:68"
     ],
+    "Короткий ответ": [
+      "Sources/CodePath/LessonView.swift:13"
+    ],
     "Коротко о главном": [
-      "Sources/CodePath/LessonView.swift:74"
+      "Sources/CodePath/LessonView.swift:97"
+    ],
+    "Лист": [
+      "Sources/CodePath/ProfileViews.swift:10"
     ],
     "Локальные данные": [
       "Sources/CodePath/SettingsView.swift:70"
     ],
     "Локальный профиль": [
-      "Sources/CodePath/ProfileViews.swift:85",
+      "Sources/CodePath/ProfileViews.swift:97",
       "Sources/CodePath/SettingsView.swift:12"
     ],
     "Мастерство": [
@@ -259,6 +281,12 @@
     "Метаданные версии недоступны": [
       "Sources/CodePath/ReleaseViews.swift:12"
     ],
+    "Мои курсы": [
+      "Sources/CodePath/AppModel.swift:86"
+    ],
+    "Мой прогресс": [
+      "Sources/CodePath/AppModel.swift:90"
+    ],
     "На горизонте": [
       "Sources/CodePath/DashboardViews.swift:78"
     ],
@@ -269,24 +297,27 @@
       "Sources/CodePath/AchievementViews.swift:37"
     ],
     "Назад": [
-      "Sources/CodePath/LessonView.swift:53",
-      "Sources/CodePath/ProfileViews.swift:123",
-      "Sources/CodePath/ProfileViews.swift:144"
+      "Sources/CodePath/LessonView.swift:76",
+      "Sources/CodePath/ProfileViews.swift:135",
+      "Sources/CodePath/ProfileViews.swift:156"
     ],
     "Найдётся во время практики.": [
       "Sources/CodePath/AchievementViews.swift:61"
     ],
     "Намёк": [
-      "Sources/CodePath/LessonView.swift:144"
+      "Sources/CodePath/LessonView.swift:167"
     ],
     "Написание кода проверяется самостоятельно. Встроенного исполнения кода и AI-помощника в этой версии нет.": [
       "Sources/CodePath/SettingsView.swift:87"
+    ],
+    "Написать код": [
+      "Sources/CodePath/LessonView.swift:9"
     ],
     "Настойчивость": [
       "Sources/CodePath/AchievementViews.swift:12"
     ],
     "Настройка хранится только на этом Mac": [
-      "Sources/CodePath/ProfileViews.swift:155"
+      "Sources/CodePath/ProfileViews.swift:167"
     ],
     "Настройки": [
       "Sources/CodePath/RootView.swift:64"
@@ -298,19 +329,22 @@
       "Sources/CodePath/ReleaseViews.swift:26"
     ],
     "Начать настройку": [
-      "Sources/CodePath/ProfileViews.swift:116"
+      "Sources/CodePath/ProfileViews.swift:128"
     ],
     "Начать обучение": [
-      "Sources/CodePath/ProfileViews.swift:146"
+      "Sources/CodePath/ProfileViews.swift:158"
     ],
     "Начните с C++. Другие направления пока недоступны и не содержат вымышленных уроков.": [
       "Sources/CodePath/DashboardViews.swift:98"
+    ],
+    "Не завершено": [
+      "Sources/CodePath/LessonView.swift:21"
     ],
     "Не начаты": [
       "Sources/CodePath/DashboardViews.swift:123"
     ],
     "Не сохранено": [
-      "Sources/CodePath/LessonView.swift:56"
+      "Sources/CodePath/LessonView.swift:79"
     ],
     "Не сохранено: %@": [
       "Sources/CodePath/RootView.swift:71"
@@ -334,7 +368,7 @@
       "Sources/CodePath/SettingsView.swift:58"
     ],
     "Нужен намёк": [
-      "Sources/CodePath/LessonView.swift:152"
+      "Sources/CodePath/LessonView.swift:175"
     ],
     "О codelib": [
       "Sources/CodePath/CodePathApp.swift:26",
@@ -343,28 +377,29 @@
       "Sources/CodePath/SettingsView.swift:83"
     ],
     "Обучение": [
+      "Sources/CodePath/AppModel.swift:89",
       "Sources/CodePath/CodePathApp.swift:32"
     ],
     "Один локальный профиль, без регистрации и проверки имени в интернете. Фото хранится внутри локального файла прогресса и его экспорта.": [
-      "Sources/CodePath/ProfileViews.swift:54"
+      "Sources/CodePath/ProfileViews.swift:66"
     ],
     "Один язык. Настоящее понимание.": [
       "Sources/CodePath/DashboardViews.swift:98"
     ],
     "Ожидаемый файл: %@": [
-      "Sources/CodePath/LessonView.swift:130"
+      "Sources/CodePath/LessonView.swift:153"
     ],
     "От первой строки до своего проекта": [
       "Sources/CodePath/DashboardViews.swift:45"
     ],
     "Ответ: %@": [
-      "Sources/CodePath/LessonView.swift:164"
+      "Sources/CodePath/LessonView.swift:187"
     ],
     "Ответы, черновики и настройки будут сброшены. Рекомендуем сначала экспортировать данные.": [
       "Sources/CodePath/SettingsView.swift:97"
     ],
     "Откройте программу курса или продолжите с последнего места.": [
-      "Sources/CodePath/LessonView.swift:64"
+      "Sources/CodePath/LessonView.swift:87"
     ],
     "Открыто %lld из %lld": [
       "Sources/CodePath/AchievementViews.swift:40"
@@ -373,14 +408,17 @@
       "Sources/CodePath/DashboardViews.swift:48"
     ],
     "Открыть разбор и ответ": [
-      "Sources/CodePath/LessonView.swift:157"
+      "Sources/CodePath/LessonView.swift:180"
     ],
     "Отмена": [
       "Sources/CodePath/AvatarPhoto.swift:69",
-      "Sources/CodePath/ProfileViews.swift:89"
+      "Sources/CodePath/ProfileViews.swift:101"
     ],
     "Отметить прочитанным": [
       "Sources/CodePath/ReleaseViews.swift:70"
+    ],
+    "Отмечено вами": [
+      "Sources/CodePath/LessonView.swift:23"
     ],
     "Офлайн · только на вашем Mac": [
       "Sources/CodePath/RootView.swift:57"
@@ -410,11 +448,11 @@
       "Sources/CodePath/DashboardViews.swift:210"
     ],
     "Повторить": [
-      "Sources/CodePath/LessonView.swift:232",
+      "Sources/CodePath/LessonView.swift:255",
       "Sources/CodePath/RootView.swift:73"
     ],
     "Повторить задание?": [
-      "Sources/CodePath/LessonView.swift:169"
+      "Sources/CodePath/LessonView.swift:192"
     ],
     "Повторить сохранение": [
       "Sources/CodePath/ReleaseViews.swift:70"
@@ -426,13 +464,13 @@
       "Sources/CodePath/SettingsView.swift:55"
     ],
     "Подсказка": [
-      "Sources/CodePath/LessonView.swift:148"
+      "Sources/CodePath/LessonView.swift:171"
     ],
     "Познакомимся?": [
-      "Sources/CodePath/ProfileViews.swift:119"
+      "Sources/CodePath/ProfileViews.swift:131"
     ],
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": [
-      "Sources/CodePath/LessonView.swift:246"
+      "Sources/CodePath/LessonView.swift:271"
     ],
     "Получено · %@": [
       "Sources/CodePath/AchievementViews.swift:69"
@@ -441,7 +479,7 @@
       "Sources/CodePath/RootView.swift:32"
     ],
     "Попыток: %lld": [
-      "Sources/CodePath/LessonView.swift:251"
+      "Sources/CodePath/LessonView.swift:276"
     ],
     "Последнее занятие: %@": [
       "Sources/CodePath/DashboardViews.swift:191"
@@ -452,29 +490,38 @@
     "Практический курс C++ для macOS.\nОфлайн, без аккаунтов и телеметрии.": [
       "Sources/CodePath/ReleaseViews.swift:27"
     ],
+    "Предсказать вывод": [
+      "Sources/CodePath/LessonView.swift:11"
+    ],
     "Предыдущее задание": [
       "Sources/CodePath/CodePathApp.swift:33"
     ],
     "Прежние задания, ответы и черновики останутся на месте.": [
-      "Sources/CodePath/ProfileViews.swift:120"
+      "Sources/CodePath/ProfileViews.swift:132"
     ],
     "Пример %lld · ввод": [
-      "Sources/CodePath/LessonView.swift:118"
+      "Sources/CodePath/LessonView.swift:141"
     ],
     "Пример строки вывода на %@": [
       "Sources/CodePath/WelcomeCodeView.swift:82"
     ],
     "Примеры входа и выхода": [
-      "Sources/CodePath/LessonView.swift:115"
+      "Sources/CodePath/LessonView.swift:138"
     ],
     "Примеры строк вывода, не запуск программ и не отдельные курсы.": [
       "Sources/CodePath/WelcomeCodeView.swift:85"
     ],
+    "Проверено автоматически": [
+      "Sources/CodePath/LessonView.swift:22"
+    ],
     "Проверить ответ": [
-      "Sources/CodePath/LessonView.swift:226"
+      "Sources/CodePath/LessonView.swift:249"
     ],
     "Прогноз вывода программы": [
-      "Sources/CodePath/LessonView.swift:212"
+      "Sources/CodePath/LessonView.swift:235"
+    ],
+    "Программа C++": [
+      "Sources/CodePath/AppModel.swift:88"
     ],
     "Прогресс не открыт": [
       "Sources/CodePath/RootView.swift:14"
@@ -502,10 +549,10 @@
       "Sources/CodePath/SettingsView.swift:21"
     ],
     "Разбор": [
-      "Sources/CodePath/LessonView.swift:160"
+      "Sources/CodePath/LessonView.swift:183"
     ],
     "Раскрыть подсказку": [
-      "Sources/CodePath/LessonView.swift:152"
+      "Sources/CodePath/LessonView.swift:175"
     ],
     "Редактор C++": [
       "Sources/CodePath/SettingsView.swift:54"
@@ -517,8 +564,8 @@
       "Sources/CodePath/DashboardViews.swift:22"
     ],
     "Сбросить код": [
-      "Sources/CodePath/LessonView.swift:175",
-      "Sources/CodePath/LessonView.swift:185"
+      "Sources/CodePath/LessonView.swift:198",
+      "Sources/CodePath/LessonView.swift:208"
     ],
     "Сбросить поиск и фильтр": [
       "Sources/CodePath/DashboardViews.swift:160"
@@ -530,11 +577,11 @@
       "Sources/CodePath/SettingsView.swift:78"
     ],
     "Светлая": [
-      "Sources/CodePath/ProfileViews.swift:134",
+      "Sources/CodePath/ProfileViews.swift:146",
       "Sources/CodePath/SettingsView.swift:34"
     ],
     "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": [
-      "Sources/CodePath/ProfileViews.swift:141"
+      "Sources/CodePath/ProfileViews.swift:153"
     ],
     "Сейчас: %@": [
       "Sources/CodePath/DashboardViews.swift:23"
@@ -550,28 +597,28 @@
       "Sources/CodePath/DashboardViews.swift:84"
     ],
     "Скрыть теорию": [
-      "Sources/CodePath/LessonView.swift:19"
+      "Sources/CodePath/LessonView.swift:42"
     ],
     "Следующее задание": [
       "Sources/CodePath/CodePathApp.swift:35"
     ],
     "Сложность %lld/3": [
-      "Sources/CodePath/LessonView.swift:110"
+      "Sources/CodePath/LessonView.swift:133"
     ],
     "Сначала попробуйте самостоятельно": [
-      "Sources/CodePath/LessonView.swift:142"
+      "Sources/CodePath/LessonView.swift:165"
     ],
     "Снять отметку выполнения": [
-      "Sources/CodePath/LessonView.swift:170"
+      "Sources/CodePath/LessonView.swift:193"
     ],
     "Состояние урока": [
       "Sources/CodePath/DashboardViews.swift:121"
     ],
     "Сохранено локально": [
-      "Sources/CodePath/LessonView.swift:56"
+      "Sources/CodePath/LessonView.swift:79"
     ],
     "Сохранить": [
-      "Sources/CodePath/ProfileViews.swift:91"
+      "Sources/CodePath/ProfileViews.swift:103"
     ],
     "Сохранить изменения": [
       "Sources/CodePath/CodePathApp.swift:37"
@@ -592,20 +639,20 @@
       "Sources/CodePath/SettingsView.swift:100"
     ],
     "Текущий черновик будет заменён. Прежняя самостоятельная отметка и подсказки сохранятся; это не проверка нового текста.": [
-      "Sources/CodePath/LessonView.swift:176"
+      "Sources/CodePath/LessonView.swift:199"
     ],
     "Тема": [
-      "Sources/CodePath/ProfileViews.swift:132",
+      "Sources/CodePath/ProfileViews.swift:144",
       "Sources/CodePath/SettingsView.swift:30"
     ],
     "Тема, раздел, задание или навык": [
       "Sources/CodePath/DashboardViews.swift:164"
     ],
     "Теория": [
-      "Sources/CodePath/LessonView.swift:19"
+      "Sources/CodePath/LessonView.swift:42"
     ],
     "Тёмная": [
-      "Sources/CodePath/ProfileViews.swift:135",
+      "Sources/CodePath/ProfileViews.swift:147",
       "Sources/CodePath/SettingsView.swift:35"
     ],
     "Убрать отступ": [
@@ -621,7 +668,7 @@
       "Sources/CodePath/ReleaseViews.swift:99"
     ],
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": [
-      "Sources/CodePath/LessonView.swift:253"
+      "Sources/CodePath/LessonView.swift:278"
     ],
     "Уроки не найдены": [
       "Sources/CodePath/DashboardViews.swift:158"
@@ -630,7 +677,7 @@
       "Sources/CodePath/AchievementViews.swift:95"
     ],
     "Учимся программировать на C++ — офлайн и в своём темпе. Код остаётся черновиком: встроенного запуска и AI нет.": [
-      "Sources/CodePath/ProfileViews.swift:114"
+      "Sources/CodePath/ProfileViews.swift:126"
     ],
     "Учиться в своём темпе": [
       "Sources/CodePath/RootView.swift:51"
@@ -641,11 +688,17 @@
     "Учтено из прежнего прогресса · %@": [
       "Sources/CodePath/AchievementViews.swift:67"
     ],
+    "Фотография": [
+      "Sources/CodePath/ProfileViews.swift:13"
+    ],
     "Хороший день, чтобы разобраться.": [
       "Sources/CodePath/DashboardViews.swift:10"
     ],
     "Черновик, ответы и история подсказок останутся. Вы сможете заново завершить задание.": [
-      "Sources/CodePath/LessonView.swift:173"
+      "Sources/CodePath/LessonView.swift:196"
+    ],
+    "Числовой ответ": [
+      "Sources/CodePath/LessonView.swift:12"
     ],
     "Что нового в codelib": [
       "Sources/CodePath/ReleaseViews.swift:44"
@@ -660,10 +713,10 @@
       "Sources/CodePath/SettingsView.swift:75"
     ],
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": [
-      "Sources/CodePath/LessonView.swift:242"
+      "Sources/CodePath/LessonView.swift:267"
     ],
     "Я проверил(а) решение — отметить выполненным": [
-      "Sources/CodePath/LessonView.swift:223"
+      "Sources/CodePath/LessonView.swift:246"
     ],
     "впереди": [
       "Sources/CodePath/DashboardViews.swift:179"
@@ -693,16 +746,16 @@
   "formatVersion": 1,
   "sourceFiles": {
     "Sources/CodePath/AchievementViews.swift": "a85418608f7f1aa5ba6f7adc97ee4e8ff39eca141f30b84bea32eadc1bd293c0",
-    "Sources/CodePath/AppModel.swift": "f89588ddd44ec47fa114cb00e9d2076260f1f4a1475864e30b1cedf9c1a5f8dd",
+    "Sources/CodePath/AppModel.swift": "2afb85886b0cef4b64d682aa9e93c4f1c8612f64440bbdd40b183d646993dc00",
     "Sources/CodePath/AvatarPhoto.swift": "5eeae8f2eda58e0895877e34e44164813050695f9e6bfb6bacca667bcb01300f",
     "Sources/CodePath/CodeEditor.swift": "0179bcd9048f6b7570dc586c107138ca704c7dcbb1684ff57dad4364bc13c775",
     "Sources/CodePath/CodePathApp.swift": "468e428b784b0a4717c47b4a05d9972bc8df0c561ddc2e42e2dcb5ce246b6476",
     "Sources/CodePath/DashboardViews.swift": "cbc9c1034d672d30759dea35c73d75e8b070a04d76a89ee1ea808d15350c3873",
-    "Sources/CodePath/LessonView.swift": "1b704a547d731f5beb1c3ae31e35ed25fd759269bf3f755b228246ee504fa6f5",
+    "Sources/CodePath/LessonView.swift": "40c5f0cdf57d5afc60afd8aa629c75fbafe7678a4c380ab78f647d56aba8ccb8",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
-    "Sources/CodePath/ProfileViews.swift": "b6fa9ab1dce97da0f7808f9a4b7bd28c979bf8739aa1ea5800c0d80d5d2ecf90",
+    "Sources/CodePath/ProfileViews.swift": "66edf72772e008269672d8cbf26c1a6a0bce9c6d9b62ad1e26e6e40895610ee1",
     "Sources/CodePath/ReleaseViews.swift": "18901b77e5092d9003e1e2d6c91a800fe56e8fc2a33a9438fd74d3115b648b39",
-    "Sources/CodePath/RootView.swift": "3cb8b49bb1bdf1b76c6b7281bc3b2ee1cb9c7beee616c93c033e44e26b7278d6",
+    "Sources/CodePath/RootView.swift": "5036e82ee575197c3f539bbb6f802a63ce7e1ae8b4749cfdb8e7b7d67e05dc69",
     "Sources/CodePath/SettingsView.swift": "9bd6fa542427360ccd7bd384e637dd9f52ebee4aef0e15a183285c0ace800bd0",
     "Sources/CodePath/SmokeTest.swift": "a59d446c5528abbe4fc62b0d117f48222390f735fcac36641495613a29a4483e",
     "Sources/CodePath/SyntaxColors.swift": "6f550340e4bce08f18df1840bec48dae7d4bd697f8ed2042dbbb3e2189bffe5a",

@@ -20,15 +20,31 @@ class LocalizationAuthoringTests(unittest.TestCase):
         return SimpleNamespace(__name__="test-author", SOURCE_SHA256=author.SOURCE_SHA256,
                                SECTION_ID=author.SECTION_ID, ENTITIES=copy.deepcopy(author.ENTITIES), SKILLS=dict(author.SKILLS))
 
-    def test_fourteen_complete_sections_and_english_prose(self):
+    def test_entire_course_has_complete_english_prose(self):
         texts, expected = generator.build_texts(self.course, self.source)
-        self.assertEqual(len(texts), 2437)
+        self.assertEqual(len(texts), 2904)
         self.assertEqual(len(expected), 2904)
         selected = [s for s in self.course["sections"] if s["id"] in {a.SECTION_ID for a in generator.AUTHORS}]
-        self.assertEqual(sum(len(s["lessons"]) for s in selected), 54)
-        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 248)
+        self.assertEqual(len(selected), 17)
+        self.assertEqual(sum(len(s["lessons"]) for s in selected), 64)
+        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 296)
         self.assertEqual(set(texts), set(source_texts(dict(self.course, sections=selected))))
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in texts.values()))
+        root = Path(__file__).resolve().parents[1]
+        document = json.loads((root / "localization/drafts/course.en.json").read_text())
+        self.assertEqual(document["status"], "draft")
+        self.assertEqual(document["texts"], texts)
+
+    def test_every_declared_section_rejects_a_hole(self):
+        for index, original in enumerate(generator.AUTHORS):
+            with self.subTest(section=original.SECTION_ID):
+                author = self.clone(original)
+                lesson_id = next(key for key, value in author.ENTITIES.items() if "theory" in value)
+                del author.ENTITIES[lesson_id]["theory"]
+                authors = list(generator.AUTHORS)
+                authors[index] = author
+                with patch.object(generator, "AUTHORS", authors):
+                    with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)
 
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):

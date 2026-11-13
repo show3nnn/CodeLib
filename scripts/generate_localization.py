@@ -17,10 +17,14 @@ import content_en_11
 import content_en_12
 import content_en_13
 import content_en_14
+import content_en_15
+import content_en_16
+import content_en_17
 from localization_tools import digest, entities, source_texts, value_key
 
 AUTHORS = [content_en_01, content_en_02, content_en_03, content_en_04, content_en_05, content_en_06, content_en_07, content_en_08,
-           content_en_09, content_en_10, content_en_11, content_en_12, content_en_13, content_en_14]
+           content_en_09, content_en_10, content_en_11, content_en_12, content_en_13, content_en_14,
+           content_en_15, content_en_16, content_en_17]
 
 
 def build_texts(course, source):

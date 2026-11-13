@@ -3,6 +3,18 @@ import LearningCore
 import SwiftUI
 import UniformTypeIdentifiers
 
+extension LocalProfile.Avatar {
+    var localizedTitle: LocalizedStringResource {
+        switch self {
+        case .initial: "Инициал имени"
+        case .leaf: "Лист"
+        case .mountain: "Горы"
+        case .star: "Звезда"
+        case .photo: "Фотография"
+        }
+    }
+}
+
 struct ProfileAvatar: View {
     let profile: LocalProfile
     var size: CGFloat = 52
@@ -44,8 +56,8 @@ struct ProfileFields: View {
                     } label: {
                         Image(systemName: avatar.symbol).frame(width: 30, height: 30)
                     }
-                    .help(avatar.title)
-                    .accessibilityLabel(avatar.title)
+                    .help(Text(avatar.localizedTitle))
+                    .accessibilityLabel(Text(avatar.localizedTitle))
                     .overlay { if profile.avatar == avatar { RoundedRectangle(cornerRadius: 6).stroke(.green, lineWidth: 2) } }
                 }
                 Button("Загрузить фото…") { choosePhoto() }

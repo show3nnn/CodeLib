@@ -20,8 +20,9 @@ struct CourseTranslationTests {
         let source = try source()
         let translation = try draft()
         let report = try translation.coverage(for: source)
-        #expect(report.translated > 40 && report.translated < report.total)
-        #expect(report.unknown.isEmpty && !report.isComplete)
+        #expect(report.translated == 2904 && report.translated == report.total)
+        #expect(report.unknown.isEmpty && report.missing.isEmpty && report.isComplete)
+        #expect(translation.status == .draft)
         let base = try JSONDecoder().decode(Course.self, from: source)
         let firstLessonKeys = Set(CourseTranslation.sourceTexts(in: base).keys.filter { $0.hasPrefix("cpp.first.") })
         #expect(firstLessonKeys.isSubset(of: Set(translation.texts.keys)))
@@ -50,20 +51,13 @@ struct CourseTranslationTests {
         }
     }
 
-    @Test func firstFourteenSectionsHaveNoUntranslatedPresentationFields() throws {
+    @Test func entireCourseHasNoUntranslatedPresentationFields() throws {
         let data = try source()
         let course = try JSONDecoder().decode(Course.self, from: data)
-        let selectedIDs: Set<String> = ["cpp.section.start", "cpp.section.data", "cpp.section.expressions", "cpp.section.decisions", "cpp.section.loops",
-                                        "cpp.section.functions", "cpp.section.text", "cpp.section.sequences",
-                                        "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership",
-                                        "cpp.section.objects", "cpp.section.microscope", "cpp.section.datafiles"]
-        let ids = Set([course.id] + course.sections.filter { selectedIDs.contains($0.id) }.flatMap { section in
-            [section.id] + section.lessons.map(\.id) + section.lessons.flatMap(\.exercises).map(\.id)
-        })
-        let expected = Set(CourseTranslation.sourceTexts(in: course).keys.filter { key in ids.contains { key.hasPrefix($0 + ".") } })
+        let expected = Set(CourseTranslation.sourceTexts(in: course).keys)
         let translation = try draft()
         #expect(Set(translation.texts.keys) == expected)
-        #expect(translation.texts.count == 2437)
+        #expect(translation.texts.count == 2904)
         let preview = try translation.developerPreview(from: data)
         #expect(preview.lessons.first(where: { $0.id == "cpp.tickets" })?.title == "Mini-project: ticket office")
         #expect(preview.lessons.first(where: { $0.id == "cpp.telemetry" })?.title == "Assessment: telemetry")
@@ -76,7 +70,10 @@ struct CourseTranslationTests {
         #expect(preview.lessons.first(where: { $0.id == "cpp.encapsulation" })?.title == "Mini-project: a store of records")
         #expect(preview.lessons.first(where: { $0.id == "cpp.undefined" })?.title == "Undefined behavior")
         #expect(preview.lessons.first(where: { $0.id == "cpp.files" })?.title == "File streams")
-        for exercise in preview.sections.filter({ selectedIDs.contains($0.id) }).flatMap(\.lessons).flatMap(\.exercises) where exercise.kind == .choice {
+        #expect(preview.lessons.first(where: { $0.id == "cpp.console" })?.title == "Project: command panel")
+        #expect(preview.lessons.first(where: { $0.id == "cpp.capstone" })?.title == "Capstone: supplies dispatcher")
+        #expect(preview.lessons.first(where: { $0.id == "cpp.binarylab" })?.title == "Binary search and searching the answer")
+        for exercise in preview.exercises where exercise.kind == .choice {
             #expect(AnswerChecker.check(exercise.answer!, for: exercise) == true)
             #expect(exercise.choices.allSatisfy { exercise.choiceLabels?[$0] != nil })
         }
@@ -110,15 +107,12 @@ struct CourseTranslationTests {
         #expect(AnswerChecker.check(reopened.exercises[original.id]!.answer, for: translated) == true)
     }
 
-    @Test func newSectionChoicesAndProfileSurvivePreviewRoundTrip() throws {
+    @Test func allAutomaticAnswersAndProfileSurvivePreviewRoundTrip() throws {
         let data = try source()
         let base = try JSONDecoder().decode(Course.self, from: data)
         let preview = try draft().developerPreview(from: data)
-        let sectionIDs: Set<String> = ["cpp.section.functions", "cpp.section.text", "cpp.section.sequences",
-                                       "cpp.section.algorithms", "cpp.section.memory", "cpp.section.ownership",
-                                       "cpp.section.objects", "cpp.section.microscope", "cpp.section.datafiles"]
-        let choices = base.sections.filter { sectionIDs.contains($0.id) }.flatMap(\.lessons).flatMap(\.exercises).filter { $0.kind == .choice }
-        #expect(choices.count == 31)
+        let automatic = base.exercises.filter { $0.kind == .choice || $0.kind == .output }
+        #expect(automatic.count == 97)
         let folder = root.appendingPathComponent(".build/test-data/locale-roundtrip-\(UUID().uuidString)")
         let store = try ProgressStore(url: folder.appendingPathComponent("progress.json"))
         let profile = LocalProfile(nickname: "Пилот 👩🏽‍💻", avatar: .star)
@@ -132,7 +126,7 @@ struct CourseTranslationTests {
             awards.awards["award.checked"] = AchievementAward(recognizedAt: recognizedAt, historical: true)
             awards.awards["future.award"] = AchievementAward(recognizedAt: recognizedAt, historical: false)
             document.achievements = awards
-            for exercise in choices {
+            for exercise in automatic {
                 var progress = ExerciseProgress()
                 progress.answer = exercise.answer!
                 progress.completion = .automatic
@@ -152,12 +146,12 @@ struct CourseTranslationTests {
         let savedBytes = try Data(contentsOf: store.url)
         let reopened = try ProgressStore(url: store.url).document
         for course in [preview, base, preview] {
-            for exercise in choices {
+            for exercise in automatic {
                 let projected = try #require(course.exercises.first { $0.id == exercise.id })
                 let savedAnswer = try #require(reopened.exercises[exercise.id]?.answer)
                 #expect(AnswerChecker.check(savedAnswer, for: projected) == true)
             }
-            #expect(reopened.completedCount(in: course) == 32)
+            #expect(reopened.completedCount(in: course) == 98)
             #expect(reopened.lastExerciseID.flatMap { id in course.exercises.first { $0.id == id } }?.id == "cpp.inventory.compress")
         }
         #expect(reopened.profile == profile)
@@ -184,6 +178,11 @@ struct CourseTranslationTests {
         #expect(throws: (any Error).self) { try translation(completeTexts, digest: "stale").apply(to: data) }
         #expect(throws: (any Error).self) { try translation(completeTexts, status: .draft).apply(to: data) }
         #expect(throws: (any Error).self) { try translation(completeTexts, id: "another-course").apply(to: data) }
+        var missing = draft.texts
+        missing.removeValue(forKey: "cpp.binarylab.capacity.prompt")
+        let incomplete = translation(missing)
+        #expect(try incomplete.coverage(for: data).missing == ["cpp.binarylab.capacity.prompt"])
+        #expect(throws: (any Error).self) { try incomplete.apply(to: data) }
         var unknown = draft.texts
         unknown["cpp.first.beacon.solution"] = "Never replace executable content via translation"
         #expect(throws: (any Error).self) { try translation(unknown).developerPreview(from: data) }

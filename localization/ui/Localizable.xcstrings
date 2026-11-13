@@ -92,7 +92,7 @@
       }
     },
     "%lld из %lld заданий завершено": {
-      "comment": "Sources/CodePath/LessonView.swift:15",
+      "comment": "Sources/CodePath/LessonView.swift:38",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -110,7 +110,7 @@
       }
     },
     "%lld. %@": {
-      "comment": "Sources/CodePath/LessonView.swift:29",
+      "comment": "Sources/CodePath/LessonView.swift:52",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -146,7 +146,7 @@
       }
     },
     "1–30 символов, включая Unicode. Это имя только на вашем Mac.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:34",
+      "comment": "Sources/CodePath/ProfileViews.swift:46",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -200,7 +200,7 @@
       }
     },
     "C++ · первый шаг": {
-      "comment": "Sources/CodePath/ProfileViews.swift:178",
+      "comment": "Sources/CodePath/ProfileViews.swift:190",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -218,7 +218,7 @@
       }
     },
     "C++ под микроскопом": {
-      "comment": "Sources/CodePath/LessonView.swift:81",
+      "comment": "Sources/CodePath/LessonView.swift:104",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -272,7 +272,7 @@
       }
     },
     "Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ · Длинные строки переносятся · Компилятора в этой версии нет": {
-      "comment": "Sources/CodePath/LessonView.swift:198",
+      "comment": "Sources/CodePath/LessonView.swift:221",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -290,7 +290,7 @@
       }
     },
     "codelib": {
-      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:109; Sources/CodePath/ReleaseViews.swift:24; Sources/CodePath/RootView.swift:31; Sources/CodePath/RootView.swift:45",
+      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:121; Sources/CodePath/ReleaseViews.swift:24; Sources/CodePath/RootView.swift:31; Sources/CodePath/RootView.swift:45",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -308,7 +308,7 @@
       }
     },
     "std::cout << 42;": {
-      "comment": "Sources/CodePath/ProfileViews.swift:179",
+      "comment": "Sources/CodePath/ProfileViews.swift:191",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -326,7 +326,7 @@
       }
     },
     "Аватар": {
-      "comment": "Sources/CodePath/ProfileViews.swift:38",
+      "comment": "Sources/CodePath/ProfileViews.swift:50",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -398,7 +398,7 @@
       }
     },
     "Ваш код · C++17": {
-      "comment": "Sources/CodePath/LessonView.swift:183",
+      "comment": "Sources/CodePath/LessonView.swift:206",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -416,7 +416,7 @@
       }
     },
     "Ваш ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:204; Sources/CodePath/LessonView.swift:214",
+      "comment": "Sources/CodePath/LessonView.swift:227; Sources/CodePath/LessonView.swift:237",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -434,7 +434,7 @@
       }
     },
     "Ваш прогноз вывода": {
-      "comment": "Sources/CodePath/LessonView.swift:209",
+      "comment": "Sources/CodePath/LessonView.swift:232",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -488,7 +488,7 @@
       }
     },
     "Верно. %@": {
-      "comment": "Sources/CodePath/LessonView.swift:246",
+      "comment": "Sources/CodePath/LessonView.swift:271",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -614,7 +614,7 @@
       }
     },
     "Выберите вариант": {
-      "comment": "Sources/CodePath/LessonView.swift:205",
+      "comment": "Sources/CodePath/LessonView.swift:228",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -632,7 +632,7 @@
       }
     },
     "Выберите урок": {
-      "comment": "Sources/CodePath/LessonView.swift:64",
+      "comment": "Sources/CodePath/LessonView.swift:87",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -645,6 +645,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Выберите урок"
+          }
+        }
+      }
+    },
+    "Выбрать объяснение": {
+      "comment": "Sources/CodePath/LessonView.swift:10",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose an explanation"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Выбрать объяснение"
           }
         }
       }
@@ -668,7 +686,7 @@
       }
     },
     "Вывод": {
-      "comment": "Sources/CodePath/LessonView.swift:120",
+      "comment": "Sources/CodePath/LessonView.swift:143",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -685,8 +703,26 @@
         }
       }
     },
+    "Горы": {
+      "comment": "Sources/CodePath/ProfileViews.swift:11",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mountains"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Горы"
+          }
+        }
+      }
+    },
     "Далее": {
-      "comment": "Sources/CodePath/LessonView.swift:59; Sources/CodePath/ProfileViews.swift:125",
+      "comment": "Sources/CodePath/LessonView.swift:82; Sources/CodePath/ProfileViews.swift:137",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -722,7 +758,7 @@
       }
     },
     "Добавим ваш профиль": {
-      "comment": "Sources/CodePath/ProfileViews.swift:119",
+      "comment": "Sources/CodePath/ProfileViews.swift:131",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -740,7 +776,7 @@
       }
     },
     "Добро пожаловать в codelib": {
-      "comment": "Sources/CodePath/ProfileViews.swift:112",
+      "comment": "Sources/CodePath/ProfileViews.swift:124",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -753,6 +789,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Добро пожаловать в codelib"
+          }
+        }
+      }
+    },
+    "Достижения": {
+      "comment": "Sources/CodePath/AppModel.swift:91",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Achievements"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Достижения"
           }
         }
       }
@@ -794,7 +848,7 @@
       }
     },
     "Загрузить фото…": {
-      "comment": "Sources/CodePath/ProfileViews.swift:51",
+      "comment": "Sources/CodePath/ProfileViews.swift:63",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -812,7 +866,7 @@
       }
     },
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": {
-      "comment": "Sources/CodePath/LessonView.swift:239",
+      "comment": "Sources/CodePath/LessonView.swift:264",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -884,7 +938,7 @@
       }
     },
     "Заменить черновик стартовым кодом?": {
-      "comment": "Sources/CodePath/LessonView.swift:174",
+      "comment": "Sources/CodePath/LessonView.swift:197",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -897,6 +951,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Заменить черновик стартовым кодом?"
+          }
+        }
+      }
+    },
+    "Звезда": {
+      "comment": "Sources/CodePath/ProfileViews.swift:12",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Star"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Звезда"
           }
         }
       }
@@ -1027,6 +1099,24 @@
         }
       }
     },
+    "Инициал имени": {
+      "comment": "Sources/CodePath/ProfileViews.swift:9",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name initial"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Инициал имени"
+          }
+        }
+      }
+    },
     "Использовать фото": {
       "comment": "Sources/CodePath/AvatarPhoto.swift:71",
       "extractionState": "manual",
@@ -1136,7 +1226,7 @@
       }
     },
     "Исходный файл: %@": {
-      "comment": "Sources/CodePath/LessonView.swift:124",
+      "comment": "Sources/CodePath/LessonView.swift:147",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1172,7 +1262,7 @@
       }
     },
     "Как в macOS": {
-      "comment": "Sources/CodePath/ProfileViews.swift:133",
+      "comment": "Sources/CodePath/ProfileViews.swift:145",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1190,7 +1280,7 @@
       }
     },
     "Как к вам обращаться?": {
-      "comment": "Sources/CodePath/ProfileViews.swift:32",
+      "comment": "Sources/CodePath/ProfileViews.swift:44",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1208,7 +1298,7 @@
       }
     },
     "Каталог": {
-      "comment": "Sources/CodePath/DashboardViews.swift:98",
+      "comment": "Sources/CodePath/AppModel.swift:87; Sources/CodePath/DashboardViews.swift:98",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1316,7 +1406,7 @@
       }
     },
     "Комфортное оформление": {
-      "comment": "Sources/CodePath/ProfileViews.swift:131",
+      "comment": "Sources/CodePath/ProfileViews.swift:143",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1334,7 +1424,7 @@
       }
     },
     "Копировать": {
-      "comment": "Sources/CodePath/LessonView.swift:187",
+      "comment": "Sources/CodePath/LessonView.swift:210",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1369,8 +1459,26 @@
         }
       }
     },
+    "Короткий ответ": {
+      "comment": "Sources/CodePath/LessonView.swift:13",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short answer"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Короткий ответ"
+          }
+        }
+      }
+    },
     "Коротко о главном": {
-      "comment": "Sources/CodePath/LessonView.swift:74",
+      "comment": "Sources/CodePath/LessonView.swift:97",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1383,6 +1491,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Коротко о главном"
+          }
+        }
+      }
+    },
+    "Лист": {
+      "comment": "Sources/CodePath/ProfileViews.swift:10",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leaf"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лист"
           }
         }
       }
@@ -1406,7 +1532,7 @@
       }
     },
     "Локальный профиль": {
-      "comment": "Sources/CodePath/ProfileViews.swift:85; Sources/CodePath/SettingsView.swift:12",
+      "comment": "Sources/CodePath/ProfileViews.swift:97; Sources/CodePath/SettingsView.swift:12",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1477,6 +1603,42 @@
         }
       }
     },
+    "Мои курсы": {
+      "comment": "Sources/CodePath/AppModel.swift:86",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My courses"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мои курсы"
+          }
+        }
+      }
+    },
+    "Мой прогресс": {
+      "comment": "Sources/CodePath/AppModel.swift:90",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My progress"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Мой прогресс"
+          }
+        }
+      }
+    },
     "На горизонте": {
       "comment": "Sources/CodePath/DashboardViews.swift:78",
       "extractionState": "manual",
@@ -1532,7 +1694,7 @@
       }
     },
     "Назад": {
-      "comment": "Sources/CodePath/LessonView.swift:53; Sources/CodePath/ProfileViews.swift:123; Sources/CodePath/ProfileViews.swift:144",
+      "comment": "Sources/CodePath/LessonView.swift:76; Sources/CodePath/ProfileViews.swift:135; Sources/CodePath/ProfileViews.swift:156",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1568,7 +1730,7 @@
       }
     },
     "Намёк": {
-      "comment": "Sources/CodePath/LessonView.swift:144",
+      "comment": "Sources/CodePath/LessonView.swift:167",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1603,6 +1765,24 @@
         }
       }
     },
+    "Написать код": {
+      "comment": "Sources/CodePath/LessonView.swift:9",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write code"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Написать код"
+          }
+        }
+      }
+    },
     "Настойчивость": {
       "comment": "Sources/CodePath/AchievementViews.swift:12",
       "extractionState": "manual",
@@ -1622,7 +1802,7 @@
       }
     },
     "Настройка хранится только на этом Mac": {
-      "comment": "Sources/CodePath/ProfileViews.swift:155",
+      "comment": "Sources/CodePath/ProfileViews.swift:167",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1694,7 +1874,7 @@
       }
     },
     "Начать настройку": {
-      "comment": "Sources/CodePath/ProfileViews.swift:116",
+      "comment": "Sources/CodePath/ProfileViews.swift:128",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1712,7 +1892,7 @@
       }
     },
     "Начать обучение": {
-      "comment": "Sources/CodePath/ProfileViews.swift:146",
+      "comment": "Sources/CodePath/ProfileViews.swift:158",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1747,6 +1927,24 @@
         }
       }
     },
+    "Не завершено": {
+      "comment": "Sources/CodePath/LessonView.swift:21",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not complete"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Не завершено"
+          }
+        }
+      }
+    },
     "Не начаты": {
       "comment": "Sources/CodePath/DashboardViews.swift:123",
       "extractionState": "manual",
@@ -1766,7 +1964,7 @@
       }
     },
     "Не сохранено": {
-      "comment": "Sources/CodePath/LessonView.swift:56",
+      "comment": "Sources/CodePath/LessonView.swift:79",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1910,7 +2108,7 @@
       }
     },
     "Нужен намёк": {
-      "comment": "Sources/CodePath/LessonView.swift:152",
+      "comment": "Sources/CodePath/LessonView.swift:175",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1946,7 +2144,7 @@
       }
     },
     "Обучение": {
-      "comment": "Sources/CodePath/CodePathApp.swift:32",
+      "comment": "Sources/CodePath/AppModel.swift:89; Sources/CodePath/CodePathApp.swift:32",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1964,7 +2162,7 @@
       }
     },
     "Один локальный профиль, без регистрации и проверки имени в интернете. Фото хранится внутри локального файла прогресса и его экспорта.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:54",
+      "comment": "Sources/CodePath/ProfileViews.swift:66",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2000,7 +2198,7 @@
       }
     },
     "Ожидаемый файл: %@": {
-      "comment": "Sources/CodePath/LessonView.swift:130",
+      "comment": "Sources/CodePath/LessonView.swift:153",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2036,7 +2234,7 @@
       }
     },
     "Ответ: %@": {
-      "comment": "Sources/CodePath/LessonView.swift:164",
+      "comment": "Sources/CodePath/LessonView.swift:187",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2072,7 +2270,7 @@
       }
     },
     "Откройте программу курса или продолжите с последнего места.": {
-      "comment": "Sources/CodePath/LessonView.swift:64",
+      "comment": "Sources/CodePath/LessonView.swift:87",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2126,7 +2324,7 @@
       }
     },
     "Открыть разбор и ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:157",
+      "comment": "Sources/CodePath/LessonView.swift:180",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2144,7 +2342,7 @@
       }
     },
     "Отмена": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:69; Sources/CodePath/ProfileViews.swift:89",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:69; Sources/CodePath/ProfileViews.swift:101",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2175,6 +2373,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Отметить прочитанным"
+          }
+        }
+      }
+    },
+    "Отмечено вами": {
+      "comment": "Sources/CodePath/LessonView.swift:23",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marked by you"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Отмечено вами"
           }
         }
       }
@@ -2342,7 +2558,7 @@
       }
     },
     "Повторить": {
-      "comment": "Sources/CodePath/LessonView.swift:232; Sources/CodePath/RootView.swift:73",
+      "comment": "Sources/CodePath/LessonView.swift:255; Sources/CodePath/RootView.swift:73",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2360,7 +2576,7 @@
       }
     },
     "Повторить задание?": {
-      "comment": "Sources/CodePath/LessonView.swift:169",
+      "comment": "Sources/CodePath/LessonView.swift:192",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2432,7 +2648,7 @@
       }
     },
     "Подсказка": {
-      "comment": "Sources/CodePath/LessonView.swift:148",
+      "comment": "Sources/CodePath/LessonView.swift:171",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2450,7 +2666,7 @@
       }
     },
     "Познакомимся?": {
-      "comment": "Sources/CodePath/ProfileViews.swift:119",
+      "comment": "Sources/CodePath/ProfileViews.swift:131",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2468,7 +2684,7 @@
       }
     },
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": {
-      "comment": "Sources/CodePath/LessonView.swift:246",
+      "comment": "Sources/CodePath/LessonView.swift:271",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2522,7 +2738,7 @@
       }
     },
     "Попыток: %lld": {
-      "comment": "Sources/CodePath/LessonView.swift:251",
+      "comment": "Sources/CodePath/LessonView.swift:276",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2593,6 +2809,24 @@
         }
       }
     },
+    "Предсказать вывод": {
+      "comment": "Sources/CodePath/LessonView.swift:11",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predict output"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Предсказать вывод"
+          }
+        }
+      }
+    },
     "Предыдущее задание": {
       "comment": "Sources/CodePath/CodePathApp.swift:33",
       "extractionState": "manual",
@@ -2612,7 +2846,7 @@
       }
     },
     "Прежние задания, ответы и черновики останутся на месте.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:120",
+      "comment": "Sources/CodePath/ProfileViews.swift:132",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2630,7 +2864,7 @@
       }
     },
     "Пример %lld · ввод": {
-      "comment": "Sources/CodePath/LessonView.swift:118",
+      "comment": "Sources/CodePath/LessonView.swift:141",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2666,7 +2900,7 @@
       }
     },
     "Примеры входа и выхода": {
-      "comment": "Sources/CodePath/LessonView.swift:115",
+      "comment": "Sources/CodePath/LessonView.swift:138",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2701,8 +2935,26 @@
         }
       }
     },
+    "Проверено автоматически": {
+      "comment": "Sources/CodePath/LessonView.swift:22",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatically checked"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Проверено автоматически"
+          }
+        }
+      }
+    },
     "Проверить ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:226",
+      "comment": "Sources/CodePath/LessonView.swift:249",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2720,7 +2972,7 @@
       }
     },
     "Прогноз вывода программы": {
-      "comment": "Sources/CodePath/LessonView.swift:212",
+      "comment": "Sources/CodePath/LessonView.swift:235",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2733,6 +2985,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Прогноз вывода программы"
+          }
+        }
+      }
+    },
+    "Программа C++": {
+      "comment": "Sources/CodePath/AppModel.swift:88",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C++ syllabus"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Программа C++"
           }
         }
       }
@@ -2882,7 +3152,7 @@
       }
     },
     "Разбор": {
-      "comment": "Sources/CodePath/LessonView.swift:160",
+      "comment": "Sources/CodePath/LessonView.swift:183",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2900,7 +3170,7 @@
       }
     },
     "Раскрыть подсказку": {
-      "comment": "Sources/CodePath/LessonView.swift:152",
+      "comment": "Sources/CodePath/LessonView.swift:175",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2972,7 +3242,7 @@
       }
     },
     "Сбросить код": {
-      "comment": "Sources/CodePath/LessonView.swift:175; Sources/CodePath/LessonView.swift:185",
+      "comment": "Sources/CodePath/LessonView.swift:198; Sources/CodePath/LessonView.swift:208",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3044,7 +3314,7 @@
       }
     },
     "Светлая": {
-      "comment": "Sources/CodePath/ProfileViews.swift:134; Sources/CodePath/SettingsView.swift:34",
+      "comment": "Sources/CodePath/ProfileViews.swift:146; Sources/CodePath/SettingsView.swift:34",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3062,7 +3332,7 @@
       }
     },
     "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:141",
+      "comment": "Sources/CodePath/ProfileViews.swift:153",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3152,7 +3422,7 @@
       }
     },
     "Скрыть теорию": {
-      "comment": "Sources/CodePath/LessonView.swift:19",
+      "comment": "Sources/CodePath/LessonView.swift:42",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3188,7 +3458,7 @@
       }
     },
     "Сложность %lld/3": {
-      "comment": "Sources/CodePath/LessonView.swift:110",
+      "comment": "Sources/CodePath/LessonView.swift:133",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3206,7 +3476,7 @@
       }
     },
     "Сначала попробуйте самостоятельно": {
-      "comment": "Sources/CodePath/LessonView.swift:142",
+      "comment": "Sources/CodePath/LessonView.swift:165",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3224,7 +3494,7 @@
       }
     },
     "Снять отметку выполнения": {
-      "comment": "Sources/CodePath/LessonView.swift:170",
+      "comment": "Sources/CodePath/LessonView.swift:193",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3260,7 +3530,7 @@
       }
     },
     "Сохранено локально": {
-      "comment": "Sources/CodePath/LessonView.swift:56",
+      "comment": "Sources/CodePath/LessonView.swift:79",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3278,7 +3548,7 @@
       }
     },
     "Сохранить": {
-      "comment": "Sources/CodePath/ProfileViews.swift:91",
+      "comment": "Sources/CodePath/ProfileViews.swift:103",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3404,7 +3674,7 @@
       }
     },
     "Текущий черновик будет заменён. Прежняя самостоятельная отметка и подсказки сохранятся; это не проверка нового текста.": {
-      "comment": "Sources/CodePath/LessonView.swift:176",
+      "comment": "Sources/CodePath/LessonView.swift:199",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3422,7 +3692,7 @@
       }
     },
     "Тема": {
-      "comment": "Sources/CodePath/ProfileViews.swift:132; Sources/CodePath/SettingsView.swift:30",
+      "comment": "Sources/CodePath/ProfileViews.swift:144; Sources/CodePath/SettingsView.swift:30",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3458,7 +3728,7 @@
       }
     },
     "Теория": {
-      "comment": "Sources/CodePath/LessonView.swift:19",
+      "comment": "Sources/CodePath/LessonView.swift:42",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3476,7 +3746,7 @@
       }
     },
     "Тёмная": {
-      "comment": "Sources/CodePath/ProfileViews.swift:135; Sources/CodePath/SettingsView.swift:35",
+      "comment": "Sources/CodePath/ProfileViews.swift:147; Sources/CodePath/SettingsView.swift:35",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3566,7 +3836,7 @@
       }
     },
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": {
-      "comment": "Sources/CodePath/LessonView.swift:253",
+      "comment": "Sources/CodePath/LessonView.swift:278",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3620,7 +3890,7 @@
       }
     },
     "Учимся программировать на C++ — офлайн и в своём темпе. Код остаётся черновиком: встроенного запуска и AI нет.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:114",
+      "comment": "Sources/CodePath/ProfileViews.swift:126",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3691,6 +3961,24 @@
         }
       }
     },
+    "Фотография": {
+      "comment": "Sources/CodePath/ProfileViews.swift:13",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Фотография"
+          }
+        }
+      }
+    },
     "Хороший день, чтобы разобраться.": {
       "comment": "Sources/CodePath/DashboardViews.swift:10",
       "extractionState": "manual",
@@ -3710,7 +3998,7 @@
       }
     },
     "Черновик, ответы и история подсказок останутся. Вы сможете заново завершить задание.": {
-      "comment": "Sources/CodePath/LessonView.swift:173",
+      "comment": "Sources/CodePath/LessonView.swift:196",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3723,6 +4011,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Черновик, ответы и история подсказок останутся. Вы сможете заново завершить задание."
+          }
+        }
+      }
+    },
+    "Числовой ответ": {
+      "comment": "Sources/CodePath/LessonView.swift:12",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numeric answer"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Числовой ответ"
           }
         }
       }
@@ -3800,7 +4106,7 @@
       }
     },
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": {
-      "comment": "Sources/CodePath/LessonView.swift:242",
+      "comment": "Sources/CodePath/LessonView.swift:267",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3818,7 +4124,7 @@
       }
     },
     "Я проверил(а) решение — отметить выполненным": {
-      "comment": "Sources/CodePath/LessonView.swift:223",
+      "comment": "Sources/CodePath/LessonView.swift:246",
       "extractionState": "manual",
       "localizations": {
         "en": {
