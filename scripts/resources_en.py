@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Reviewed source change: only the real 0.1.14 note was added and translated below.
-RELEASES_SHA256 = "c0f9266af7d90e9ad77857f0224b0c1bdf340f4d38739e5b7597a08a90f9ceab"
+# Reviewed source change: the 0.2.0 interface redesign note was added and translated below.
+RELEASES_SHA256 = "c3f1824bcf381201cd7f874e9b81d3a8158c537fb92f7951d5f1a72926924ebd"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -19,6 +19,18 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.2.0": note("A new look for the main screens",
+        "Continuing CHANGELOG1 §13–15: the home screen, navigation and catalog, the lesson screen, statistics with profile and settings, the achievements collection and the history windows are redesigned in one style — graphite glass surfaces with restrained green accents. Course content, IDs, progress and drafts are unchanged.",
+        {
+            "home-navigation": ("A new home screen and navigation", "The home opens with a dark course card showing the current section, metrics and a next-step card. Sidebar navigation is grouped by meaning, and the catalog received a large C++ card and clear cards for future courses."),
+            "lesson-editor": ("A lesson screen with the editor up front", "The code editor is visible immediately: a tidy main.cpp editor chrome, theory on the right on wide windows or in a separate sheet on narrow ones, a compact task strip with auto-scroll, and a new header and completion area. Typing, highlighting, line numbers and undo were not changed."),
+            "statistics-settings": ("Statistics, profile and settings", "Statistics shows a progress ring, sections and tasks to review. Settings are split into profile, appearance and data: text and code sizes are tuned separately with individual resets, and profile editing keeps its identity and creation date."),
+            "rewards-history": ("Rewards and history in the same style", "The achievements collection opens with a progress-ring card and signature award tiles. The release history window and the About screen received matching headers, version capsules and cards."),
+        },
+        {
+            "Обновление затрагивает только представление: курс, стабильные идентификаторы, прогресс, черновики и настройки остались прежними и прошли проверки перезапуска.": "The update touches presentation only: course content, stable IDs, progress, drafts and preferences stayed the same and passed relaunch checks.",
+            "Экраны адаптируются к узким и широким окнам в обеих темах; внизу главного окна появилась аккуратная строка состояния.": "Screens adapt to narrow and wide windows in both themes; the main window gained a tidy status bar at the bottom.",
+        }),
     "0.1.14": note("One language for dates and errors",
         "Continuing CHANGELOG1 §10: the interface uses an explicit Russian locale, and system errors get understandable messages instead of text in an arbitrary macOS language. English is not enabled yet.",
         {

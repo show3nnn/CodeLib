@@ -18,7 +18,7 @@ class UICatalogTests(unittest.TestCase):
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in ui_en.TEXTS.values()))
         self.assertTrue(all(not location.startswith("/") for locations in manifest["entries"].values() for location in locations))
         # These formerly dynamic String parameters must stay visible to Apple's extraction.
-        for key in ["С возвращением, %@!", "Ваша лаборатория кода", "уроков завершено",
+        for key in ["С возвращением, %@.", "Лаборатория кода", "ВАША ЛАБОРАТОРИЯ", "уроков завершено",
                     "проверено автоматически", "Не только точки с запятой", "Первый урок",
                     "Секретное достижение", "Условие откроется после получения награды.",
                     "Новое достижение · %@", "Получено · %@", "Учтено из прежнего прогресса · %@",

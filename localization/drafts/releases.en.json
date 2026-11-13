@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "locale": "en",
   "resource": "releases",
-  "sourceSHA256": "c0f9266af7d90e9ad77857f0224b0c1bdf340f4d38739e5b7597a08a90f9ceab",
+  "sourceSHA256": "c3f1824bcf381201cd7f874e9b81d3a8158c537fb92f7951d5f1a72926924ebd",
   "status": "draft",
   "texts": {
     "release.0.1.0.feature.course.detail": "16 sections, 60 lessons and 272 tasks, including assessments and console projects.",
@@ -155,6 +155,18 @@
     "release.0.1.9.improvement.2e4f60dede46052e4ae975e01703a6b5857269ff0b76de760c6c1dc910c8f03b": "The user's name remains a literal greeting parameter, and the first-lesson fallback is extracted separately.",
     "release.0.1.9.improvement.fe105c168d8d6cb6e8e4e7098f3dd34070bfc777a9d0b39af1e242dc477c037a": "Header case is applied after localization, not by transforming the source key.",
     "release.0.1.9.summary": "Continuing CHANGELOG1 §10: the developer translation covers 11 sections, 43 lessons and 204 tasks. Headers and metrics use native Apple localizable resources. Full English is not ready or enabled yet.",
-    "release.0.1.9.title": "Ranges, memory and interface language"
+    "release.0.1.9.title": "Ranges, memory and interface language",
+    "release.0.2.0.feature.home-navigation.detail": "The home opens with a dark course card showing the current section, metrics and a next-step card. Sidebar navigation is grouped by meaning, and the catalog received a large C++ card and clear cards for future courses.",
+    "release.0.2.0.feature.home-navigation.title": "A new home screen and navigation",
+    "release.0.2.0.feature.lesson-editor.detail": "The code editor is visible immediately: a tidy main.cpp editor chrome, theory on the right on wide windows or in a separate sheet on narrow ones, a compact task strip with auto-scroll, and a new header and completion area. Typing, highlighting, line numbers and undo were not changed.",
+    "release.0.2.0.feature.lesson-editor.title": "A lesson screen with the editor up front",
+    "release.0.2.0.feature.rewards-history.detail": "The achievements collection opens with a progress-ring card and signature award tiles. The release history window and the About screen received matching headers, version capsules and cards.",
+    "release.0.2.0.feature.rewards-history.title": "Rewards and history in the same style",
+    "release.0.2.0.feature.statistics-settings.detail": "Statistics shows a progress ring, sections and tasks to review. Settings are split into profile, appearance and data: text and code sizes are tuned separately with individual resets, and profile editing keeps its identity and creation date.",
+    "release.0.2.0.feature.statistics-settings.title": "Statistics, profile and settings",
+    "release.0.2.0.improvement.5d3ea7619cc609e6b722ed0e207b84a25a96f22fa52923c8529be4b56902a4a5": "The update touches presentation only: course content, stable IDs, progress, drafts and preferences stayed the same and passed relaunch checks.",
+    "release.0.2.0.improvement.6daf4188e73eff9c7e2289bca8e98ab812c9102d8408ac608a6fc0d844f710aa": "Screens adapt to narrow and wide windows in both themes; the main window gained a tidy status bar at the bottom.",
+    "release.0.2.0.summary": "Continuing CHANGELOG1 §13–15: the home screen, navigation and catalog, the lesson screen, statistics with profile and settings, the achievements collection and the history windows are redesigned in one style — graphite glass surfaces with restrained green accents. Course content, IDs, progress and drafts are unchanged.",
+    "release.0.2.0.title": "A new look for the main screens"
   }
 }
