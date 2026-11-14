@@ -2,7 +2,7 @@
   "courseID": "cpp-foundations",
   "formatVersion": 1,
   "locale": "en",
-  "sourceSHA256": "1ba8f26578c0c5bc70e03c4f4b470b30198969b5ba08d321b304f99f5c99c349",
+  "sourceSHA256": "49ea05f92e8ae1f4a5b61fb16f0a3566a1288749514d07018628ca9b3cd19792",
   "status": "draft",
   "texts": {
     "cpp-foundations.summary": "A hands-on C++17 course: from your first program to containers, memory, objects and console projects. Reference solutions are also checked in C++20.",

@@ -4,7 +4,7 @@ def program(body, headers="iostream"):
 
 def code(key, title, prompt, body, cases, hints, explanation, headers="iostream", difficulty=1):
     return dict(id=key, title=title, kind="code", prompt=prompt,
-                starter=program("// Напишите решение здесь", headers),
+                starter=program("// TODO", headers),
                 solution=program(body, headers), answer=None, choices=[], hints=hints,
                 explanation=explanation, difficulty=difficulty, skills=[],
                 testCases=[case if isinstance(case, dict) else dict(input=case[0], output=case[1]) for case in cases])
