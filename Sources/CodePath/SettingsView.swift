@@ -110,9 +110,11 @@ struct SettingsView: View {
                 Card { Text("Профиль можно создать в главном окне начальной настройки.") }
             }
             if let course = model.course {
+                let completed = model.document.completedCount(in: course)
+                let awards = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                 HStack(spacing: 14) {
-                    Metric(value: "\(model.document.completedCount(in: course))", label: "заданий завершено", icon: "checkmark.circle")
-                    Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
+                    Metric(value: "\(completed)", label: PluralPresentation.metricLabel(.tasks, count: completed), icon: "checkmark.circle")
+                    Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
                 }
                 HStack {
                     Button("Мой прогресс", systemImage: "chart.bar") { showMain(.progress) }

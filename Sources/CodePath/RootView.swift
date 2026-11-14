@@ -83,7 +83,7 @@ struct RootView: View {
                                 Text(model.fraction, format: PresentationLocale.percent).monospacedDigit()
                             }.foregroundStyle(.secondary)
                             ProgressView(value: model.fraction).tint(.green)
-                            Text("\(model.document.completedCount(in: course)) из \(course.exercises.count) заданий")
+                            Text(PluralPresentation.taskProgress(model.document.completedCount(in: course), total: course.exercises.count))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }

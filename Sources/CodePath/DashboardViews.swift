@@ -9,8 +9,13 @@ struct HomeView: View {
                 HStack(alignment: .center, spacing: 18) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("ВАША ЛАБОРАТОРИЯ").font(.system(size: 10, weight: .bold)).tracking(2).foregroundStyle(.green)
-                        Text(model.document.profile.map { "С возвращением, \($0.nickname)." } ?? "Хороший день для кода.")
-                            .font(.system(size: 30, weight: .bold)).tracking(-0.8)
+                        Group {
+                            if let profile = model.document.profile {
+                                Text("С возвращением, \(profile.nickname).")
+                            } else {
+                                Text("Хороший день для кода.")
+                            }
+                        }.font(.system(size: 30, weight: .bold)).tracking(-0.8)
                             .fixedSize(horizontal: false, vertical: true)
                         Text("Один понятный шаг. Ещё немного собственного кода.")
                             .foregroundStyle(.secondary)
@@ -19,11 +24,14 @@ struct HomeView: View {
                     if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 54) }
                 }
                 if let course = model.course {
+                    let completedTasks = model.document.completedCount(in: course)
+                    let completedLessons = course.lessons.filter { model.document.lessonCompleted($0) }.count
+                    let awards = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                     courseHero(course)
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 14) {
-                        Metric(value: "\(model.document.completedCount(in: course))", label: "заданий завершено", icon: "checkmark.circle")
-                        Metric(value: "\(course.lessons.filter { model.document.lessonCompleted($0) }.count)", label: "уроков завершено", icon: "book.closed")
-                        Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
+                        Metric(value: "\(completedTasks)", label: PluralPresentation.metricLabel(.tasks, count: completedTasks), icon: "checkmark.circle")
+                        Metric(value: "\(completedLessons)", label: PluralPresentation.metricLabel(.lessons, count: completedLessons), icon: "book.closed")
+                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
                     }
                     HStack {
                         Text("Следующий шаг").font(.system(size: 21, weight: .bold)).tracking(-0.4)
@@ -39,7 +47,7 @@ struct HomeView: View {
                                     VStack(alignment: .leading, spacing: 6) {
                                         Text(lesson.title).font(.headline)
                                         Text(lesson.summary).font(.callout).foregroundStyle(.secondary).lineLimit(2)
-                                        Text("\(lesson.exercises.count) заданий · ~\(lesson.minutes) мин")
+                                        Text(PluralPresentation.lessonTasks(lesson.exercises.count, minutes: lesson.minutes))
                                             .font(.caption).foregroundStyle(.secondary)
                                     }
                                     Spacer(minLength: 0)
@@ -404,7 +412,7 @@ struct ProgressViewScreen: View {
                                         }.frame(minHeight: 44, alignment: .top)
                                         ProgressView(value: Double(done), total: Double(tasks.count)).tint(.green)
                                         HStack {
-                                            Text("\(done) из \(tasks.count) заданий")
+                                            Text(PluralPresentation.taskProgress(done, total: tasks.count))
                                             Spacer(minLength: 0)
                                             Text("\(section.lessons.filter { model.document.lessonCompleted($0) }.count)/\(section.lessons.count) уроков")
                                         }.font(.caption).foregroundStyle(.secondary)

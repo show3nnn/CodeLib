@@ -39,7 +39,8 @@ struct LessonView: View {
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(lesson.title).font(.system(size: 19, weight: .semibold)).tracking(-0.3)
-                        Text("\(lesson.exercises.filter { model.document.completed($0.id) }.count) из \(lesson.exercises.count) заданий завершено")
+                        Text(PluralPresentation.taskProgress(lesson.exercises.filter { model.document.completed($0.id) }.count,
+                                                             total: lesson.exercises.count, completed: true))
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
