@@ -77,6 +77,16 @@ class ResourceTranslationTests(unittest.TestCase):
             translated = build(reordered, resource, author, digest(reordered))["texts"]
             self.assertEqual(original, translated)
 
+    def test_grading_release_shortcut_matches_editor(self):
+        data, author, _ = self.fixture("releases")
+        note = next(note for note in json.loads(data)["releases"] if note["version"] == "0.4.0")
+        detail = next(feature["detail"] for feature in note["features"] if feature["id"] == "grading")
+        self.assertIn("Command-Shift-Return", detail)
+        self.assertIn("Command-Shift-Return", author["0.4.0"]["features"]["grading"]["detail"])
+        editor = (self.root / "Sources/CodePath/LessonView.swift").read_text()
+        self.assertRegex(editor, r'Button\("Проверить решение"[^}]+\}[\s\S]{0,160}?'
+                                 r'\.keyboardShortcut\(\.return, modifiers: \[\.command, \.shift\]\)')
+
 
 if __name__ == "__main__":
     unittest.main()

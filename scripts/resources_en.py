@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Reviewed source change: the 0.5.0 environment-check note is translated below.
-RELEASES_SHA256 = "8b23bcd923d70aca3ba7c292d884fdb4bd84321dd90c2538395086ac78b5d624"
+# Source change reviewed: correct the 0.4.0 grading shortcut in both languages.
+RELEASES_SHA256 = "54917fc7381f33c24d88569f92550272842786f5487d8f4c2d919948c15abf77"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -27,7 +27,7 @@ RELEASES = {
     "0.4.0": note("Checking a solution against examples",
         "Code tasks can now be checked for real: codelib runs the program on the task's examples in the isolated environment and shows the result for each example. The task counts only when the output matches on every example; a successful run by itself still never completes it.",
         {
-            "grading": ("“Check solution”", "A new button and Command-Shift-R compile and run the current draft on every example from the task. Each run uses its own disposable environment, so the program cannot affect the following examples."),
+            "grading": ("“Check solution”", "The new button and Command-Shift-Return compile and run the current draft on every example from the task. Each run uses its own disposable environment, so the program cannot affect the following examples."),
             "grading-cases": ("A result for every example", "You can see which example passed and why not: input, expected and actual output, a compilation error or a limit that was hit. During checking the app shows “example N of M”."),
             "grading-progress": ("Only a complete pass counts", "The task becomes “Verified automatically” only when every example matched. A compilation error or wrong output adds an attempt, but an earlier mark is never revoked. Cancelling the check or an environment failure never changes the result."),
             "grading-coverage": ("More examples in the course", "The sections on data, expressions, conditions, loops, functions, strings and arrays now have five or more examples per task. Tasks with file examples or without examples are still marked manually."),

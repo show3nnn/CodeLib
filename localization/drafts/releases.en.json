@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "locale": "en",
   "resource": "releases",
-  "sourceSHA256": "8b23bcd923d70aca3ba7c292d884fdb4bd84321dd90c2538395086ac78b5d624",
+  "sourceSHA256": "54917fc7381f33c24d88569f92550272842786f5487d8f4c2d919948c15abf77",
   "status": "draft",
   "texts": {
     "release.0.1.0.feature.course.detail": "16 sections, 60 lessons and 272 tasks, including assessments and console projects.",
@@ -188,7 +188,7 @@
     "release.0.4.0.feature.grading-honesty.title": "An honest mark",
     "release.0.4.0.feature.grading-progress.detail": "The task becomes “Verified automatically” only when every example matched. A compilation error or wrong output adds an attempt, but an earlier mark is never revoked. Cancelling the check or an environment failure never changes the result.",
     "release.0.4.0.feature.grading-progress.title": "Only a complete pass counts",
-    "release.0.4.0.feature.grading.detail": "A new button and Command-Shift-R compile and run the current draft on every example from the task. Each run uses its own disposable environment, so the program cannot affect the following examples.",
+    "release.0.4.0.feature.grading.detail": "The new button and Command-Shift-Return compile and run the current draft on every example from the task. Each run uses its own disposable environment, so the program cannot affect the following examples.",
     "release.0.4.0.feature.grading.title": "“Check solution”",
     "release.0.4.0.improvement.cb02bcbee7ad9e19cfdbee759c0e02aa8eb34a786a193db8042153d68d8146e5": "Self-review hints are clearer: running and checking against examples are different things.",
     "release.0.4.0.improvement.e6f706d65169ca6d75cc9fbb3b4e25bed3cdaf88433ccde220aa88b7da6097a3": "The first section's text is updated: running a program is already available rather than “coming later”.",
