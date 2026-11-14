@@ -16,7 +16,7 @@ struct RootView: View {
             } else if let error = model.storageError {
                 VStack(spacing: 20) {
                     ContentUnavailableView("Прогресс не открыт", systemImage: "externaldrive.badge.exclamationmark",
-                                           description: Text("\(String(localized: error.resource()))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
+                                           description: Text("\(Text(error.resource()))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
                     Text(model.dataURL.path).font(.caption).textSelection(.enabled)
                     FailureDiagnostics(failure: error)
                     Button("Восстановить резервную копию") { model.restoreBackup() }
@@ -112,7 +112,7 @@ struct RootView: View {
                 if model.hasUnsavedChanges {
                     HStack {
                         Label {
-                            if let error = model.saveError { Text("Не сохранено: \(String(localized: error.resource()))") }
+                            if let error = model.saveError { Text("Не сохранено: \(Text(error.resource()))") }
                             else { Text("Не сохранено: идёт запись") }
                         } icon: { Image(systemName: "exclamationmark.triangle") }
                         Spacer()
