@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "architecture": "aarch64",
+  "artifacts": [
+    {"name":"binutils","version":"2.44-r3","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/binutils-2.44-r3.apk","sha256":"4e08a500a402ffef9bc9bd4adf4fea5ff72446767b59f0177df6de46708a3b52","bytes":3336460},
+    {"name":"g++","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/g++-14.2.0-r6.apk","sha256":"a9eaddb74680dfb76b964d22249950275cbd30f6cf870dccc0a882459b388fa8","bytes":15730102},
+    {"name":"gcc","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/gcc-14.2.0-r6.apk","sha256":"0224b985a055ef90324dee9a65c5683f28499f0798db23cae90b40ebba620772","bytes":50041118},
+    {"name":"gmp","version":"6.3.0-r3","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/gmp-6.3.0-r3.apk","sha256":"0d2eb1079b1b5692e9e6652ff0e269caeb9c812f483e34c88d461c03bcf75460","bytes":223215},
+    {"name":"isl26","version":"0.26-r1","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/isl26-0.26-r1.apk","sha256":"1283f7ec497ea57044a8ca0a55baf687ed8e36467ba91d9c2f3ee8df7de38c23","bytes":859563},
+    {"name":"jansson","version":"2.14.1-r0","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/jansson-2.14.1-r0.apk","sha256":"f57c3bceb823add72ee0ccbf17aa7fc98596ff9eb0c11d0e5a2c28260ea87dcd","bytes":49781},
+    {"name":"libatomic","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libatomic-14.2.0-r6.apk","sha256":"7b4427d24bf2e3418a1a3ea97eef81aedbe7aa060ad186ad5387b3a597931c4e","bytes":10334},
+    {"name":"libgcc","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libgcc-14.2.0-r6.apk","sha256":"ba1835eec3ad8a120efd3d5020e561d53553a0513763a08f509e3ce6d4baa9ca","bytes":67013},
+    {"name":"libgomp","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libgomp-14.2.0-r6.apk","sha256":"97a2f9a89d8b3cc7714e1d5a0ab2e01bce711e8a3b330db36b5f876d9aa4ec8c","bytes":145042},
+    {"name":"libstdc++","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libstdc++-14.2.0-r6.apk","sha256":"0d2f054057a4f932e985a129eccb79908b40964185139a0a609aed3032aba064","bytes":906209},
+    {"name":"libstdc++-dev","version":"14.2.0-r6","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/libstdc++-dev-14.2.0-r6.apk","sha256":"a606b1b4a2cebce71443c3c27876cec4b6d51a5216e362d8674760d6b1586b69","bytes":4006405},
+    {"name":"mpc1","version":"1.3.1-r1","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/mpc1-1.3.1-r1.apk","sha256":"20dca4b0a808aef7d5d9e59eaa1dea59b929f65b103107a1396acab81c2ad278","bytes":53978},
+    {"name":"mpfr4","version":"4.2.1_p1-r0","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/mpfr4-4.2.1_p1-r0.apk","sha256":"258d57fa9c59eee21110a2d3f44a96f893a132e77febb7a5c0abca8512c6fc30","bytes":297631},
+    {"name":"musl","version":"1.2.5-r13","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/musl-1.2.5-r13.apk","sha256":"d616c430bcbe0bf452b7f6ea2669f2cad14e85644a7599f4f495115d021742ef","bytes":418149},
+    {"name":"musl-dev","version":"1.2.5-r13","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/musl-dev-1.2.5-r13.apk","sha256":"9d100736f645f15c01da723c9bafd8a843ae847ef4334aa4c0f53405dcfa4dff","bytes":2557519},
+    {"name":"zlib","version":"1.4-r0","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/zlib-1.4-r0.apk","sha256":"279972bab4f817182d9617984880bc29471f1d3016f92265be10d71e6f95ca74","bytes":55065},
+    {"name":"zstd-libs","version":"1.5.7-r0","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/zstd-libs-1.5.7-r0.apk","sha256":"a0e92d2225941a514eb0b2325b137fe6444ef9171627aae8129b74a6ad934ac4","bytes":362854},
+    {"name":"rootfs","version":"3.22.8","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/aarch64/alpine-minirootfs-3.22.8-aarch64.tar.gz","sha256":"36091efacd083c1cf5a8c837272530bff4fc72db1fbfdef559f52de0d890bca4","bytes":3971704},
+    {"name":"kernel","version":"6.12.117-r0","url":"https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/linux-virt-6.12.117-r0.apk","sha256":"dc01531450938a224f8cc369da67197aad4919d0841fb80754c40e6b6fb6adab","bytes":36494471}
+  ]
+}
