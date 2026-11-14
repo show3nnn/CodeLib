@@ -17,7 +17,11 @@ struct ExecutionOutputView: View {
     private var execution: CodeExecutionController { model.execution }
     private var isCurrent: Bool { execution.exerciseID == exerciseID }
     private var result: ExecutionResult? { isCurrent ? execution.result : nil }
-    private var stale: Bool { isCurrent && (source != execution.sourceSnapshot || input.wrappedValue != execution.inputSnapshot) }
+    private var stale: Bool {
+        guard isCurrent else { return false }
+        guard source == execution.sourceSnapshot else { return true }
+        return !execution.isGrading && input.wrappedValue != execution.inputSnapshot
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -49,17 +53,7 @@ struct ExecutionOutputView: View {
                 }
                 if let result {
                     if result.status == .compileError {
-                        ForEach(Array(CompilerDiagnostic.parse(result.stderr).enumerated()), id: \.offset) { _, item in
-                            Button { navigate(item) } label: {
-                                HStack(alignment: .top, spacing: 8) {
-                                    Text("\(item.line):\(item.column)").monospaced()
-                                    Text(verbatim: item.message).lineLimit(2)
-                                    Spacer(minLength: 0)
-                                    Image(systemName: "arrow.up.left")
-                                }.font(.caption)
-                            }.buttonStyle(.plain).foregroundStyle(.orange)
-                                .disabled(stale).help("Перейти к месту диагностики в редакторе")
-                        }
+                        diagnostics(result.stderr)
                     }
                     output("stdout", text: result.stdout)
                     if !result.stderr.isEmpty { output("stderr · диагностика", text: result.stderr) }
@@ -69,9 +63,19 @@ struct ExecutionOutputView: View {
                         }
                     }
                 }
+                if execution.isGrading {
+                    ForEach(execution.gradingResults) { item in
+                        gradingCase(item)
+                    }
+                }
             }
-            Text("Успешный запуск не означает, что задача решена верно. Автопроверка кода пока не включена. Файлы программы исчезают после запуска.")
-                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            if model.course?.exercises.first(where: { $0.id == exerciseID })?.gradingFixtures != nil {
+                Text("«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод. Успешный запуск сам по себе задание не засчитывает.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            } else {
+                Text("Для этого задания автоматическая проверка недоступна: запуск не засчитывает решение. Отметьте выполнение вручную.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
             if model.course?.exercises.first(where: { $0.id == exerciseID })?.testCases.contains(where: { $0.files?.isEmpty == false }) == true {
                 Text("Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -94,7 +98,9 @@ struct ExecutionOutputView: View {
                 case .phase(.running): Text("Программа выполняется…")
                 case .stopping: Text("Останавливаем среду и все процессы…")
                 case .finished:
-                    if let result {
+                    if execution.isGrading {
+                        gradingSummary
+                    } else if let result {
                         switch result.status {
                         case .success: Text("Программа завершилась · код 0")
                         case .compileError: Text("Ошибка компиляции")
@@ -108,7 +114,74 @@ struct ExecutionOutputView: View {
                     } else { Text("Запуск не выполнен") }
                 }
             }.font(.callout.weight(.medium))
+            if execution.isGrading, execution.isBusy, execution.gradingCaseTotal > 0 {
+                Text("· пример \(min(execution.gradingCaseIndex + 1, execution.gradingCaseTotal)) из \(execution.gradingCaseTotal)")
+                    .font(.callout).foregroundStyle(.secondary)
+            }
         }.accessibilityElement(children: .combine).accessibilityAddTraits(.updatesFrequently)
+    }
+
+    @ViewBuilder private var gradingSummary: some View {
+        let passed = execution.gradingResults.filter(\.matches).count
+        let total = execution.gradingCaseTotal
+        if execution.gradingResults.isEmpty {
+            Text("Проверка не выполнена")
+        } else if passed == total, total > 0 {
+            Text("Все примеры пройдены · \(passed) из \(total)")
+        } else if execution.gradingResults.count < total {
+            Text("Проверка остановлена · пройдено \(passed) из \(total)")
+        } else {
+            Text("Пройдено \(passed) из \(total)")
+        }
+    }
+
+    @ViewBuilder private func gradingCase(_ item: GradingCaseResult) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: item.matches ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .foregroundStyle(item.matches ? Color.green : Color.orange)
+                Text("Пример \(item.index)").font(.callout.weight(.medium))
+                Spacer(minLength: 0)
+                Text(gradingLabel(item)).font(.caption).foregroundStyle(.secondary)
+            }
+            if !item.matches {
+                if item.status == .compileError { diagnostics(item.stderr) }
+                if item.status == .success {
+                    if !item.input.isEmpty { output("ввод", text: item.input) }
+                    output("ожидалось", text: item.expectedOutput)
+                    output("получено", text: item.actualOutput)
+                } else if item.status != .compileError, !item.stderr.isEmpty {
+                    output("stderr · диагностика", text: item.stderr)
+                }
+            }
+        }
+    }
+
+    private func gradingLabel(_ item: GradingCaseResult) -> String {
+        switch item.status {
+        case .success: item.matches ? "Вывод совпал" : "Другой вывод"
+        case .compileError: "Ошибка компиляции"
+        case .runtimeError: "Ошибка выполнения · код \(item.exitCode ?? -1)"
+        case .cpuLimit: "Лимит процессорного времени"
+        case .outputLimit: "Превышен лимит вывода"
+        case .timeout: "Превышено время ожидания"
+        case .cancelled: "Запуск остановлен"
+        case .backendError: "Среда недоступна"
+        }
+    }
+
+    @ViewBuilder private func diagnostics(_ text: String) -> some View {
+        ForEach(Array(CompilerDiagnostic.parse(text).enumerated()), id: \.offset) { _, item in
+            Button { navigate(item) } label: {
+                HStack(alignment: .top, spacing: 8) {
+                    Text("\(item.line):\(item.column)").monospaced()
+                    Text(verbatim: item.message).lineLimit(2)
+                    Spacer(minLength: 0)
+                    Image(systemName: "arrow.up.left")
+                }.font(.caption)
+            }.buttonStyle(.plain).foregroundStyle(.orange)
+                .disabled(stale).help("Перейти к месту диагностики в редакторе")
+        }
     }
 
     private func output(_ title: String, text: String) -> some View {

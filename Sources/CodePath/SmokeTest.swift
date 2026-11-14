@@ -54,19 +54,55 @@ enum SmokeTest {
                 check(try Data(contentsOf: model.dataURL) == before, "Running does not change persisted progress, awards or drafts")
                 check(model.state(for: first.id).completion == .unfinished, "Successful execution is not automatic task completion")
                 let console = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 880, height: 980), styleMask: [.titled, .resizable], backing: .buffered, defer: false)
-                console.contentView = NSHostingView(rootView: ExerciseView(model: model, exercise: first, revealEditor: {}).responseArea.padding(24)
+                console.contentView = NSHostingView(rootView: ExerciseEditorPreview(model: model, exercise: first).padding(24)
                     .frame(width: 880, height: 980, alignment: .topLeading).background(WorkspaceBackdrop())
                     .environment(\.locale, PresentationLocale.locale).preferredColorScheme(.light).tint(.green))
                 console.orderFront(nil)
                 await settle()
                 check(findEditor(in: console.contentView) != nil, "Result preview renders the real unified code editor")
                 try snapshot(window: console, to: directory.appendingPathComponent("execution-editor-success.png"))
-                console.contentView = NSHostingView(rootView: ExerciseView(model: model, exercise: first, revealEditor: {}).responseArea.padding(24)
+                console.contentView = NSHostingView(rootView: ExerciseEditorPreview(model: model, exercise: first).padding(24)
                     .frame(width: 580, height: 980, alignment: .topLeading).background(WorkspaceBackdrop())
                     .environment(\.locale, PresentationLocale.locale).preferredColorScheme(.dark).tint(.green))
                 await settle()
                 try snapshot(window: console, to: directory.appendingPathComponent("execution-editor-compact-dark.png"))
+                guard let gradeTask = course.exercises.first(where: {
+                    ($0.gradingFixtures?.count ?? 0) >= 2 && $0.testCases.allSatisfy { !$0.output.isEmpty }
+                }) else { throw ContentError.invalid("No multi-fixture task for grading smoke") }
+                model.open(gradeTask)
+                model.updateState(gradeTask.id) { $0.draft = gradeTask.solution }
+                let beforeGrade = try Data(contentsOf: model.dataURL)
+                model.gradeCode()
+                check(model.execution.isGrading && model.execution.isBusy, "Grading uses the real execution slot")
+                check(!model.execution.run(exerciseID: gradeTask.id, source: gradeTask.solution, stdin: ""), "Run is refused while grading occupies the slot")
+                try await waitForExecution()
+                check(model.execution.gradingResults.count == gradeTask.testCases.count, "Every verified fixture is executed")
+                check(model.execution.gradingPassed, "Reference solution passes all fixtures")
+                check(model.state(for: gradeTask.id).completion == .automatic
+                      && model.state(for: gradeTask.id).lastCorrect == true
+                      && model.state(for: gradeTask.id).attempts == 1, "Complete grading pass persists automatic completion")
+                check(try Data(contentsOf: model.dataURL) != beforeGrade, "Grading result is persisted")
+                console.contentView = NSHostingView(rootView: ExerciseEditorPreview(model: model, exercise: gradeTask).padding(24)
+                    .frame(width: 880, height: 1100, alignment: .topLeading).background(WorkspaceBackdrop())
+                    .environment(\.locale, PresentationLocale.locale).preferredColorScheme(.light).tint(.green))
+                await settle()
+                try snapshot(window: console, to: directory.appendingPathComponent("grading-editor-success.png"))
+                model.updateState(gradeTask.id) { $0.draft = "int main(){}" }
+                await settle()
+                if let editor = findEditor(in: console.contentView) {
+                    check(editor.string == "int main(){}", "Programmatic draft change reaches the real editor")
+                } else { failures.append("Programmatic draft change has a real editor") }
+                model.gradeCode()
+                try await waitForExecution()
+                check(model.execution.gradingResults.count == gradeTask.testCases.count
+                      && model.execution.gradingResults.allSatisfy({ !$0.matches }), "Wrong program fails every fixture")
+                check(model.state(for: gradeTask.id).attempts == 2
+                      && model.state(for: gradeTask.id).lastCorrect == false
+                      && model.state(for: gradeTask.id).completion == .automatic, "Failure records an attempt without revoking earned completion")
+                await settle()
+                try snapshot(window: console, to: directory.appendingPathComponent("grading-editor-failure.png"))
                 console.orderOut(nil)
+                model.open(first)
                 if let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) {
                     await settle()
                     try snapshot(window: window, to: directory.appendingPathComponent("execution-light.png"))
@@ -422,6 +458,18 @@ enum SmokeTest {
         print("UI smoke: \(checks.count) checks; failures: \(failures)")
         // This mode is a test process, not a normal application exit.
         exit(failures.isEmpty ? 0 : 1)
+    }
+
+    /// Compact preview for the execution screenshots. Evaluating the observable
+    /// progress inside a real body keeps programmatic draft changes flowing into
+    /// the hosted AppKit editor exactly as the lesson screen does in the app.
+    private struct ExerciseEditorPreview: View {
+        let model: AppModel
+        let exercise: Exercise
+        var body: some View {
+            let _ = model.state(for: exercise.id)
+            ExerciseView(model: model, exercise: exercise, revealEditor: {}).responseArea
+        }
     }
 
     private static func findEditor(in view: NSView?) -> EditingTextView? {

@@ -156,7 +156,7 @@ struct OnboardingView: View {
                 case .welcome:
                     Text("Добро пожаловать в codelib").font(.largeTitle.bold())
                     WelcomeCodeView()
-                    Text("Учимся программировать на C++ — офлайн и в своём темпе. Код остаётся черновиком: встроенного запуска и AI нет.")
+                    Text("Учимся программировать на C++ — офлайн и в своём темпе. Код можно запустить в изолированной среде; AI нет.")
                         .foregroundStyle(.secondary)
                     Button("Начать настройку") { advance(to: .profile) }
                         .buttonStyle(.borderedProminent).controlSize(.large)

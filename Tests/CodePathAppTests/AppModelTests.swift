@@ -28,6 +28,34 @@ struct AppModelTests {
         #expect(try Data(contentsOf: model.dataURL) == beforeInput)
     }
 
+    @Test func gradingPersistsOnlyCompleteRuntimeOutcomes() throws {
+        _ = try setup()
+        let model = AppModel()
+        let task = try #require(model.course?.exercises.first { $0.gradingFixtures != nil })
+        model.open(task)
+        #expect(model.state(for: task.id).attempts == 0)
+        model.recordGrading(exerciseID: task.id, passed: false)
+        #expect(model.state(for: task.id).attempts == 1)
+        #expect(model.state(for: task.id).lastCorrect == false)
+        #expect(model.state(for: task.id).completion == .unfinished)
+        model.recordGrading(exerciseID: task.id, passed: true)
+        #expect(model.state(for: task.id).attempts == 2)
+        #expect(model.state(for: task.id).lastCorrect == true)
+        #expect(model.state(for: task.id).completion == .automatic)
+        model.selfComplete()
+        #expect(model.state(for: task.id).completion == .automatic)
+        model.recordGrading(exerciseID: task.id, passed: false)
+        #expect(model.state(for: task.id).completion == .automatic)
+        #expect(model.state(for: task.id).attempts == 3)
+        model.recordGrading(exerciseID: "future.unknown", passed: true)
+        #expect(model.state(for: "future.unknown").attempts == 0)
+
+        let restored = AppModel()
+        #expect(restored.state(for: task.id).attempts == 3)
+        #expect(restored.state(for: task.id).lastCorrect == false)
+        #expect(restored.state(for: task.id).completion == .automatic)
+    }
+
     @Test func compilerBytePositionsConvertToUTF16WithoutChangingSource() {
         let source = "// 👩🏽‍💻\nint привет = 1; missing;\n"
         let bytesBefore = "int привет = 1; ".utf8.count

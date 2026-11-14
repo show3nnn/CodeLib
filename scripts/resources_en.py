@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Reviewed source change: only the real 0.3.0 execution note was added and translated below.
-RELEASES_SHA256 = "a2c9e47e78b082c295ef663737068e8e3351734152bd1b15fd35d9d76af78321"
+# Reviewed source change: the 0.4.0 grading note was added and translated below.
+RELEASES_SHA256 = "22ce65790ea58b7d9bd8825b61fc2af751069da70394a88867ecfd7ef8ab972e"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -19,6 +19,19 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.4.0": note("Checking a solution against examples",
+        "Code tasks can now be checked for real: codelib runs the program on the condition\\u2019s examples in the isolated environment and shows the result for each example. The task counts only when the output matches on every example; a successful run by itself still never completes it.",
+        {
+            "grading": ("\\u201cCheck solution\\u201d", "A new button and Command-Shift-R compile and run the current draft on every example from the condition. Each run uses its own disposable environment, so the program cannot affect the following examples."),
+            "grading-cases": ("A result for every example", "You can see which example passed and why not: input, expected and actual output, a compilation error or a limit that was hit. During checking the app shows \\u201cexample N of M\\u201d."),
+            "grading-progress": ("Only a complete pass counts", "The task becomes \\u201cVerified automatically\\u201d only when every example matched. A compilation error or wrong output adds an attempt, but an earlier mark is never revoked. Cancelling the check or an environment failure never changes the result."),
+            "grading-coverage": ("More examples in the course", "The sections on data, expressions, conditions, loops, functions, strings and arrays now have five or more examples per task. Tasks with file examples or without examples are still marked manually."),
+            "grading-honesty": ("An honest mark", "\\u201cMark manually\\u201d remains next to it: that is your mark, not a check. Editing the code after checking does not revoke the result, but new output must be checked again."),
+        },
+        {
+            "Текст первого раздела обновлён: запуск программы уже доступен, а не «появится позже».": "The first section\\u2019s text is updated: running a program is already available rather than \\u201ccoming later\\u201d.",
+            "Подсказки о самопроверке уточнены: запуск и проверка на примерах — разные вещи.": "Self-review hints are clearer: running and checking against examples are different things.",
+        }),
     "0.3.0": note("Real C++ execution inside codelib",
         "You can now compile and run a program from the editor: provide input, see output and diagnostics, and stop execution. C++ runs in a separate disposable Linux environment without network access or access to Mac files. A successful run does not yet mean the task was solved automatically.",
         {

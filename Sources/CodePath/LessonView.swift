@@ -338,8 +338,19 @@ struct ExerciseView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 if exercise.kind == .code {
-                    Button("Отметить выполненным", systemImage: "checkmark") { model.selfComplete() }
-                        .buttonStyle(.borderedProminent).disabled(state.completion == .selfReviewed)
+                    if exercise.gradingFixtures != nil {
+                        Button("Проверить решение", systemImage: "checkmark.seal") { model.gradeCode() }
+                            .buttonStyle(.borderedProminent)
+                            .keyboardShortcut(.return, modifiers: [.command, .shift])
+                            .disabled(model.execution.isBusy)
+                        Button("Отметить самому") { model.selfComplete() }
+                            .buttonStyle(.bordered)
+                            .disabled(state.completion != .unfinished)
+                            .help(state.completion == .automatic ? "Задание уже проверено на примерах" : "Отметить выполнение без автопроверки")
+                    } else {
+                        Button("Отметить выполненным", systemImage: "checkmark") { model.selfComplete() }
+                            .buttonStyle(.borderedProminent).disabled(state.completion == .selfReviewed)
+                    }
                 } else {
                     Button("Проверить ответ", systemImage: "checkmark.circle") { model.check() }
                         .buttonStyle(.borderedProminent).keyboardShortcut(.return, modifiers: .command)
@@ -351,8 +362,13 @@ struct ExerciseView: View {
                 }
             }
             if exercise.kind == .code && state.completion == .unfinished {
-                Text("Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.")
-                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if exercise.gradingFixtures != nil {
+                    Text("Проверка запускает примеры из условия в изолированной среде и сравнивает вывод. Задание засчитывается только при совпадении на каждом примере; запуск сам по себе ничего не засчитывает.")
+                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.")
+                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                }
             }
             if state.completion != .unfinished {
                 Label { Text(state.completion.localizedTitle) } icon: {
@@ -363,7 +379,13 @@ struct ExerciseView: View {
                     Text("Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.").font(.caption).foregroundStyle(.secondary)
                 }
                 if exercise.kind == .code {
-                    Text("Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.").font(.caption).foregroundStyle(.secondary)
+                    if state.completion == .automatic {
+                        Text("Задание проверено на примерах из условия. Изменение кода не отменяет прежнюю отметку, но новый вывод нужно проверить отдельно.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    } else {
+                        Text("Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                 }
             }
             if let correct = state.lastCorrect {

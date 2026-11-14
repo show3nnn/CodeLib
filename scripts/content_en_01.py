@@ -3,7 +3,7 @@
 The source snapshot is intentional: update it only after reviewing course changes.
 Code, expected output and grading values are not translated.
 """
-SOURCE_SHA256 = "435ec03a6945a041d489ee395b326d3eeda7966c7e6e31b111b068fdc663ca0e"
+SOURCE_SHA256 = "1ba8f26578c0c5bc70e03c4f4b470b30198969b5ba08d321b304f99f5c99c349"
 SECTION_ID = "cpp.section.start"
 
 ENTITIES = {
@@ -18,7 +18,7 @@ ENTITIES = {
     "cpp.first": {
         "title": "Programs and main",
         "summary": "Give the computer its first precise instruction.",
-        "theory": 'An algorithm is a finite sequence of steps that an executor can follow. A program expresses an algorithm in a programming language. C++ is case-sensitive: main and Main are different names.\n\nAn ordinary console program starts executing in int main(). Braces enclose its body. The statement std::cout << "Ready"; sends text to standard output. A semicolon ends the statement; quotation marks delimit the text and are not printed. The directive #include <iostream> makes input/output declarations available. For now, use this structure without trying to memorize every detail.\n\nIn codelib, you can write code, save it and compare it with a reference solution. There is no built-in execution yet. Do not confuse marking a task complete yourself with checking a program using a compiler.',
+        "theory": 'An algorithm is a finite sequence of steps that an executor can follow. A program expresses an algorithm in a programming language. C++ is case-sensitive: main and Main are different names.\n\nAn ordinary console program starts executing in int main(). Braces enclose its body. The statement std::cout << "Ready"; sends text to standard output. A semicolon ends the statement; quotation marks delimit the text and are not printed. The directive #include <iostream> makes input/output declarations available. For now, use this structure without trying to memorize every detail.\n\nIn codelib, you can write code, save it and run it right in the editor: the program executes in a separate disposable environment. A successful run shows output but never completes the task by itself: it needs checking against the condition\u2019s examples or your own mark.',
         "microscope": "A compiler translates C++ source into object code and reports violations of the language rules. A linker combines object files and the required libraries into an executable. Compilation does not prove that an algorithm is correct: a program can compile successfully and still produce the wrong result. Reaching the end of int main() is equivalent to return 0; — this is a special rule for main, not for every function.",
         "recap": "Check the name main, matching braces, quotation marks and the semicolon. The output is not the text of the entire program.",
     },
@@ -127,7 +127,7 @@ ENTITIES.update({
     },
     "cpp.board": {
         "title": "Mini-project: status board", "summary": "Assemble and check a complete text message.",
-        "theory": "This mini-project combines the program structure, exact output and special characters. Write down the required result first, then identify the line breaks, quotation marks and backslashes. Write the program and compare it with the reference solution. There is no input: the board is static for now.\n\nBefore marking the task complete yourself, check every line: letter case, spaces and punctuation. If you have an external C++ compiler, you can check your code there; codelib does not execute user programs. Editing a draft does not erase an earlier completion mark: the status means that you completed the task previously, not that the current source has been checked again.",
+        "theory": "This mini-project combines the program structure, exact output and special characters. Write down the required result first, then identify the line breaks, quotation marks and backslashes. Write the program and compare it with the reference solution. There is no input: the board is static for now.\n\nBefore marking the task, check every line: letter case, spaces and punctuation. You can run the program with \u201cRun\u201d and compare the output with the condition; running alone never completes the task. Editing a draft does not erase an earlier completion mark: the status means that you completed the task previously, not that the current source has been checked again.",
         "microscope": "Program output and a source file are different representations. Compare the result with the requirements, not the appearance of your code with the reference: different programs can print the same text. Comparing source text is therefore not a correct way to judge solutions.",
         "recap": "Requirements first, then code, then compare the result. Do not call a program automatically checked when you have only read the reference solution.",
     },

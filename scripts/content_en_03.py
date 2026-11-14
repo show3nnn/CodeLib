@@ -1,7 +1,7 @@
 """Complete text-field draft: expressions and calculations. Not a shipped app language."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "435ec03a6945a041d489ee395b326d3eeda7966c7e6e31b111b068fdc663ca0e"
+SOURCE_SHA256 = "1ba8f26578c0c5bc70e03c4f4b470b30198969b5ba08d321b304f99f5c99c349"
 SECTION_ID = "cpp.section.expressions"
 ENTITIES = {
     SECTION_ID: dict(title="3. Expressions and calculations", summary="Division, remainders, conversions and a supplies assessment."),

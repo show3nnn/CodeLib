@@ -270,6 +270,8 @@ final class AppModel {
 
     func selfComplete() {
         guard let exercise, exercise.kind == .code else { return }
+        // An honest runtime pass is never replaced by a weaker manual mark.
+        guard state(for: exercise.id).completion != .automatic else { return }
         updateState(exercise.id) { $0.completion = .selfReviewed }
     }
 
@@ -278,6 +280,28 @@ final class AppModel {
         flush()
         _ = execution.run(exerciseID: exercise.id, source: state(for: exercise.id).draft ?? exercise.starter, stdin: stdin)
         // Running is not grading, completion or an achievement event.
+    }
+
+    /// Automatic verification against the exercise's verified stdin/stdout fixtures.
+    /// A pass is a real runtime result, not source-text matching.
+    func gradeCode() {
+        guard let exercise, let fixtures = exercise.gradingFixtures, !execution.isBusy else { return }
+        flush()
+        let source = state(for: exercise.id).draft ?? exercise.starter
+        _ = execution.grade(exerciseID: exercise.id, source: source, fixtures: fixtures) { [weak self] id, passed in
+            self?.recordGrading(exerciseID: id, passed: passed)
+        }
+    }
+
+    /// Persists the outcome of a complete grading run. Partial, cancelled or broken
+    /// backend runs never reach this method and never change completion.
+    func recordGrading(exerciseID: String, passed: Bool) {
+        guard course?.exercises.contains(where: { $0.id == exerciseID }) == true else { return }
+        updateState(exerciseID) {
+            if $0.attempts < Int.max { $0.attempts += 1 }
+            $0.lastCorrect = passed
+            if passed { $0.completion = .automatic }
+        }
     }
 
     func exportProgress() {
