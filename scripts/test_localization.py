@@ -11,6 +11,13 @@ import generate_localization as generator
 from localization_tools import source_texts
 
 
+NUMBER = re.compile(r"(?<![\w])[-−]?\d+(?:[.,]\d+)?(?![\w])")
+
+
+def numeric_tokens(text):
+    return Counter(value.replace("−", "-").replace(",", ".") for value in NUMBER.findall(text))
+
+
 class LocalizationAuthoringTests(unittest.TestCase):
     def setUp(self):
         root = Path(__file__).resolve().parents[1]
@@ -50,16 +57,40 @@ class LocalizationAuthoringTests(unittest.TestCase):
     def test_exercise_prompt_numeric_tokens_match_source(self):
         # This is a narrow guard for examples and bounds, not semantic review:
         # punctuation and decimal separators may differ, but numbers must not vanish.
-        number = re.compile(r"(?<![\w])[-−]?\d+(?:[.,]\d+)?(?![\w])")
-        def numbers(text):
-            return Counter(value.replace("−", "-").replace(",", ".") for value in number.findall(text))
-
         texts, _ = generator.build_texts(self.course, self.source)
         for section in self.course["sections"]:
             for lesson in section["lessons"]:
                 for exercise in lesson["exercises"]:
                     with self.subTest(exercise=exercise["id"]):
-                        self.assertEqual(numbers(exercise["prompt"]), numbers(texts[f'{exercise["id"]}.prompt']))
+                        self.assertEqual(numeric_tokens(exercise["prompt"]), numeric_tokens(texts[f'{exercise["id"]}.prompt']))
+
+    def test_numeric_token_guard_preserves_sign_and_repetition(self):
+        self.assertEqual(numeric_tokens("−12 3,5 -12"), Counter({"-12": 2, "3.5": 1}))
+        self.assertNotEqual(numeric_tokens("0 10 10"), numeric_tokens("0 10"))
+        self.assertNotEqual(numeric_tokens("−12"), numeric_tokens("12"))
+
+    def test_theory_hints_and_explanations_keep_numeric_tokens(self):
+        # Known reviewed tokenization differences, not omissions of meaning:
+        # number words, the English plural "2s", an explanatory repeated 60,
+        # and comma-separated indices interpreted as decimal commas.
+        exceptions = {
+            "cpp.while.theory": ({"0": 1}, {}),
+            "cpp.types.microscope": ({"2": 1}, {}),
+            "cpp.while.recap": ({"0": 1}, {}),
+            "cpp.inventory.compress.explanation": ({"2": 1}, {}),
+            "cpp.division.clock.hint.2": ({}, {"60": 1}),
+            "cpp.arrays.reverse.hint.1": ({"0.1": 1}, {"0": 1, "1": 1}),
+            "cpp.arrays.reverse.hint.2": ({"2.1": 1}, {"2": 1, "1": 1}),
+        }
+        texts, source = generator.build_texts(self.course, self.source)
+        observed = {}
+        for key, original in source.items():
+            if key.endswith((".theory", ".microscope", ".recap", ".explanation")) or ".hint." in key:
+                missing = numeric_tokens(original) - numeric_tokens(texts[key])
+                added = numeric_tokens(texts[key]) - numeric_tokens(original)
+                if missing or added:
+                    observed[key] = (dict(missing), dict(added))
+        self.assertEqual(observed, exceptions)
 
     def test_cpp_standard_library_names_are_not_lost_in_translation(self):
         # Identifiers are language-neutral; additional English examples are allowed.
