@@ -12,10 +12,15 @@ from localization_tools import source_texts
 
 
 NUMBER = re.compile(r"(?<![\w])[-−]?\d+(?:[.,]\d+)?(?![\w])")
+COMPARISON = re.compile(r"(?<![<>=!])(?:<=|>=|==|!=|≤|≥)(?![=<>])")
 
 
 def numeric_tokens(text):
     return Counter(value.replace("−", "-").replace(",", ".") for value in NUMBER.findall(text))
+
+
+def comparison_tokens(text):
+    return Counter({"≤": "<=", "≥": ">="}.get(value, value) for value in COMPARISON.findall(text))
 
 
 class LocalizationAuthoringTests(unittest.TestCase):
@@ -91,6 +96,28 @@ class LocalizationAuthoringTests(unittest.TestCase):
                 if missing or added:
                     observed[key] = (dict(missing), dict(added))
         self.assertEqual(observed, exceptions)
+
+    def test_explicit_comparison_operators_remain_in_translation(self):
+        # Standalone < and > are deliberately excluded: they also delimit C++
+        # headers and templates. This guard does not establish semantic equivalence.
+        texts, source = generator.build_texts(self.course, self.source)
+        for key, original in source.items():
+            if key.endswith((".prompt", ".theory", ".microscope", ".recap", ".explanation")) or ".hint." in key or ".choice." in key:
+                with self.subTest(field=key):
+                    self.assertEqual(comparison_tokens(original), comparison_tokens(texts[key]))
+
+    def test_choice_labels_keep_numeric_tokens(self):
+        texts, source = generator.build_texts(self.course, self.source)
+        for key, original in source.items():
+            if ".choice." in key:
+                with self.subTest(field=key):
+                    self.assertEqual(numeric_tokens(original), numeric_tokens(texts[key]))
+
+    def test_comparison_guard_distinguishes_boundary_and_equality(self):
+        self.assertEqual(comparison_tokens("x ≤ 3 && y >= 2"), Counter({"<=": 1, ">=": 1}))
+        self.assertNotEqual(comparison_tokens("x <= 3"), comparison_tokens("x >= 3"))
+        self.assertNotEqual(comparison_tokens("x == 3"), comparison_tokens("x != 3"))
+        self.assertEqual(comparison_tokens("#include <vector>  a < b  a <=> b"), Counter())
 
     def test_cpp_standard_library_names_are_not_lost_in_translation(self):
         # Identifiers are language-neutral; additional English examples are allowed.
