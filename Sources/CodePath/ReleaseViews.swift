@@ -95,7 +95,7 @@ struct ReleaseHistoryView: View {
                             .padding(.horizontal, 10).padding(.vertical, 4).background(Color.green.opacity(0.1), in: Capsule())
                     }
                     Spacer()
-                    if let date = note.date { Text(date).font(.caption).foregroundStyle(.secondary) }
+                    if let date = note.date { Text(PresentationLocale.releaseDate(date)).font(.caption).foregroundStyle(.secondary) }
                 }
                 Text(note.title).font(.title3.weight(.semibold))
                 Text(note.summary).fixedSize(horizontal: false, vertical: true)

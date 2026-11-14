@@ -56,4 +56,19 @@ import Testing
         #expect(0.0.formatted(PresentationLocale.percent).contains("0"))
         #expect(1.0.formatted(PresentationLocale.percent).contains("100"))
     }
+
+    @Test func releaseDatesAreCalendarDaysAndUseTheRequestedLocale() {
+        let english = Locale(identifier: "en_US")
+        let russian = Locale(identifier: "ru_RU")
+        let en = PresentationLocale.releaseDate("2026-11-14", locale: english)
+        let ru = PresentationLocale.releaseDate("2026-11-14", locale: russian)
+        #expect(en.contains("14") && en.contains("2026"))
+        #expect(ru.contains("14") && ru.contains("2026"))
+        #expect(en != ru)
+        #expect(PresentationLocale.releaseDate("2024-02-29", locale: english) != "2024-02-29")
+        for invalid in ["2023-02-29", "2026-13-01", "2026-00-01", "2026-11-31",
+                        "2026-1-14", "0000-01-01", "2026-11-14T00:00:00Z", "unknown"] {
+            #expect(PresentationLocale.releaseDate(invalid, locale: english) == invalid)
+        }
+    }
 }
