@@ -184,12 +184,14 @@ struct ExecutionOutputView: View {
         }
     }
 
-    private func output(_ title: String, text: String) -> some View {
+    private func output(_ title: LocalizedStringResource, text: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(verbatim: title).font(.caption.monospaced()).foregroundStyle(.secondary)
+            Text(PresentationLocale.resource(title)).font(.caption.monospaced()).foregroundStyle(.secondary)
             ScrollView([.horizontal, .vertical]) {
-                Text(verbatim: text.isEmpty ? "(пусто)" : text)
-                    .font(.system(size: model.document.preferences.codeSize, design: .monospaced))
+                Group {
+                    if text.isEmpty { Text("(пусто)") }
+                    else { Text(verbatim: text) }
+                }.font(.system(size: model.document.preferences.codeSize, design: .monospaced))
                     .textSelection(.enabled).fixedSize(horizontal: true, vertical: true).padding(12)
             }.defaultScrollAnchor(.topLeading)
                 .frame(height: CGFloat(min(10, max(2, text.split(separator: "\n", omittingEmptySubsequences: false).count))) *

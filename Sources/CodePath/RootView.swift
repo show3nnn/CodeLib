@@ -91,7 +91,10 @@ struct RootView: View {
                         HStack(spacing: 10) {
                             if let profile = model.document.profile { ProfileAvatar(profile: profile, size: 32) }
                             VStack(alignment: .leading, spacing: 3) {
-                                Text(model.document.profile?.nickname ?? "Ваш профиль").font(.headline).lineLimit(1)
+                                Group {
+                                    if let profile = model.document.profile { Text(verbatim: profile.nickname) }
+                                    else { Text("Ваш профиль") }
+                                }.font(.headline).lineLimit(1)
                                 Text("Профиль и настройки").font(.caption).foregroundStyle(.secondary)
                             }
                             Spacer(minLength: 0)

@@ -45,6 +45,23 @@ enum PluralPresentation {
 
     enum MetricKind { case tasks, lessons, achievements }
     enum CourseUnit { case sections, lessons, tasks }
+    enum TopicUnit { case lessons, sections }
+
+    static func topicProgress(_ kind: TopicUnit, done: Int, total: Int,
+                              locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
+        let text: LocalizedStringResource
+        switch (kind, form(total, locale: locale)) {
+        case (.lessons, .one): text = "\(done)/\(total) урок"
+        case (.lessons, .few): text = "\(done)/\(total) урока"
+        case (.lessons, .other): text = "\(done)/\(total) уроков"
+        case (.sections, .one): text = "\(done)/\(total) раздел"
+        case (.sections, .few): text = "\(done)/\(total) раздела"
+        case (.sections, .other): text = "\(done)/\(total) разделов"
+        }
+        var result = text
+        result.locale = locale
+        return result
+    }
 
     static func courseUnit(_ kind: CourseUnit, count: Int,
                            locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {

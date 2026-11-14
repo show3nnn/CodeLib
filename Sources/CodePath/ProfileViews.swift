@@ -161,7 +161,10 @@ struct OnboardingView: View {
                     Button("Начать настройку") { advance(to: .profile) }
                         .buttonStyle(.borderedProminent).controlSize(.large)
                 case .profile:
-                    Text(model.isExistingLearner ? "Добавим ваш профиль" : "Познакомимся?").font(.largeTitle.bold())
+                    Group {
+                        if model.isExistingLearner { Text("Добавим ваш профиль") }
+                        else { Text("Познакомимся?") }
+                    }.font(.largeTitle.bold())
                     if model.isExistingLearner { Text("Прежние задания, ответы и черновики останутся на месте.").foregroundStyle(.secondary) }
                     ProfileFields(profile: $state.draft)
                     HStack {

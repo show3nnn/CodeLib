@@ -111,8 +111,13 @@ struct HomeView: View {
                 .fixedSize(horizontal: false, vertical: true)
             if let course = model.course {
                 let section = course.sections.first { section in section.lessons.contains { $0.id == model.lesson?.id } }
-                Text(section?.title ?? "От первой строки к самостоятельному коду")
-                    .font(.callout).foregroundStyle(.white.opacity(0.65)).fixedSize(horizontal: false, vertical: true)
+                Group {
+                    if let section {
+                        Text(verbatim: section.title)
+                    } else {
+                        Text("От первой строки к самостоятельному коду")
+                    }
+                }.font(.callout).foregroundStyle(.white.opacity(0.65)).fixedSize(horizontal: false, vertical: true)
             }
             Button { model.resume() } label: {
                 Label("Продолжить обучение", systemImage: "arrow.right").font(.headline)
@@ -317,6 +322,7 @@ struct ProgressViewScreen: View {
                 if let course = model.course {
                     let finished = course.exercises.filter { model.document.completed($0.id) }
                     let completedLessons = course.lessons.filter { model.document.lessonCompleted($0) }.count
+                    let awards = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                     Card {
                         VStack(alignment: .leading, spacing: 22) {
                             HStack(spacing: 24) {
@@ -349,9 +355,9 @@ struct ProgressViewScreen: View {
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .automatic }.count)", label: "проверено автоматически", icon: "checkmark.seal")
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .selfReviewed }.count)", label: "отмечено вами", icon: "person.crop.circle.badge.checkmark")
                         Metric(value: "\(course.exercises.count - finished.count)", label: "впереди", icon: "arrow.forward.circle")
-                        Metric(value: "\(AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count)", label: "достижений", icon: "trophy")
+                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
                     }
-                    Text("Автоматически проверяются только однозначные ответы. Самостоятельные отметки кода учитываются отдельно и не означают запуск C++.")
+                    Text("Однозначные ответы и подходящие кодовые задания можно проверить автоматически. Самостоятельные отметки учитываются отдельно; запуск сам по себе задание не засчитывает.")
                         .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Card {
                         VStack(alignment: .leading, spacing: 14) {
@@ -431,7 +437,9 @@ struct ProgressViewScreen: View {
                                         HStack {
                                             Text(PluralPresentation.taskProgress(done, total: tasks.count))
                                             Spacer(minLength: 0)
-                                            Text("\(section.lessons.filter { model.document.lessonCompleted($0) }.count)/\(section.lessons.count) уроков")
+                                            Text(PluralPresentation.topicProgress(.lessons,
+                                                done: section.lessons.filter { model.document.lessonCompleted($0) }.count,
+                                                total: section.lessons.count))
                                         }.font(.caption).foregroundStyle(.secondary)
                                     }
                                 }.contentShape(RoundedRectangle(cornerRadius: 22))
@@ -444,7 +452,12 @@ struct ProgressViewScreen: View {
     }
 
     @ViewBuilder private func topicCounts(_ course: Course, completedLessons: Int) -> some View {
-        Label("\(completedLessons)/\(course.lessons.count) уроков", systemImage: "book.closed")
-        Label("\(course.sections.filter { section in section.lessons.allSatisfy { model.document.lessonCompleted($0) } }.count)/\(course.sections.count) разделов", systemImage: "square.stack")
+        Label { Text(PluralPresentation.topicProgress(.lessons, done: completedLessons, total: course.lessons.count)) }
+            icon: { Image(systemName: "book.closed") }
+        Label {
+            Text(PluralPresentation.topicProgress(.sections,
+                done: course.sections.filter { section in section.lessons.allSatisfy { model.document.lessonCompleted($0) } }.count,
+                total: course.sections.count))
+        } icon: { Image(systemName: "square.stack") }
     }
 }

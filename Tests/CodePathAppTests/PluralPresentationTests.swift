@@ -32,5 +32,8 @@ struct PluralPresentationTests {
         #expect(String(localized: PluralPresentation.courseUnit(.sections, count: 2)) == "2 раздела")
         #expect(String(localized: PluralPresentation.courseUnit(.lessons, count: 11)) == "11 уроков")
         #expect(String(localized: PluralPresentation.courseUnit(.tasks, count: 21)) == "21 задание")
+        #expect(String(localized: PluralPresentation.topicProgress(.lessons, done: 1, total: 1)) == "1/1 урок")
+        #expect(String(localized: PluralPresentation.topicProgress(.lessons, done: 1, total: 4)) == "1/4 урока")
+        #expect(String(localized: PluralPresentation.topicProgress(.sections, done: 0, total: 11)) == "0/11 разделов")
     }
 }

@@ -51,7 +51,10 @@ struct AchievementCollectionView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Коллекция наград").font(.caption.weight(.semibold)).foregroundStyle(.green)
                             Text("Открыто \(unlocked) из \(AchievementCatalog.all.count)").font(.system(size: 24, weight: .semibold, design: .rounded)).tracking(-0.4)
-                            Text(unlocked == 0 ? "Первая награда появится за настоящую практику." : "Каждая награда выдаётся один раз и сохраняется в профиле.").font(.callout).foregroundStyle(.secondary)
+                            Group {
+                                if unlocked == 0 { Text("Первая награда появится за настоящую практику.") }
+                                else { Text("Каждая награда выдаётся один раз и сохраняется в профиле.") }
+                            }.font(.callout).foregroundStyle(.secondary)
                         }
                         Spacer(minLength: 0)
                         Picker("Категория", selection: $category) {
