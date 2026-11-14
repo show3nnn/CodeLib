@@ -3,7 +3,17 @@ import LearningCore
 import AppKit
 
 struct SettingsView: View {
-    enum Pane: String, CaseIterable { case profile = "Профиль", appearance = "Оформление", data = "Данные" }
+    enum Pane: String, CaseIterable {
+        case profile = "Профиль", appearance = "Оформление", data = "Данные"
+        var title: LocalizedStringResource {
+            let title: LocalizedStringResource = switch self {
+            case .profile: "Профиль"
+            case .appearance: "Оформление"
+            case .data: "Данные"
+            }
+            return PresentationLocale.resource(title)
+        }
+    }
     @Bindable var model: AppModel
     @State var pane: Pane = .profile
     @State private var confirmReset = false
@@ -22,7 +32,7 @@ struct SettingsView: View {
                     Image(systemName: "slider.horizontal.3").font(.title2).foregroundStyle(.secondary)
                 }
                 Picker("Раздел настроек", selection: $pane) {
-                    ForEach(Pane.allCases, id: \.self) { pane in Text(pane.rawValue).tag(pane) }
+                    ForEach(Pane.allCases, id: \.self) { pane in Text(pane.title).tag(pane) }
                 }.pickerStyle(.segmented).labelsHidden().controlSize(.large).accessibilityIdentifier("settings.pane")
             }.padding(24)
             Divider()

@@ -1,4 +1,5 @@
 import copy
+from collections import Counter
 import json
 from pathlib import Path
 import re
@@ -45,6 +46,20 @@ class LocalizationAuthoringTests(unittest.TestCase):
                 authors[index] = author
                 with patch.object(generator, "AUTHORS", authors):
                     with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)
+
+    def test_exercise_prompt_numeric_tokens_match_source(self):
+        # This is a narrow guard for examples and bounds, not semantic review:
+        # punctuation and decimal separators may differ, but numbers must not vanish.
+        number = re.compile(r"(?<![\w])[-−]?\d+(?:[.,]\d+)?(?![\w])")
+        def numbers(text):
+            return Counter(value.replace("−", "-").replace(",", ".") for value in number.findall(text))
+
+        texts, _ = generator.build_texts(self.course, self.source)
+        for section in self.course["sections"]:
+            for lesson in section["lessons"]:
+                for exercise in lesson["exercises"]:
+                    with self.subTest(exercise=exercise["id"]):
+                        self.assertEqual(numbers(exercise["prompt"]), numbers(texts[f'{exercise["id"]}.prompt']))
 
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):

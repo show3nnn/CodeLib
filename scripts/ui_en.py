@@ -1,6 +1,8 @@
 """English authoring for compiler-extracted UI keys. Not the entire UI; developer-only."""
 TEXTS = {
     "Подготовим ваш Mac к программированию": "Let's prepare your Mac for programming",
+    "Профиль": "Profile",
+    "Данные": "Data",
     "Среда C++": "C++ environment",
     "Компилятор уже входит в приложение. Проверка запускает небольшую программу в одноразовой изолированной среде; Xcode и Command Line Tools не нужны.": "The compiler is already included in the app. The check runs a small program in a disposable isolated environment; Xcode and Command Line Tools are not required.",
     "Среда ещё не проверена. Можно продолжить обучение и проверить её позже в настройках.": "The environment has not been checked yet. You can continue learning and check it later in Settings.",
