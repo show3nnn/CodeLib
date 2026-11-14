@@ -1,7 +1,7 @@
 """Complete text-field draft: structures and classes. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "49ea05f92e8ae1f4a5b61fb16f0a3566a1288749514d07018628ca9b3cd19792"
+SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
 SECTION_ID = "cpp.section.objects"
 ENTITIES = {
     SECTION_ID: dict(title="12. Structures and classes", summary="Combine data and operations while keeping clear state rules."),

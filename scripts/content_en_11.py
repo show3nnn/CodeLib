@@ -1,14 +1,14 @@
 """Complete text-field draft: ownership and RAII. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "49ea05f92e8ae1f4a5b61fb16f0a3566a1288749514d07018628ca9b3cd19792"
+SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
 SECTION_ID = "cpp.section.ownership"
 ENTITIES = {
     SECTION_ID: dict(title="11. Ownership and RAII", summary="Understand dynamic memory, but prefer automatic resource management."),
     "cpp.dynamic": lesson("Dynamic storage duration", "Separate an object's lifetime from the pointer's local name.",
         "new int(value) creates an int in dynamic memory and returns a pointer. delete p ends that object's lifetime and releases its allocated memory. After delete, you must not read *p. The pointer itself does not automatically become null; p=nullptr may make later accidental use easier to spot, but does not fix other copies of the same address.\n\nLosing the only way to reach an allocated object without releasing it causes a leak. Deleting the same object twice is invalid. Array new[] requires delete[], not ordinary delete. This lesson uses only a single int and one new/delete pair. It explains the mechanism, not a recommendation to manage memory manually in an ordinary app. The next lesson replaces the manual pair with an RAII owner.",
         "The local pointer variable p and the object created by new are different objects with different lifetimes. Ending p's lifetime does not automatically call delete. Do not treat the 'heap' as a physical structure required by the standard: it is a common implementation model for dynamic storage.",
-        "Every manual new needs a corresponding owner and proper release. After delete, the object is no longer accessible."),
+        "Every manual new needs exactly one responsible owner and a matching release. After delete, the object is no longer accessible."),
     "cpp.dynamic.single": task("One dynamic object", "Input: n (−100–100). Create an int using new int(n), increase its value by 1, print it, then release it using delete. Do not dereference after release.",
         ["Release must follow the last use.", "Modify *p, not p; call delete once."], "Printing before delete is valid; printing through the same pointer after delete is not."),
     "cpp.dynamic.copyvalue": task("Keep the value, not the address", "Input: n (−100–100). Create a dynamic int with value 2*n, copy *p into an ordinary int result, release the object and print result.",

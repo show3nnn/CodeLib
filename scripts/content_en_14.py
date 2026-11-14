@@ -1,7 +1,7 @@
 """Complete text-field draft: associative containers, files and errors. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "49ea05f92e8ae1f4a5b61fb16f0a3566a1288749514d07018628ca9b3cd19792"
+SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
 SECTION_ID = "cpp.section.datafiles"
 ENTITIES = {
     SECTION_ID: dict(title="14. Containers, files and errors", summary="Move from sequences to maps and reliable input."),
@@ -32,7 +32,7 @@ ENTITIES = {
     "cpp.sets.firstseen": task("First appearances", "Input: n (0–100), then n numbers (0–99). Print each distinct number once in first-appearance order, separated by spaces. Use set for checking and vector for order.",
         ["Check seen before inserting.", "Append to order only numbers not seen before."], "The two structures handle different properties: uniqueness and order."),
     "cpp.files": lesson("File streams", "Handle a missing file and check writes.",
-        "std::ifstream input(\"data.txt\") from <fstream> opens a file for reading relative to the process's working directory. if(!input) checks whether opening succeeded. Reading input>>value resembles cin, while while(input>>value) reads numbers until a failure. That loop alone does not distinguish end of file from a malformed token; further checks come later.\n\nstd::ofstream output(\"journal.txt\") creates or truncates a file by default. Use std::ios::app to append. Check opening before writing and the state afterwards; when needed, output.close() followed by another check detects deferred errors. The stream closes its resource through RAII.\n\nFile tasks run only in an external development environment. codelib shows initial and expected files but does not execute your code or create those files itself.",
+        "std::ifstream input(\"data.txt\") from <fstream> opens a file for reading relative to the process's working directory. if(!input) checks whether opening succeeded. Reading input>>value resembles cin, while while(input>>value) reads numbers until a failure. That loop alone does not distinguish end of file from a malformed token; further checks come later.\n\nstd::ofstream output(\"journal.txt\") creates or truncates a file by default. Use std::ios::app to append. Check opening before writing and the state afterwards; when needed, output.close() followed by another check detects deferred errors. The stream closes its resource through RAII.\n\ncodelib can run code in a disposable environment, but it does not yet pass the example's initial files into that environment or check files the program creates. Use an external development environment to fully check file tasks; in codelib you can view the initial and expected files and mark the solution yourself.",
         "The working directory need not match the source file's or executable's folder. Opening may fail because of the path, permissions or absence; do not reduce every error to a single cause. Checks concern the actual stream, not an assumption that disk writes always succeed.",
         "Check opening, reading or writing, and the path. Do not use while(!eof()) as the condition for reading the next value."),
     "cpp.files.read": task("The first number from a file", "If data.txt exists, it contains one integer from −100 to 100. Open it: if absent, print Missing; otherwise read and print the number. Do not use cin.",

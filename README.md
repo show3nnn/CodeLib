@@ -62,7 +62,7 @@ UUID профиля, награды и даты активности тоже в
 - `scripts/generate_icon.swift` — программный оригинал иконки открытого ноутбука с прозрачным фоном; PNG 16–1024 px в `.build/CodePath.iconset/`, ICNS для Xcode в `packaging/CodePath.icns` (имя ресурса сохранено).
 - `Tests/` — ядро и координация приложения. `UITests/` — отдельный XCUITest пользовательского сценария.
 - `PROJECT_PLAN.md` — этапы, журнал, точка продолжения; `VERIFICATION.md` — результаты и ограничения проверки.
-- `localization/` — разработческие материалы, не ресурсы приложения. Полные en-drafts: курс2904/2904, catalog10/10, releases193/193 (19 версий), не reviewed; UI-каталог: 444/444 извлечённых ключей. `ResourceTranslation` сохраняет ID/метаданные/доступность и не принимает draft в production. Форматы/проверки — `localization/README.md`; остаток — `localization/UI_REMAINING.md`.
+- `localization/` — разработческие материалы, не ресурсы приложения. Полные en-drafts: курс2904/2904, catalog10/10, releases193/193 (19 версий), не reviewed; UI-каталог: 448/448 извлечённых ключей. `ResourceTranslation` сохраняет ID/метаданные/доступность и не принимает draft в production. Форматы/проверки — `localization/README.md`; остаток — `localization/UI_REMAINING.md`.
 - `scripts/content_17.py` — новый блок: префиксные суммы/разности, окна, два указателя, бинарный поиск и мини-проект вместимости. `scripts/algorithm_lab_cases.py` — только разработческие независимые переборные проверки, не примеры в интерфейсе и не выполнение пользовательского кода.
 
 ## Проверки

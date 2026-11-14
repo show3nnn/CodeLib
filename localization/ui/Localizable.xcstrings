@@ -1873,6 +1873,24 @@
         }
       }
     },
+    "Вывод совпал": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:162",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output matched"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вывод совпал"
+          }
+        }
+      }
+    },
     "Выйти без сохранения": {
       "comment": "Sources/CodePath/CodePathApp.swift:82",
       "extractionState": "manual",
@@ -2143,6 +2161,24 @@
         }
       }
     },
+    "Другой вывод": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:162",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output differed"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Другой вывод"
+          }
+        }
+      }
+    },
     "Другой процесс записывает прогресс. Повторите сохранение.": {
       "comment": "Sources/CodePath/ErrorPresentation.swift:66",
       "extractionState": "manual",
@@ -2360,7 +2396,7 @@
       }
     },
     "Запуск остановлен": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:111",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:111; Sources/CodePath/ExecutionOutputView.swift:168",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3201,6 +3237,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Лаборатория кода"
+          }
+        }
+      }
+    },
+    "Лимит процессорного времени": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:165",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU time limit"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Лимит процессорного времени"
           }
         }
       }
@@ -4682,7 +4736,7 @@
       }
     },
     "Ошибка выполнения · код %lld": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:107",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:107; Sources/CodePath/ExecutionOutputView.swift:164",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4700,7 +4754,7 @@
       }
     },
     "Ошибка компиляции": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:106",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:106; Sources/CodePath/ExecutionOutputView.swift:163",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5420,7 +5474,7 @@
       }
     },
     "Превышен лимит вывода": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:109",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:109; Sources/CodePath/ExecutionOutputView.swift:166",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5456,7 +5510,7 @@
       }
     },
     "Превышено время ожидания": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:110",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:110; Sources/CodePath/ExecutionOutputView.swift:167",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7035,6 +7089,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Среда не ответила вовремя и была принудительно остановлена."
+          }
+        }
+      }
+    },
+    "Среда недоступна": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:169",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Environment unavailable"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Среда недоступна"
           }
         }
       }

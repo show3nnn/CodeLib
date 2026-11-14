@@ -142,7 +142,7 @@ struct ExecutionOutputView: View {
                     .foregroundStyle(item.matches ? Color.green : Color.orange)
                 Text("Пример \(item.index)").font(.callout.weight(.medium))
                 Spacer(minLength: 0)
-                Text(gradingLabel(item)).font(.caption).foregroundStyle(.secondary)
+                Text(PresentationLocale.resource(gradingLabel(item))).font(.caption).foregroundStyle(.secondary)
             }
             if !item.matches {
                 if item.status == .compileError { diagnostics(item.stderr) }
@@ -157,7 +157,7 @@ struct ExecutionOutputView: View {
         }
     }
 
-    private func gradingLabel(_ item: GradingCaseResult) -> String {
+    private func gradingLabel(_ item: GradingCaseResult) -> LocalizedStringResource {
         switch item.status {
         case .success: item.matches ? "Вывод совпал" : "Другой вывод"
         case .compileError: "Ошибка компиляции"

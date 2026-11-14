@@ -323,6 +323,9 @@
     "Вывод": [
       "Sources/CodePath/LessonView.swift:204"
     ],
+    "Вывод совпал": [
+      "Sources/CodePath/ExecutionOutputView.swift:162"
+    ],
     "Выйти без сохранения": [
       "Sources/CodePath/CodePathApp.swift:82"
     ],
@@ -370,6 +373,9 @@
     "Доступен сейчас": [
       "Sources/CodePath/DashboardViews.swift:229"
     ],
+    "Другой вывод": [
+      "Sources/CodePath/ExecutionOutputView.swift:162"
+    ],
     "Другой процесс записывает прогресс. Повторите сохранение.": [
       "Sources/CodePath/ErrorPresentation.swift:66"
     ],
@@ -408,7 +414,8 @@
       "Sources/CodePath/ExecutionOutputView.swift:114"
     ],
     "Запуск остановлен": [
-      "Sources/CodePath/ExecutionOutputView.swift:111"
+      "Sources/CodePath/ExecutionOutputView.swift:111",
+      "Sources/CodePath/ExecutionOutputView.swift:168"
     ],
     "Запускаем изолированную среду…": [
       "Sources/CodePath/ExecutionOutputView.swift:96"
@@ -553,6 +560,9 @@
     "Лаборатория кода": [
       "Sources/CodePath/ReleaseViews.swift:26",
       "Sources/CodePath/RootView.swift:70"
+    ],
+    "Лимит процессорного времени": [
+      "Sources/CodePath/ExecutionOutputView.swift:165"
     ],
     "Лист": [
       "Sources/CodePath/ProfileViews.swift:10"
@@ -813,10 +823,12 @@
       "Sources/CodePath/SettingsView.swift:133"
     ],
     "Ошибка выполнения · код %lld": [
-      "Sources/CodePath/ExecutionOutputView.swift:107"
+      "Sources/CodePath/ExecutionOutputView.swift:107",
+      "Sources/CodePath/ExecutionOutputView.swift:164"
     ],
     "Ошибка компиляции": [
-      "Sources/CodePath/ExecutionOutputView.swift:106"
+      "Sources/CodePath/ExecutionOutputView.swift:106",
+      "Sources/CodePath/ExecutionOutputView.swift:163"
     ],
     "Первая награда появится за настоящую практику.": [
       "Sources/CodePath/AchievementViews.swift:55"
@@ -939,13 +951,15 @@
       "Sources/CodePath/DashboardViews.swift:321"
     ],
     "Превышен лимит вывода": [
-      "Sources/CodePath/ExecutionOutputView.swift:109"
+      "Sources/CodePath/ExecutionOutputView.swift:109",
+      "Sources/CodePath/ExecutionOutputView.swift:166"
     ],
     "Превышен лимит процессорного времени": [
       "Sources/CodePath/ExecutionOutputView.swift:108"
     ],
     "Превышено время ожидания": [
-      "Sources/CodePath/ExecutionOutputView.swift:110"
+      "Sources/CodePath/ExecutionOutputView.swift:110",
+      "Sources/CodePath/ExecutionOutputView.swift:167"
     ],
     "Предсказать вывод": [
       "Sources/CodePath/LessonView.swift:12"
@@ -1219,6 +1233,9 @@
     "Среда не ответила вовремя и была принудительно остановлена.": [
       "Sources/CodePath/ExecutionOutputView.swift:211"
     ],
+    "Среда недоступна": [
+      "Sources/CodePath/ExecutionOutputView.swift:169"
+    ],
     "Стандартные размеры шрифта": [
       "Sources/CodePath/SettingsView.swift:172"
     ],
@@ -1397,7 +1414,7 @@
     "Sources/CodePath/CodePathApp.swift": "3a51c0b2358ff3e40e7e4f1864579cf507b6e47560699b5ba66c261c9893897b",
     "Sources/CodePath/DashboardViews.swift": "61365c332c17f461eee565302e14ee36366fcaca8e27af0aae336461bbd7078f",
     "Sources/CodePath/ErrorPresentation.swift": "46ebd44e8bc9a1e1afed1b2803bf94e162a89911b2920bdc768eb25bd8ddcda3",
-    "Sources/CodePath/ExecutionOutputView.swift": "9617adab62ec47ef832d35ed8dc1fbe3f7cff4e35bf070e130552192389bd31d",
+    "Sources/CodePath/ExecutionOutputView.swift": "3a3a2125448c98d0028d21b58f6c492473dec9991ca48f2491555297992c9f9b",
     "Sources/CodePath/ExecutionReadinessView.swift": "d206d1c57e56bdd9e64c5e9a3aef6c7aa854de53593f00cf6779ce415b44d90e",
     "Sources/CodePath/LessonView.swift": "d9b8c44fbe77131c30b783721a9ab4e58b776e354d806b87215dc18d86c37bee",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
