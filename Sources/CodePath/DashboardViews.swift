@@ -90,7 +90,7 @@ struct HomeView: View {
                         Text(model.fraction, format: PresentationLocale.percent).foregroundStyle(.mint).monospacedDigit()
                     }.font(.caption.weight(.medium))
                     ProgressView(value: model.fraction).tint(.mint)
-                    Text("\(course.sections.count) разделов · \(course.lessons.count) уроков · \(course.exercises.count) заданий")
+                    CourseCounts(course: course)
                         .font(.caption).foregroundStyle(.white.opacity(0.55))
                 }
             }
@@ -163,6 +163,23 @@ struct Metric: View {
     }
 }
 
+/// Keep each count as a localized Text so the surrounding template may reorder
+/// them without losing their separately selected plural forms.
+struct CourseCounts: View {
+    let course: Course
+    var slashes = false
+    var body: some View {
+        let sections = Text(PluralPresentation.courseUnit(.sections, count: course.sections.count))
+        let lessons = Text(PluralPresentation.courseUnit(.lessons, count: course.lessons.count))
+        let tasks = Text(PluralPresentation.courseUnit(.tasks, count: course.exercises.count))
+        if slashes {
+            Text("\(sections)  /  \(lessons)  /  \(tasks)")
+        } else {
+            Text("\(sections) · \(lessons) · \(tasks)")
+        }
+    }
+}
+
 struct FutureCourses: View {
     let entries: [CourseListing]
     var body: some View {
@@ -212,7 +229,7 @@ struct CatalogView: View {
                         }
                         Text(model.course?.summary ?? "").foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         if let course = model.course {
-                            Text("\(course.sections.count) разделов  /  \(course.lessons.count) уроков  /  \(course.exercises.count) заданий")
+                            CourseCounts(course: course, slashes: true)
                                 .font(.caption.monospaced()).foregroundStyle(.secondary)
                         }
                         ViewThatFits(in: .horizontal) {

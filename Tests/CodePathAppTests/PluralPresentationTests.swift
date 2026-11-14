@@ -28,5 +28,9 @@ struct PluralPresentationTests {
         #expect(String(localized: PluralPresentation.metricLabel(.tasks, count: 2)) == "задания завершено")
         #expect(String(localized: PluralPresentation.metricLabel(.lessons, count: 21)) == "урок завершён")
         #expect(String(localized: PluralPresentation.metricLabel(.achievements, count: 5)) == "достижений")
+        #expect(String(localized: PluralPresentation.courseUnit(.sections, count: 1)) == "1 раздел")
+        #expect(String(localized: PluralPresentation.courseUnit(.sections, count: 2)) == "2 раздела")
+        #expect(String(localized: PluralPresentation.courseUnit(.lessons, count: 11)) == "11 уроков")
+        #expect(String(localized: PluralPresentation.courseUnit(.tasks, count: 21)) == "21 задание")
     }
 }

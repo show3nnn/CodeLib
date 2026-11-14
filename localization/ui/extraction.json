@@ -15,6 +15,12 @@
     "%@\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии.": [
       "Sources/CodePath/RootView.swift:19"
     ],
+    "%@  /  %@  /  %@": [
+      "Sources/CodePath/DashboardViews.swift:176"
+    ],
+    "%@ · %@ · %@": [
+      "Sources/CodePath/DashboardViews.swift:178"
+    ],
     "%@ · сборка %@": [
       "Sources/CodePath/ReleaseViews.swift:9"
     ],
@@ -22,17 +28,26 @@
       "Sources/CodePath/AchievementViews.swift:93",
       "Sources/CodePath/WelcomeCodeView.swift:77"
     ],
+    "%lld задание": [
+      "Sources/CodePath/PluralPresentation.swift:59"
+    ],
     "%lld задание · ~%lld мин": [
       "Sources/CodePath/PluralPresentation.swift:21"
     ],
+    "%lld заданий": [
+      "Sources/CodePath/PluralPresentation.swift:61"
+    ],
     "%lld заданий · ~%lld мин": [
       "Sources/CodePath/PluralPresentation.swift:23"
+    ],
+    "%lld задания": [
+      "Sources/CodePath/PluralPresentation.swift:60"
     ],
     "%lld задания · ~%lld мин": [
       "Sources/CodePath/PluralPresentation.swift:22"
     ],
     "%lld из %lld": [
-      "Sources/CodePath/DashboardViews.swift:318"
+      "Sources/CodePath/DashboardViews.swift:335"
     ],
     "%lld из %lld заданий": [
       "Sources/CodePath/PluralPresentation.swift:39"
@@ -50,24 +65,36 @@
       "Sources/CodePath/SettingsView.swift:150",
       "Sources/CodePath/SettingsView.swift:164"
     ],
-    "%lld разделов  /  %lld уроков  /  %lld заданий": [
-      "Sources/CodePath/DashboardViews.swift:215"
+    "%lld раздел": [
+      "Sources/CodePath/PluralPresentation.swift:53"
     ],
-    "%lld разделов · %lld уроков · %lld заданий": [
-      "Sources/CodePath/DashboardViews.swift:93"
+    "%lld раздела": [
+      "Sources/CodePath/PluralPresentation.swift:54"
+    ],
+    "%lld разделов": [
+      "Sources/CodePath/PluralPresentation.swift:55"
+    ],
+    "%lld урок": [
+      "Sources/CodePath/PluralPresentation.swift:56"
+    ],
+    "%lld урока": [
+      "Sources/CodePath/PluralPresentation.swift:57"
+    ],
+    "%lld уроков": [
+      "Sources/CodePath/PluralPresentation.swift:58"
     ],
     "%lld/%lld": [
       "Sources/CodePath/AchievementViews.swift:46"
     ],
     "%lld/%lld · ~%lld мин": [
-      "Sources/CodePath/DashboardViews.swift:272"
+      "Sources/CodePath/DashboardViews.swift:289"
     ],
     "%lld/%lld разделов": [
-      "Sources/CodePath/DashboardViews.swift:431"
+      "Sources/CodePath/DashboardViews.swift:448"
     ],
     "%lld/%lld уроков": [
-      "Sources/CodePath/DashboardViews.swift:417",
-      "Sources/CodePath/DashboardViews.swift:430"
+      "Sources/CodePath/DashboardViews.swift:434",
+      "Sources/CodePath/DashboardViews.swift:447"
     ],
     "%lld/30": [
       "Sources/CodePath/ProfileViews.swift:48"
@@ -76,10 +103,10 @@
       "Sources/CodePath/ExecutionOutputView.swift:177"
     ],
     "C++": [
-      "Sources/CodePath/DashboardViews.swift:209"
+      "Sources/CodePath/DashboardViews.swift:226"
     ],
     "C++ · ваш путь": [
-      "Sources/CodePath/DashboardViews.swift:317"
+      "Sources/CodePath/DashboardViews.swift:334"
     ],
     "C++ · первый шаг": [
       "Sources/CodePath/ProfileViews.swift:236"
@@ -97,7 +124,7 @@
       "Sources/CodePath/DashboardViews.swift:75"
     ],
     "C++17 · практика": [
-      "Sources/CodePath/DashboardViews.swift:244"
+      "Sources/CodePath/DashboardViews.swift:261"
     ],
     "C++17 запускается в одноразовой изолированной среде. Кодовые задания проверяются на примерах из условия; AI нет.": [
       "Sources/CodePath/ReleaseViews.swift:35"
@@ -150,7 +177,7 @@
       "Sources/CodePath/ProfileViews.swift:56"
     ],
     "Автоматически проверяются только однозначные ответы. Самостоятельные отметки кода учитываются отдельно и не означают запуск C++.": [
-      "Sources/CodePath/DashboardViews.swift:337"
+      "Sources/CodePath/DashboardViews.swift:354"
     ],
     "Алгоритмы": [
       "Sources/CodePath/AchievementViews.swift:11"
@@ -159,10 +186,10 @@
       "Sources/CodePath/SettingsView.swift:124"
     ],
     "Большие идеи начинаются\nс первой строки.": [
-      "Sources/CodePath/DashboardViews.swift:199"
+      "Sources/CodePath/DashboardViews.swift:216"
     ],
     "В работе": [
-      "Sources/CodePath/DashboardViews.swift:249"
+      "Sources/CodePath/DashboardViews.swift:266"
     ],
     "В черновике перевода есть пустые или неизвестные поля": [
       "Sources/CodePath/ErrorPresentation.swift:140"
@@ -187,7 +214,7 @@
       "Sources/CodePath/LessonView.swift:328"
     ],
     "Ваш результат": [
-      "Sources/CodePath/DashboardViews.swift:299",
+      "Sources/CodePath/DashboardViews.swift:316",
       "Sources/CodePath/RootView.swift:59"
     ],
     "Ваш темп. Ваши данные. Всё остаётся на этом Mac.": [
@@ -212,7 +239,7 @@
       "Sources/CodePath/LessonView.swift:282"
     ],
     "Вернуться к практике": [
-      "Sources/CodePath/DashboardViews.swift:341"
+      "Sources/CodePath/DashboardViews.swift:358"
     ],
     "Версия данных %lld не поддерживается. Файл не изменён.": [
       "Sources/CodePath/ErrorPresentation.swift:63"
@@ -224,13 +251,13 @@
       "Sources/CodePath/ErrorPresentation.swift:31"
     ],
     "Все": [
-      "Sources/CodePath/DashboardViews.swift:247"
+      "Sources/CodePath/DashboardViews.swift:264"
     ],
     "Все доступные темы открыты. Возвращайтесь к теории и задачам без потери результатов.": [
-      "Sources/CodePath/DashboardViews.swift:244"
+      "Sources/CodePath/DashboardViews.swift:261"
     ],
     "Все задания для повторения (%lld)": [
-      "Sources/CodePath/DashboardViews.swift:386"
+      "Sources/CodePath/DashboardViews.swift:403"
     ],
     "Все категории": [
       "Sources/CodePath/AchievementViews.swift:58"
@@ -243,7 +270,7 @@
     ],
     "Вся программа": [
       "Sources/CodePath/DashboardViews.swift:39",
-      "Sources/CodePath/DashboardViews.swift:394"
+      "Sources/CodePath/DashboardViews.swift:411"
     ],
     "Входные данные программы": [
       "Sources/CodePath/ExecutionOutputView.swift:33"
@@ -258,7 +285,7 @@
       "Sources/CodePath/ErrorPresentation.swift:67"
     ],
     "Выберите своё направление. Учитесь в собственном темпе.": [
-      "Sources/CodePath/DashboardViews.swift:199"
+      "Sources/CodePath/DashboardViews.swift:216"
     ],
     "Выберите урок": [
       "Sources/CodePath/LessonView.swift:130"
@@ -320,13 +347,13 @@
       "Sources/CodePath/AppModel.swift:96"
     ],
     "Доступен сейчас": [
-      "Sources/CodePath/DashboardViews.swift:207"
+      "Sources/CodePath/DashboardViews.swift:224"
     ],
     "Другой процесс записывает прогресс. Повторите сохранение.": [
       "Sources/CodePath/ErrorPresentation.swift:66"
     ],
     "Завершены": [
-      "Sources/CodePath/DashboardViews.swift:250"
+      "Sources/CodePath/DashboardViews.swift:267"
     ],
     "Загрузить фото…": [
       "Sources/CodePath/ProfileViews.swift:79"
@@ -375,7 +402,7 @@
       "Sources/CodePath/SettingsView.swift:186"
     ],
     "Здесь появятся задания с ошибками или подробными подсказками. Пока можно двигаться дальше.": [
-      "Sources/CodePath/DashboardViews.swift:367"
+      "Sources/CodePath/DashboardViews.swift:384"
     ],
     "Идёт запись на диск.": [
       "Sources/CodePath/SettingsView.swift:45"
@@ -387,13 +414,13 @@
       "Sources/CodePath/CodePathApp.swift:79"
     ],
     "Измените запрос или фильтр состояния.": [
-      "Sources/CodePath/DashboardViews.swift:284"
+      "Sources/CodePath/DashboardViews.swift:301"
     ],
     "Изолированный запуск · Linux / GCC": [
       "Sources/CodePath/LessonView.swift:307"
     ],
     "Изучить программу": [
-      "Sources/CodePath/DashboardViews.swift:232"
+      "Sources/CodePath/DashboardViews.swift:249"
     ],
     "Импорт отменён, текущие данные сохранены: %@": [
       "Sources/CodePath/ErrorPresentation.swift:29"
@@ -462,7 +489,7 @@
       "Sources/CodePath/ErrorPresentation.swift:132"
     ],
     "Каталог курсов": [
-      "Sources/CodePath/DashboardViews.swift:199"
+      "Sources/CodePath/DashboardViews.swift:216"
     ],
     "Каталог повреждён или ссылается на отсутствующий курс": [
       "Sources/CodePath/ErrorPresentation.swift:131"
@@ -535,7 +562,7 @@
       "Sources/CodePath/RootView.swift:139"
     ],
     "На горизонте": [
-      "Sources/CodePath/DashboardViews.swift:170"
+      "Sources/CodePath/DashboardViews.swift:187"
     ],
     "На диске недостаточно места. Освободите место и повторите действие.": [
       "Sources/CodePath/ErrorPresentation.swift:101"
@@ -583,13 +610,13 @@
       "Sources/CodePath/ProfileViews.swift:203"
     ],
     "Не гонка за цифрами. Ваш путь от первой строки к самостоятельному коду.": [
-      "Sources/CodePath/DashboardViews.swift:299"
+      "Sources/CodePath/DashboardViews.swift:316"
     ],
     "Не завершено": [
       "Sources/CodePath/LessonView.swift:23"
     ],
     "Не начаты": [
-      "Sources/CodePath/DashboardViews.swift:248"
+      "Sources/CodePath/DashboardViews.swift:265"
     ],
     "Не сохранено": [
       "Sources/CodePath/LessonView.swift:120"
@@ -774,7 +801,7 @@
       "Sources/CodePath/AchievementViews.swift:9"
     ],
     "Первый урок": [
-      "Sources/CodePath/DashboardViews.swift:345"
+      "Sources/CodePath/DashboardViews.swift:362"
     ],
     "Перевод имеет неподдерживаемый формат или устарел относительно исходного курса": [
       "Sources/CodePath/ErrorPresentation.swift:137"
@@ -810,7 +837,7 @@
       "Sources/CodePath/AvatarPhoto.swift:65"
     ],
     "По разделам": [
-      "Sources/CodePath/DashboardViews.swift:392"
+      "Sources/CodePath/DashboardViews.swift:409"
     ],
     "Повторить": [
       "Sources/CodePath/LessonView.swift:362",
@@ -851,7 +878,7 @@
       "Sources/CodePath/SettingsView.swift:212"
     ],
     "Показать меньше": [
-      "Sources/CodePath/DashboardViews.swift:386"
+      "Sources/CodePath/DashboardViews.swift:403"
     ],
     "Полный перевод курса для %@ пока недоступен": [
       "Sources/CodePath/ErrorPresentation.swift:116"
@@ -872,7 +899,7 @@
       "Sources/CodePath/LessonView.swift:398"
     ],
     "Последнее занятие: %@": [
-      "Sources/CodePath/DashboardViews.swift:348"
+      "Sources/CodePath/DashboardViews.swift:365"
     ],
     "Последняя проверка успешна: тестовая программа выполнена.": [
       "Sources/CodePath/ExecutionReadinessView.swift:20"
@@ -882,7 +909,7 @@
       "Sources/CodePath/RootView.swift:55"
     ],
     "Практика становится навыком.": [
-      "Sources/CodePath/DashboardViews.swift:299"
+      "Sources/CodePath/DashboardViews.swift:316"
     ],
     "Превышен лимит вывода": [
       "Sources/CodePath/ExecutionOutputView.swift:109"
@@ -972,7 +999,7 @@
       "Sources/CodePath/AchievementViews.swift:49"
     ],
     "Прогресс курса": [
-      "Sources/CodePath/DashboardViews.swift:314",
+      "Sources/CodePath/DashboardViews.swift:331",
       "Sources/CodePath/DashboardViews.swift:88"
     ],
     "Прогресс не открыт": [
@@ -985,16 +1012,16 @@
       "Sources/CodePath/RootView.swift:142"
     ],
     "Продолжить или повторить раздел": [
-      "Sources/CodePath/DashboardViews.swift:421"
+      "Sources/CodePath/DashboardViews.swift:438"
     ],
     "Продолжить обучение": [
       "Sources/CodePath/CodePathApp.swift:31",
       "Sources/CodePath/DashboardViews.swift:118",
-      "Sources/CodePath/DashboardViews.swift:230",
+      "Sources/CodePath/DashboardViews.swift:247",
       "Sources/CodePath/LessonView.swift:134"
     ],
     "Продолжить практику": [
-      "Sources/CodePath/DashboardViews.swift:350"
+      "Sources/CodePath/DashboardViews.swift:367"
     ],
     "Пройдено %lld из %lld": [
       "Sources/CodePath/ExecutionOutputView.swift:134"
@@ -1060,7 +1087,7 @@
       "Sources/CodePath/DashboardViews.swift:14"
     ],
     "С нуля до своего проекта": [
-      "Sources/CodePath/DashboardViews.swift:210"
+      "Sources/CodePath/DashboardViews.swift:227"
     ],
     "Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.": [
       "Sources/CodePath/LessonView.swift:370"
@@ -1077,7 +1104,7 @@
       "Sources/CodePath/LessonView.swift:260"
     ],
     "Сбросить поиск и фильтр": [
-      "Sources/CodePath/DashboardViews.swift:285"
+      "Sources/CodePath/DashboardViews.swift:302"
     ],
     "Сбросить прогресс": [
       "Sources/CodePath/SettingsView.swift:77"
@@ -1121,7 +1148,7 @@
       "Sources/CodePath/RootView.swift:41"
     ],
     "Скоро": [
-      "Sources/CodePath/DashboardViews.swift:184"
+      "Sources/CodePath/DashboardViews.swift:201"
     ],
     "Скрыть теорию": [
       "Sources/CodePath/LessonView.swift:47"
@@ -1142,7 +1169,7 @@
       "Sources/CodePath/LessonView.swift:255"
     ],
     "Состояние урока": [
-      "Sources/CodePath/DashboardViews.swift:246"
+      "Sources/CodePath/DashboardViews.swift:263"
     ],
     "Сохранено локально": [
       "Sources/CodePath/LessonView.swift:120"
@@ -1169,7 +1196,7 @@
       "Sources/CodePath/SettingsView.swift:172"
     ],
     "Стоит повторить": [
-      "Sources/CodePath/DashboardViews.swift:355"
+      "Sources/CodePath/DashboardViews.swift:372"
     ],
     "Стоп": [
       "Sources/CodePath/LessonView.swift:272"
@@ -1188,7 +1215,7 @@
       "Sources/CodePath/SettingsView.swift:134"
     ],
     "Тема, раздел, задание или навык": [
-      "Sources/CodePath/DashboardViews.swift:289"
+      "Sources/CodePath/DashboardViews.swift:306"
     ],
     "Теория": [
       "Sources/CodePath/LessonView.swift:146",
@@ -1226,7 +1253,7 @@
       "Sources/CodePath/LessonView.swift:400"
     ],
     "Уроки не найдены": [
-      "Sources/CodePath/DashboardViews.swift:283"
+      "Sources/CodePath/DashboardViews.swift:300"
     ],
     "Условие откроется после получения награды.": [
       "Sources/CodePath/AchievementViews.swift:116"
@@ -1274,7 +1301,7 @@
       "Sources/CodePath/LessonView.swift:13"
     ],
     "Шаги к самостоятельному коду": [
-      "Sources/CodePath/DashboardViews.swift:244"
+      "Sources/CodePath/DashboardViews.swift:261"
     ],
     "Экспорт": [
       "Sources/CodePath/RootView.swift:117",
@@ -1287,42 +1314,42 @@
       "Sources/CodePath/LessonView.swift:387"
     ],
     "впереди": [
-      "Sources/CodePath/DashboardViews.swift:334"
+      "Sources/CodePath/DashboardViews.swift:351"
     ],
     "достижение": [
-      "Sources/CodePath/PluralPresentation.swift:58"
+      "Sources/CodePath/PluralPresentation.swift:78"
     ],
     "достижений": [
-      "Sources/CodePath/DashboardViews.swift:335",
-      "Sources/CodePath/PluralPresentation.swift:60"
+      "Sources/CodePath/DashboardViews.swift:352",
+      "Sources/CodePath/PluralPresentation.swift:80"
     ],
     "достижения": [
-      "Sources/CodePath/PluralPresentation.swift:59"
+      "Sources/CodePath/PluralPresentation.swift:79"
     ],
     "задание завершено": [
-      "Sources/CodePath/PluralPresentation.swift:52"
+      "Sources/CodePath/PluralPresentation.swift:72"
     ],
     "заданий завершено": [
-      "Sources/CodePath/DashboardViews.swift:320",
-      "Sources/CodePath/PluralPresentation.swift:54"
+      "Sources/CodePath/DashboardViews.swift:337",
+      "Sources/CodePath/PluralPresentation.swift:74"
     ],
     "задания завершено": [
-      "Sources/CodePath/PluralPresentation.swift:53"
+      "Sources/CodePath/PluralPresentation.swift:73"
     ],
     "отмечено вами": [
-      "Sources/CodePath/DashboardViews.swift:333"
+      "Sources/CodePath/DashboardViews.swift:350"
     ],
     "проверено автоматически": [
-      "Sources/CodePath/DashboardViews.swift:332"
+      "Sources/CodePath/DashboardViews.swift:349"
     ],
     "урок завершён": [
-      "Sources/CodePath/PluralPresentation.swift:55"
+      "Sources/CodePath/PluralPresentation.swift:75"
     ],
     "урока завершено": [
-      "Sources/CodePath/PluralPresentation.swift:56"
+      "Sources/CodePath/PluralPresentation.swift:76"
     ],
     "уроков завершено": [
-      "Sources/CodePath/PluralPresentation.swift:57"
+      "Sources/CodePath/PluralPresentation.swift:77"
     ]
   },
   "formatVersion": 1,
@@ -1333,13 +1360,13 @@
     "Sources/CodePath/CodeEditor.swift": "58d9cb6ad0a49e3ab5146e11f9f18415aa11997e7fad3abb9ac2f59662ebd9c5",
     "Sources/CodePath/CodeExecutionController.swift": "e8b77163e1519e585d231882b3ef0cb6a49e8e83a84f31c00be0878386ee8399",
     "Sources/CodePath/CodePathApp.swift": "3a51c0b2358ff3e40e7e4f1864579cf507b6e47560699b5ba66c261c9893897b",
-    "Sources/CodePath/DashboardViews.swift": "14cd828ac4a15db33b78303bae7e0b201952c573921e31ca331138117d5845c0",
+    "Sources/CodePath/DashboardViews.swift": "fa89a4aa37294ba5b1814fdae2bee7ff381c7efa83a619f59a3f2567f630eb2a",
     "Sources/CodePath/ErrorPresentation.swift": "46ebd44e8bc9a1e1afed1b2803bf94e162a89911b2920bdc768eb25bd8ddcda3",
     "Sources/CodePath/ExecutionOutputView.swift": "a790ec77b96b1a94431011996d4df5ac7977bd73913fc19ee1d4ef5f3da7101e",
     "Sources/CodePath/ExecutionReadinessView.swift": "d206d1c57e56bdd9e64c5e9a3aef6c7aa854de53593f00cf6779ce415b44d90e",
     "Sources/CodePath/LessonView.swift": "d9b8c44fbe77131c30b783721a9ab4e58b776e354d806b87215dc18d86c37bee",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
-    "Sources/CodePath/PluralPresentation.swift": "649210493bd6bff19fc3aa76aea9b07c0af56109bcc3ced18944955af46ca1ac",
+    "Sources/CodePath/PluralPresentation.swift": "a418849e517b6d2295c04a660acb4d47ca3a7838515f7471dafa073660e2e47f",
     "Sources/CodePath/PresentationLocale.swift": "da11478601af870270bfd82a0d1d961c1161493516cb119e8a4c211f4094c183",
     "Sources/CodePath/ProfileViews.swift": "0920cc4eeaee8da59d4f180493de39b97017faded0b75082f21e53f6dfef3a18",
     "Sources/CodePath/ReleaseViews.swift": "535d6459778dcdfc631acf2d50d689a0b8cbb74903b0c427a4f972a0e383ecde",

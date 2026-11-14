@@ -44,6 +44,26 @@ enum PluralPresentation {
     }
 
     enum MetricKind { case tasks, lessons, achievements }
+    enum CourseUnit { case sections, lessons, tasks }
+
+    static func courseUnit(_ kind: CourseUnit, count: Int,
+                           locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
+        let text: LocalizedStringResource
+        switch (kind, form(count, locale: locale)) {
+        case (.sections, .one): text = "\(count) раздел"
+        case (.sections, .few): text = "\(count) раздела"
+        case (.sections, .other): text = "\(count) разделов"
+        case (.lessons, .one): text = "\(count) урок"
+        case (.lessons, .few): text = "\(count) урока"
+        case (.lessons, .other): text = "\(count) уроков"
+        case (.tasks, .one): text = "\(count) задание"
+        case (.tasks, .few): text = "\(count) задания"
+        case (.tasks, .other): text = "\(count) заданий"
+        }
+        var result = text
+        result.locale = locale
+        return result
+    }
 
     static func metricLabel(_ kind: MetricKind, count: Int,
                             locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
