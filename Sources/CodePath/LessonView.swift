@@ -156,7 +156,7 @@ private struct TheoryView: View {
     }
 }
 
-private struct ExerciseView: View {
+struct ExerciseView: View {
     @Bindable var model: AppModel
     let exercise: Exercise
     let revealEditor: () -> Void
@@ -260,7 +260,7 @@ private struct ExerciseView: View {
         } message: { Text("Текущий черновик будет заменён. Прежняя самостоятельная отметка и подсказки сохранятся; это не проверка нового текста.") }
     }
 
-    @ViewBuilder private var responseArea: some View {
+    @ViewBuilder var responseArea: some View {
         if exercise.kind == .code {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(spacing: 0) {
@@ -270,6 +270,7 @@ private struct ExerciseView: View {
                         if model.execution.isBusy {
                             Button("Стоп", systemImage: "stop.fill") { model.execution.cancel() }
                                 .keyboardShortcut(".", modifiers: .command).disabled(model.execution.state == .stopping)
+                                .accessibilityIdentifier("editor.stop")
                         } else {
                             Button("Запустить", systemImage: "play.fill") {
                                 model.runCode(stdin: model.execution.inputs[exercise.id] ?? exercise.testCases.first?.input ?? "")
@@ -292,6 +293,13 @@ private struct ExerciseView: View {
                         .frame(minHeight: 320, idealHeight: 400)
                         .accessibilityIdentifier("lesson.editor")
                     Divider()
+                    ExecutionOutputView(model: model, exerciseID: exercise.id, source: draft.wrappedValue,
+                                        initialInput: exercise.testCases.first?.input ?? "") { diagnostic in
+                        revealEditor()
+                        editorNavigation = EditorNavigation(source: model.execution.sourceSnapshot,
+                                                            line: diagnostic.line, byteColumn: diagnostic.column)
+                    }
+                    Divider()
                     HStack {
                         Text("C++17").font(.system(.caption, design: .monospaced))
                         Spacer()
@@ -303,14 +311,10 @@ private struct ExerciseView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.primary.opacity(0.1)) }
                     .id("editor-\(exercise.id)")
+                    .accessibilityElement(children: .contain)
+                    .accessibilityIdentifier("lesson.code-workspace")
                 Text("Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ")
                     .font(.caption).foregroundStyle(.secondary)
-                ExecutionConsoleView(model: model, exerciseID: exercise.id, source: draft.wrappedValue,
-                                     initialInput: exercise.testCases.first?.input ?? "") { diagnostic in
-                    revealEditor()
-                    editorNavigation = EditorNavigation(source: model.execution.sourceSnapshot,
-                                                        line: diagnostic.line, byteColumn: diagnostic.column)
-                }
             }
         } else {
             if !exercise.starter.isEmpty { CodeBlock(code: exercise.starter, fontSize: model.document.preferences.codeSize) }

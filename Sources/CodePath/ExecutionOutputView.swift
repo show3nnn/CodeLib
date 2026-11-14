@@ -1,12 +1,15 @@
 import ExecutionSupport
 import SwiftUI
 
-struct ExecutionConsoleView: View {
+/// Input and execution results embedded in the main.cpp editor, without
+/// a second card or a duplicate set of Run/Stop controls.
+struct ExecutionOutputView: View {
     @Bindable var model: AppModel
     let exerciseID: String
     let source: String
     let initialInput: String
     let navigate: (CompilerDiagnostic) -> Void
+    @State private var showInput = false
     private var input: Binding<String> {
         Binding(get: { model.execution.inputs[exerciseID] ?? initialInput },
                 set: { model.execution.inputs[exerciseID] = $0 })
@@ -18,27 +21,18 @@ struct ExecutionConsoleView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Label("Консоль C++", systemImage: "terminal").font(.headline)
-                Spacer()
-                if execution.isBusy {
-                    Button("Остановить", systemImage: "stop.fill") { execution.cancel() }
-                        .buttonStyle(.bordered).disabled(execution.state == .stopping)
-                        .accessibilityIdentifier("execution.stop")
-                } else {
-                    Button("Запустить", systemImage: "play.fill") { model.runCode(stdin: input.wrappedValue) }
-                        .buttonStyle(.borderedProminent)
-                        .accessibilityIdentifier("execution.run")
-                }
+            DisclosureGroup(isExpanded: $showInput) {
+                TextEditor(text: input).font(.system(size: model.document.preferences.codeSize, design: .monospaced))
+                    .frame(height: 80).padding(6)
+                    .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
+                    .overlay { RoundedRectangle(cornerRadius: 10).strokeBorder(.primary.opacity(0.1)) }
+                    .accessibilityLabel("Входные данные программы").accessibilityIdentifier("execution.stdin")
+                    .padding(.top, 8)
+                    // Never truncate user input. Oversized requests fail before VM launch.
+            } label: {
+                Text("Ввод stdin · передаётся целиком перед запуском")
+                    .font(.caption).foregroundStyle(.secondary)
             }
-            Text("Ввод stdin · передаётся целиком перед запуском")
-                .font(.caption).foregroundStyle(.secondary)
-            TextEditor(text: input).font(.system(size: model.document.preferences.codeSize, design: .monospaced))
-                .frame(height: 80).padding(6)
-                .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
-                .overlay { RoundedRectangle(cornerRadius: 10).strokeBorder(.primary.opacity(0.1)) }
-                .accessibilityLabel("Входные данные программы").accessibilityIdentifier("execution.stdin")
-                // Never truncate user input. Oversized requests fail before VM launch.
             if isCurrent {
                 status
                 if stale && (result != nil || execution.isBusy) {
@@ -75,9 +69,6 @@ struct ExecutionConsoleView: View {
                         }
                     }
                 }
-            } else {
-                Text("C++17 · Linux / GCC · без сети и доступа к файлам Mac")
-                    .font(.caption).foregroundStyle(.secondary)
             }
             Text("Успешный запуск не означает, что задача решена верно. Автопроверка кода пока не включена. Файлы программы исчезают после запуска.")
                 .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -85,9 +76,10 @@ struct ExecutionConsoleView: View {
                 Text("Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
-        }.padding(20)
-            .background(.background, in: RoundedRectangle(cornerRadius: 20))
-            .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.primary.opacity(0.1)) }
+        }.padding(16)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("editor.execution")
+            .onAppear { showInput = !input.wrappedValue.isEmpty }
     }
 
     @ViewBuilder private var status: some View {

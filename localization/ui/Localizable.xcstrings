@@ -344,7 +344,7 @@
       }
     },
     "%lld:%lld": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:61",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:55",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -452,7 +452,7 @@
       }
     },
     "C++17": {
-      "comment": "Sources/CodePath/LessonView.swift:296",
+      "comment": "Sources/CodePath/LessonView.swift:304",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -483,24 +483,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "C++17 / C++20"
-          }
-        }
-      }
-    },
-    "C++17 · Linux / GCC · без сети и доступа к файлам Mac": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:79",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "C++17 · Linux / GCC · no network or access to Mac files"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "C++17 · Linux / GCC · без сети и доступа к файлам Mac"
           }
         }
       }
@@ -596,7 +578,7 @@
       }
     },
     "Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ": {
-      "comment": "Sources/CodePath/LessonView.swift:306",
+      "comment": "Sources/CodePath/LessonView.swift:316",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -866,7 +848,7 @@
       }
     },
     "В этой сборке нет полной среды C++. Используйте упакованное приложение codelib.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:140",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:132",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -938,7 +920,7 @@
       }
     },
     "Ваш ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:318; Sources/CodePath/LessonView.swift:328",
+      "comment": "Sources/CodePath/LessonView.swift:322; Sources/CodePath/LessonView.swift:332",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -956,7 +938,7 @@
       }
     },
     "Ваш прогноз вывода": {
-      "comment": "Sources/CodePath/LessonView.swift:323",
+      "comment": "Sources/CodePath/LessonView.swift:327",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1064,7 +1046,7 @@
       }
     },
     "Ввод stdin · передаётся целиком перед запуском": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:34",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:33",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1082,7 +1064,7 @@
       }
     },
     "Верно. %@": {
-      "comment": "Sources/CodePath/LessonView.swift:366",
+      "comment": "Sources/CodePath/LessonView.swift:370",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1100,7 +1082,7 @@
       }
     },
     "Вернуть стартовый код с подтверждением": {
-      "comment": "Sources/CodePath/LessonView.swift:280",
+      "comment": "Sources/CodePath/LessonView.swift:281",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1298,7 +1280,7 @@
       }
     },
     "Входные данные программы": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:40",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:29",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1334,7 +1316,7 @@
       }
     },
     "Выберите вариант": {
-      "comment": "Sources/CodePath/LessonView.swift:319",
+      "comment": "Sources/CodePath/LessonView.swift:323",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1514,7 +1496,7 @@
       }
     },
     "Готово к запуску": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:98",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:90",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1604,7 +1586,7 @@
       }
     },
     "Для этой среды нужны Apple silicon и доступная аппаратная виртуализация.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:143",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:135",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1658,7 +1640,7 @@
       }
     },
     "Дождитесь завершения предыдущего запуска.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:147",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:139",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1784,7 +1766,7 @@
       }
     },
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": {
-      "comment": "Sources/CodePath/LessonView.swift:359",
+      "comment": "Sources/CodePath/LessonView.swift:363",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1874,7 +1856,7 @@
       }
     },
     "Запуск не выполнен": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:116",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:108",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1892,7 +1874,7 @@
       }
     },
     "Запуск остановлен": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:113",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:105",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1910,7 +1892,7 @@
       }
     },
     "Запускаем изолированную среду…": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:100",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:92",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1928,7 +1910,7 @@
       }
     },
     "Запустить": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:29; Sources/CodePath/LessonView.swift:274",
+      "comment": "Sources/CodePath/LessonView.swift:275",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2072,7 +2054,7 @@
       }
     },
     "Изолированный запуск · Linux / GCC": {
-      "comment": "Sources/CodePath/LessonView.swift:298",
+      "comment": "Sources/CodePath/LessonView.swift:306",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2558,7 +2540,7 @@
       }
     },
     "Код или ввод превышает 64 КиБ, либо запрос имеет неподдерживаемый формат.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:139",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:131",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2612,7 +2594,7 @@
       }
     },
     "Компилируем C++…": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:101",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:93",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2647,26 +2629,8 @@
         }
       }
     },
-    "Консоль C++": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:22",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "C++ console"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Консоль C++"
-          }
-        }
-      }
-    },
     "Копировать": {
-      "comment": "Sources/CodePath/LessonView.swift:281",
+      "comment": "Sources/CodePath/LessonView.swift:282",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3368,7 +3332,7 @@
       }
     },
     "Не удалось запустить изолированную среду.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:146",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:138",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3764,7 +3728,7 @@
       }
     },
     "Образы среды повреждены или изменены. Запуск заблокирован; пересоберите или восстановите приложение.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:141",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:133",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3836,7 +3800,7 @@
       }
     },
     "Останавливаем среду и все процессы…": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:103",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:95",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3849,24 +3813,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Останавливаем среду и все процессы…"
-          }
-        }
-      }
-    },
-    "Остановить": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:25",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Остановить"
           }
         }
       }
@@ -4016,7 +3962,7 @@
       }
     },
     "Отметить выполненным": {
-      "comment": "Sources/CodePath/LessonView.swift:337",
+      "comment": "Sources/CodePath/LessonView.swift:341",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4124,7 +4070,7 @@
       }
     },
     "Ошибка выполнения · код %lld": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:109",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:101",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4142,7 +4088,7 @@
       }
     },
     "Ошибка компиляции": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:108",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:100",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4376,7 +4322,7 @@
       }
     },
     "Перейти к месту диагностики в редакторе": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:67",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:61",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4448,7 +4394,7 @@
       }
     },
     "Повторить": {
-      "comment": "Sources/CodePath/LessonView.swift:346; Sources/CodePath/RootView.swift:116",
+      "comment": "Sources/CodePath/LessonView.swift:350; Sources/CodePath/RootView.swift:116",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4502,7 +4448,7 @@
       }
     },
     "Подпись приложения или helper не прошла проверку. Запуск заблокирован.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:142",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:134",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4592,7 +4538,7 @@
       }
     },
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": {
-      "comment": "Sources/CodePath/LessonView.swift:366",
+      "comment": "Sources/CodePath/LessonView.swift:370",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4610,7 +4556,7 @@
       }
     },
     "Показан результат прежнего кода или ввода. Запустите изменённую программу заново.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:45",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:39",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4754,7 +4700,7 @@
       }
     },
     "Попыток: %lld": {
-      "comment": "Sources/CodePath/LessonView.swift:371",
+      "comment": "Sources/CodePath/LessonView.swift:375",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4826,7 +4772,7 @@
       }
     },
     "Превышен лимит вывода": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:111",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:103",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4844,7 +4790,7 @@
       }
     },
     "Превышен лимит процессорного времени": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:110",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:102",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4862,7 +4808,7 @@
       }
     },
     "Превышено время ожидания": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:112",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:104",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5042,7 +4988,7 @@
       }
     },
     "Проверить ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:340",
+      "comment": "Sources/CodePath/LessonView.swift:344",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5060,7 +5006,7 @@
       }
     },
     "Проверяем подпись и образы среды…": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:99",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:91",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5078,7 +5024,7 @@
       }
     },
     "Прогноз вывода программы": {
-      "comment": "Sources/CodePath/LessonView.swift:326",
+      "comment": "Sources/CodePath/LessonView.swift:330",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5114,7 +5060,7 @@
       }
     },
     "Программа выполняется…": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:102",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:94",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5132,7 +5078,7 @@
       }
     },
     "Программа завершилась · код 0": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:107",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:99",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5672,7 +5618,7 @@
       }
     },
     "Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.": {
-      "comment": "Sources/CodePath/LessonView.swift:350",
+      "comment": "Sources/CodePath/LessonView.swift:354",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5708,7 +5654,7 @@
       }
     },
     "Сбросить": {
-      "comment": "Sources/CodePath/LessonView.swift:279; Sources/CodePath/SettingsView.swift:136; Sources/CodePath/SettingsView.swift:150",
+      "comment": "Sources/CodePath/LessonView.swift:280; Sources/CodePath/SettingsView.swift:136; Sources/CodePath/SettingsView.swift:150",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5852,7 +5798,7 @@
       }
     },
     "Связь со средой прервана. Запуск не считается успешным; можно повторить.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:145",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:137",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5906,7 +5852,7 @@
       }
     },
     "Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:85",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:76",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6176,7 +6122,7 @@
       }
     },
     "Среда выполнения недоступна": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:114",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:106",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6194,7 +6140,7 @@
       }
     },
     "Среда не ответила вовремя и была принудительно остановлена.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:144",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:136",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6392,7 +6338,7 @@
       }
     },
     "Технические сведения": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:168; Sources/CodePath/ExecutionConsoleView.swift:51; Sources/CodePath/ExecutionConsoleView.swift:73",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:168; Sources/CodePath/ExecutionOutputView.swift:45; Sources/CodePath/ExecutionOutputView.swift:67",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6518,7 +6464,7 @@
       }
     },
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": {
-      "comment": "Sources/CodePath/LessonView.swift:373",
+      "comment": "Sources/CodePath/LessonView.swift:377",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6572,7 +6518,7 @@
       }
     },
     "Успешный запуск не означает, что задача решена верно. Автопроверка кода пока не включена. Файлы программы исчезают после запуска.": {
-      "comment": "Sources/CodePath/ExecutionConsoleView.swift:82",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:73",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6896,7 +6842,7 @@
       }
     },
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": {
-      "comment": "Sources/CodePath/LessonView.swift:362",
+      "comment": "Sources/CodePath/LessonView.swift:366",
       "extractionState": "manual",
       "localizations": {
         "en": {

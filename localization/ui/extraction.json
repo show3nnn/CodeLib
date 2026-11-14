@@ -62,7 +62,7 @@
       "Sources/CodePath/ProfileViews.swift:48"
     ],
     "%lld:%lld": [
-      "Sources/CodePath/ExecutionConsoleView.swift:61"
+      "Sources/CodePath/ExecutionOutputView.swift:55"
     ],
     "C++": [
       "Sources/CodePath/DashboardViews.swift:201"
@@ -80,13 +80,10 @@
       "Sources/CodePath/DashboardViews.swift:101"
     ],
     "C++17": [
-      "Sources/CodePath/LessonView.swift:296"
+      "Sources/CodePath/LessonView.swift:304"
     ],
     "C++17 / C++20": [
       "Sources/CodePath/DashboardViews.swift:67"
-    ],
-    "C++17 · Linux / GCC · без сети и доступа к файлам Mac": [
-      "Sources/CodePath/ExecutionConsoleView.swift:79"
     ],
     "C++17 · практика": [
       "Sources/CodePath/DashboardViews.swift:236"
@@ -104,7 +101,7 @@
       "Sources/CodePath/WelcomeCodeView.swift:84"
     ],
     "Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ": [
-      "Sources/CodePath/LessonView.swift:306"
+      "Sources/CodePath/LessonView.swift:316"
     ],
     "codelib": [
       "Sources/CodePath/CodePathApp.swift:12",
@@ -154,7 +151,7 @@
       "Sources/CodePath/ErrorPresentation.swift:140"
     ],
     "В этой сборке нет полной среды C++. Используйте упакованное приложение codelib.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:140"
+      "Sources/CodePath/ExecutionOutputView.swift:132"
     ],
     "ВАШ C++": [
       "Sources/CodePath/RootView.swift:81"
@@ -166,11 +163,11 @@
       "Sources/CodePath/DashboardViews.swift:11"
     ],
     "Ваш ответ": [
-      "Sources/CodePath/LessonView.swift:318",
-      "Sources/CodePath/LessonView.swift:328"
+      "Sources/CodePath/LessonView.swift:322",
+      "Sources/CodePath/LessonView.swift:332"
     ],
     "Ваш прогноз вывода": [
-      "Sources/CodePath/LessonView.swift:323"
+      "Sources/CodePath/LessonView.swift:327"
     ],
     "Ваш результат": [
       "Sources/CodePath/DashboardViews.swift:291",
@@ -189,13 +186,13 @@
       "Sources/CodePath/ErrorPresentation.swift:127"
     ],
     "Ввод stdin · передаётся целиком перед запуском": [
-      "Sources/CodePath/ExecutionConsoleView.swift:34"
+      "Sources/CodePath/ExecutionOutputView.swift:33"
     ],
     "Верно. %@": [
-      "Sources/CodePath/LessonView.swift:366"
+      "Sources/CodePath/LessonView.swift:370"
     ],
     "Вернуть стартовый код с подтверждением": [
-      "Sources/CodePath/LessonView.swift:280"
+      "Sources/CodePath/LessonView.swift:281"
     ],
     "Вернуться к практике": [
       "Sources/CodePath/DashboardViews.swift:333"
@@ -229,13 +226,13 @@
       "Sources/CodePath/DashboardViews.swift:386"
     ],
     "Входные данные программы": [
-      "Sources/CodePath/ExecutionConsoleView.swift:40"
+      "Sources/CodePath/ExecutionOutputView.swift:29"
     ],
     "Выберите PNG, JPEG или HEIC до 12 МиБ и 40 мегапикселей.": [
       "Sources/CodePath/ErrorPresentation.swift:71"
     ],
     "Выберите вариант": [
-      "Sources/CodePath/LessonView.swift:319"
+      "Sources/CodePath/LessonView.swift:323"
     ],
     "Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы.": [
       "Sources/CodePath/ErrorPresentation.swift:67"
@@ -265,7 +262,7 @@
       "Sources/CodePath/ProfileViews.swift:11"
     ],
     "Готово к запуску": [
-      "Sources/CodePath/ExecutionConsoleView.swift:98"
+      "Sources/CodePath/ExecutionOutputView.swift:90"
     ],
     "Далее": [
       "Sources/CodePath/LessonView.swift:122",
@@ -281,7 +278,7 @@
       "Sources/CodePath/ErrorPresentation.swift:170"
     ],
     "Для этой среды нужны Apple silicon и доступная аппаратная виртуализация.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:143"
+      "Sources/CodePath/ExecutionOutputView.swift:135"
     ],
     "Добавим ваш профиль": [
       "Sources/CodePath/ProfileViews.swift:164"
@@ -290,7 +287,7 @@
       "Sources/CodePath/ProfileViews.swift:157"
     ],
     "Дождитесь завершения предыдущего запуска.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:147"
+      "Sources/CodePath/ExecutionOutputView.swift:139"
     ],
     "Достижения": [
       "Sources/CodePath/AppModel.swift:96"
@@ -311,7 +308,7 @@
       "Sources/CodePath/LessonView.swift:68"
     ],
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": [
-      "Sources/CodePath/LessonView.swift:359"
+      "Sources/CodePath/LessonView.swift:363"
     ],
     "Закрыть": [
       "Sources/CodePath/AchievementViews.swift:120",
@@ -327,17 +324,16 @@
       "Sources/CodePath/LessonView.swift:258"
     ],
     "Запуск не выполнен": [
-      "Sources/CodePath/ExecutionConsoleView.swift:116"
+      "Sources/CodePath/ExecutionOutputView.swift:108"
     ],
     "Запуск остановлен": [
-      "Sources/CodePath/ExecutionConsoleView.swift:113"
+      "Sources/CodePath/ExecutionOutputView.swift:105"
     ],
     "Запускаем изолированную среду…": [
-      "Sources/CodePath/ExecutionConsoleView.swift:100"
+      "Sources/CodePath/ExecutionOutputView.swift:92"
     ],
     "Запустить": [
-      "Sources/CodePath/ExecutionConsoleView.swift:29",
-      "Sources/CodePath/LessonView.swift:274"
+      "Sources/CodePath/LessonView.swift:275"
     ],
     "Звезда": [
       "Sources/CodePath/ProfileViews.swift:12"
@@ -361,7 +357,7 @@
       "Sources/CodePath/DashboardViews.swift:276"
     ],
     "Изолированный запуск · Linux / GCC": [
-      "Sources/CodePath/LessonView.swift:298"
+      "Sources/CodePath/LessonView.swift:306"
     ],
     "Изучить программу": [
       "Sources/CodePath/DashboardViews.swift:224"
@@ -445,7 +441,7 @@
       "Sources/CodePath/CodeEditor.swift:180"
     ],
     "Код или ввод превышает 64 КиБ, либо запрос имеет неподдерживаемый формат.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:139"
+      "Sources/CodePath/ExecutionOutputView.swift:131"
     ],
     "Коллекция": [
       "Sources/CodePath/AchievementViews.swift:140",
@@ -456,16 +452,13 @@
       "Sources/CodePath/SettingsView.swift:106"
     ],
     "Компилируем C++…": [
-      "Sources/CodePath/ExecutionConsoleView.swift:101"
+      "Sources/CodePath/ExecutionOutputView.swift:93"
     ],
     "Комфортное оформление": [
       "Sources/CodePath/ProfileViews.swift:176"
     ],
-    "Консоль C++": [
-      "Sources/CodePath/ExecutionConsoleView.swift:22"
-    ],
     "Копировать": [
-      "Sources/CodePath/LessonView.swift:281"
+      "Sources/CodePath/LessonView.swift:282"
     ],
     "Короткий ответ": [
       "Sources/CodePath/LessonView.swift:14"
@@ -586,7 +579,7 @@
       "Sources/CodePath/CodePathApp.swift:80"
     ],
     "Не удалось запустить изолированную среду.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:146"
+      "Sources/CodePath/ExecutionOutputView.swift:138"
     ],
     "Не удалось подготовить аватар.": [
       "Sources/CodePath/AvatarPhoto.swift:67",
@@ -656,7 +649,7 @@
       "Sources/CodePath/SettingsView.swift:212"
     ],
     "Образы среды повреждены или изменены. Запуск заблокирован; пересоберите или восстановите приложение.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:141"
+      "Sources/CodePath/ExecutionOutputView.swift:133"
     ],
     "Обучение": [
       "Sources/CodePath/AppModel.swift:94",
@@ -669,10 +662,7 @@
       "Sources/CodePath/LessonView.swift:213"
     ],
     "Останавливаем среду и все процессы…": [
-      "Sources/CodePath/ExecutionConsoleView.swift:103"
-    ],
-    "Остановить": [
-      "Sources/CodePath/ExecutionConsoleView.swift:25"
+      "Sources/CodePath/ExecutionOutputView.swift:95"
     ],
     "Остаться": [
       "Sources/CodePath/CodePathApp.swift:81"
@@ -701,7 +691,7 @@
       "Sources/CodePath/ProfileViews.swift:134"
     ],
     "Отметить выполненным": [
-      "Sources/CodePath/LessonView.swift:337"
+      "Sources/CodePath/LessonView.swift:341"
     ],
     "Отметить прочитанным": [
       "Sources/CodePath/ReleaseViews.swift:77"
@@ -719,10 +709,10 @@
       "Sources/CodePath/SettingsView.swift:118"
     ],
     "Ошибка выполнения · код %lld": [
-      "Sources/CodePath/ExecutionConsoleView.swift:109"
+      "Sources/CodePath/ExecutionOutputView.swift:101"
     ],
     "Ошибка компиляции": [
-      "Sources/CodePath/ExecutionConsoleView.swift:108"
+      "Sources/CodePath/ExecutionOutputView.swift:100"
     ],
     "Первая награда появится за настоящую практику.": [
       "Sources/CodePath/AchievementViews.swift:54"
@@ -761,7 +751,7 @@
       "Sources/CodePath/RootView.swift:23"
     ],
     "Перейти к месту диагностики в редакторе": [
-      "Sources/CodePath/ExecutionConsoleView.swift:67"
+      "Sources/CodePath/ExecutionOutputView.swift:61"
     ],
     "По вертикали": [
       "Sources/CodePath/AvatarPhoto.swift:66"
@@ -773,7 +763,7 @@
       "Sources/CodePath/DashboardViews.swift:384"
     ],
     "Повторить": [
-      "Sources/CodePath/LessonView.swift:346",
+      "Sources/CodePath/LessonView.swift:350",
       "Sources/CodePath/RootView.swift:116"
     ],
     "Повторить задание?": [
@@ -784,7 +774,7 @@
       "Sources/CodePath/SettingsView.swift:37"
     ],
     "Подпись приложения или helper не прошла проверку. Запуск заблокирован.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:142"
+      "Sources/CodePath/ExecutionOutputView.swift:134"
     ],
     "Подсветка не проверяет код. Громкость звука определяется macOS.": [
       "Sources/CodePath/SettingsView.swift:174"
@@ -799,10 +789,10 @@
       "Sources/CodePath/ProfileViews.swift:164"
     ],
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": [
-      "Sources/CodePath/LessonView.swift:366"
+      "Sources/CodePath/LessonView.swift:370"
     ],
     "Показан результат прежнего кода или ввода. Запустите изменённую программу заново.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:45"
+      "Sources/CodePath/ExecutionOutputView.swift:39"
     ],
     "Показать в Finder": [
       "Sources/CodePath/SettingsView.swift:194"
@@ -826,7 +816,7 @@
       "Sources/CodePath/RootView.swift:39"
     ],
     "Попыток: %lld": [
-      "Sources/CodePath/LessonView.swift:371"
+      "Sources/CodePath/LessonView.swift:375"
     ],
     "Последнее занятие: %@": [
       "Sources/CodePath/DashboardViews.swift:340"
@@ -839,13 +829,13 @@
       "Sources/CodePath/DashboardViews.swift:291"
     ],
     "Превышен лимит вывода": [
-      "Sources/CodePath/ExecutionConsoleView.swift:111"
+      "Sources/CodePath/ExecutionOutputView.swift:103"
     ],
     "Превышен лимит процессорного времени": [
-      "Sources/CodePath/ExecutionConsoleView.swift:110"
+      "Sources/CodePath/ExecutionOutputView.swift:102"
     ],
     "Превышено время ожидания": [
-      "Sources/CodePath/ExecutionConsoleView.swift:112"
+      "Sources/CodePath/ExecutionOutputView.swift:104"
     ],
     "Предсказать вывод": [
       "Sources/CodePath/LessonView.swift:12"
@@ -875,22 +865,22 @@
       "Sources/CodePath/LessonView.swift:24"
     ],
     "Проверить ответ": [
-      "Sources/CodePath/LessonView.swift:340"
+      "Sources/CodePath/LessonView.swift:344"
     ],
     "Проверяем подпись и образы среды…": [
-      "Sources/CodePath/ExecutionConsoleView.swift:99"
+      "Sources/CodePath/ExecutionOutputView.swift:91"
     ],
     "Прогноз вывода программы": [
-      "Sources/CodePath/LessonView.swift:326"
+      "Sources/CodePath/LessonView.swift:330"
     ],
     "Программа C++": [
       "Sources/CodePath/AppModel.swift:93"
     ],
     "Программа выполняется…": [
-      "Sources/CodePath/ExecutionConsoleView.swift:102"
+      "Sources/CodePath/ExecutionOutputView.swift:94"
     ],
     "Программа завершилась · код 0": [
-      "Sources/CodePath/ExecutionConsoleView.swift:107"
+      "Sources/CodePath/ExecutionOutputView.swift:99"
     ],
     "Программа курса": [
       "Sources/CodePath/LessonView.swift:134"
@@ -984,13 +974,13 @@
       "Sources/CodePath/DashboardViews.swift:202"
     ],
     "Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.": [
-      "Sources/CodePath/LessonView.swift:350"
+      "Sources/CodePath/LessonView.swift:354"
     ],
     "Сброс не выполнен: %@": [
       "Sources/CodePath/ErrorPresentation.swift:30"
     ],
     "Сбросить": [
-      "Sources/CodePath/LessonView.swift:279",
+      "Sources/CodePath/LessonView.swift:280",
       "Sources/CodePath/SettingsView.swift:136",
       "Sources/CodePath/SettingsView.swift:150"
     ],
@@ -1018,7 +1008,7 @@
       "Sources/CodePath/SettingsView.swift:123"
     ],
     "Связь со средой прервана. Запуск не считается успешным; можно повторить.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:145"
+      "Sources/CodePath/ExecutionOutputView.swift:137"
     ],
     "Сделайте его своим.": [
       "Sources/CodePath/ProfileViews.swift:119"
@@ -1027,7 +1017,7 @@
       "Sources/CodePath/ProfileViews.swift:186"
     ],
     "Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:85"
+      "Sources/CodePath/ExecutionOutputView.swift:76"
     ],
     "Секретное достижение": [
       "Sources/CodePath/AchievementViews.swift:112",
@@ -1075,10 +1065,10 @@
       "Sources/CodePath/CodePathApp.swift:38"
     ],
     "Среда выполнения недоступна": [
-      "Sources/CodePath/ExecutionConsoleView.swift:114"
+      "Sources/CodePath/ExecutionOutputView.swift:106"
     ],
     "Среда не ответила вовремя и была принудительно остановлена.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:144"
+      "Sources/CodePath/ExecutionOutputView.swift:136"
     ],
     "Стандартные размеры шрифта": [
       "Sources/CodePath/SettingsView.swift:157"
@@ -1114,8 +1104,8 @@
     ],
     "Технические сведения": [
       "Sources/CodePath/ErrorPresentation.swift:168",
-      "Sources/CodePath/ExecutionConsoleView.swift:51",
-      "Sources/CodePath/ExecutionConsoleView.swift:73"
+      "Sources/CodePath/ExecutionOutputView.swift:45",
+      "Sources/CodePath/ExecutionOutputView.swift:67"
     ],
     "Только на вашем Mac": [
       "Sources/CodePath/SettingsView.swift:52"
@@ -1138,7 +1128,7 @@
       "Sources/CodePath/ReleaseViews.swift:114"
     ],
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": [
-      "Sources/CodePath/LessonView.swift:373"
+      "Sources/CodePath/LessonView.swift:377"
     ],
     "Уроки не найдены": [
       "Sources/CodePath/DashboardViews.swift:275"
@@ -1147,7 +1137,7 @@
       "Sources/CodePath/AchievementViews.swift:116"
     ],
     "Успешный запуск не означает, что задача решена верно. Автопроверка кода пока не включена. Файлы программы исчезают после запуска.": [
-      "Sources/CodePath/ExecutionConsoleView.swift:82"
+      "Sources/CodePath/ExecutionOutputView.swift:73"
     ],
     "Учимся программировать на C++ — офлайн и в своём темпе. Код остаётся черновиком: встроенного запуска и AI нет.": [
       "Sources/CodePath/ProfileViews.swift:159"
@@ -1202,7 +1192,7 @@
       "Sources/CodePath/SettingsView.swift:191"
     ],
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": [
-      "Sources/CodePath/LessonView.swift:362"
+      "Sources/CodePath/LessonView.swift:366"
     ],
     "впереди": [
       "Sources/CodePath/DashboardViews.swift:326"
@@ -1237,15 +1227,15 @@
     "Sources/CodePath/CodePathApp.swift": "3a51c0b2358ff3e40e7e4f1864579cf507b6e47560699b5ba66c261c9893897b",
     "Sources/CodePath/DashboardViews.swift": "d2cd91874c9036bb7f9c2235981cbebeb8a84d7406ddf2c01895d501a71bc3d0",
     "Sources/CodePath/ErrorPresentation.swift": "46ebd44e8bc9a1e1afed1b2803bf94e162a89911b2920bdc768eb25bd8ddcda3",
-    "Sources/CodePath/ExecutionConsoleView.swift": "ec3e8330df26b0fe07fe7a876e0cdf2045c9697846d1055762014ead46a10c78",
-    "Sources/CodePath/LessonView.swift": "f8314991bb74d4193235ee869b94c92a09b8d58248e6ff59ce148d7e0d82e2fa",
+    "Sources/CodePath/ExecutionOutputView.swift": "39c0926450624233630ffedf2db93050d1b05b9c4311acdd9a374e64f1b8cf91",
+    "Sources/CodePath/LessonView.swift": "9f19a7ec6b03299d53ac2c3017df988d385776d9c3bea4815d53452206ca4e74",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
     "Sources/CodePath/PresentationLocale.swift": "1a17e87c37c6e2508c435c304840ed7398c593a79a21924067e8beec84db87ba",
     "Sources/CodePath/ProfileViews.swift": "74bbeb146b15979bdd9e6ac2f796425aa1a76000d9355baa4cb12837783dd3f9",
     "Sources/CodePath/ReleaseViews.swift": "8126a3756a99ebb0bf965b0917908322ac54b145dd57c05bdf780c2b5dd68f2f",
     "Sources/CodePath/RootView.swift": "9cbcb86c6283619753dcdd9561a93e47a964c6c243f0a67bb86f5db480ae4a03",
     "Sources/CodePath/SettingsView.swift": "49c7074bfaeffac1d92cd1f648508a28ec42155882daab49c201012cc6f8447f",
-    "Sources/CodePath/SmokeTest.swift": "94658c215fa41c6c37e4162cb848cfb69adee5191d2674f7e3dd952416b03e63",
+    "Sources/CodePath/SmokeTest.swift": "e51bc4044036cbc070c420feaefe91d729384afb42deb8e4848937a6084cb681",
     "Sources/CodePath/SyntaxColors.swift": "6f550340e4bce08f18df1840bec48dae7d4bd697f8ed2042dbbb3e2189bffe5a",
     "Sources/CodePath/WelcomeCodeView.swift": "bc83d4901e9ce9d41939fdf5aec76aea1b502495612f4adfeb0b7f4661ae4823"
   }
