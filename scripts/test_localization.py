@@ -61,6 +61,16 @@ class LocalizationAuthoringTests(unittest.TestCase):
                     with self.subTest(exercise=exercise["id"]):
                         self.assertEqual(numbers(exercise["prompt"]), numbers(texts[f'{exercise["id"]}.prompt']))
 
+    def test_cpp_standard_library_names_are_not_lost_in_translation(self):
+        # Identifiers are language-neutral; additional English examples are allowed.
+        # This only checks spelling/presence and is not a semantic correctness review.
+        identifier = re.compile(r"\bstd::[A-Za-z_][A-Za-z_0-9]*")
+        texts, expected = generator.build_texts(self.course, self.source)
+        for key, original in expected.items():
+            if key.endswith((".theory", ".prompt", ".explanation", ".microscope", ".recap")) or ".hint." in key:
+                with self.subTest(field=key):
+                    self.assertFalse(set(identifier.findall(original)) - set(identifier.findall(texts[key])))
+
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):
             with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)
