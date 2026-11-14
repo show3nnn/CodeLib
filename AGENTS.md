@@ -1,6 +1,6 @@
 # Project context
 
-- Current user priority: WORK_PLAN.md stages; stage 4 integrates real C++ execution after the UI wave. English work remains frozen except release-note/UI catalog synchronization needed for verification. Do not bump versions for small changes. User authorizes local commits/version naming; never push automatically.
+- Current user priority: WORK_PLAN.md stage 7, including substantive English review and localization. The previous English-work freeze has been lifted; retain the production-readiness gates below and do not expose a partial language switch. Do not bump versions for small changes. User authorizes local commits/version naming; never push automatically.
 - `MASTER_PROMPT.md` is the Russian product specification. It is now plain UTF-8 (previously RTF); read it directly. Consult it before implementation; the constraints below are not the full specification.
 - Start with `PROJECT_PLAN.md` (resume point) and `VERIFICATION.md` (verified vs blocked checks). XCUITest automation and full visual/accessibility acceptance are not equivalent to the internal UI smoke test.
 

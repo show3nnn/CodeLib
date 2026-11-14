@@ -512,7 +512,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 runs in a disposable isolated environment. Code tasks are checked against the condition’s examples; there is no AI."
+            "value": "C++17 runs in a disposable isolated environment. Code tasks are checked against the examples in the task; there is no AI."
           }
         },
         "ru": {
@@ -530,7 +530,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 runs offline in an isolated Linux environment without access to Mac files. Code tasks are checked against the condition’s examples; there is no AI assistant."
+            "value": "C++17 runs offline in an isolated Linux environment without access to Mac files. Code tasks are checked against the examples in the task; there is no AI assistant."
           }
         },
         "ru": {
@@ -710,7 +710,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "“Check solution” runs the condition’s examples in the isolated environment and compares output. A successful run alone does not complete the task."
+            "value": "“Check solution” runs the examples in the task in the isolated environment and compares output. A successful run alone does not complete the task."
           }
         },
         "ru": {
@@ -1862,7 +1862,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The task was verified against the condition’s examples. Editing the code does not revoke the earlier mark, but new output must be checked separately."
+            "value": "The task was verified against its examples. Editing the code does not revoke the earlier mark, but new output must be checked separately."
           }
         },
         "ru": {
@@ -5300,7 +5300,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Checking runs the condition’s examples in the isolated environment and compares output. The task counts only when every example matches; running alone never completes it."
+            "value": "Checking runs the examples in the task in the isolated environment and compares output. The task counts only when every example matches; running alone never completes it."
           }
         },
         "ru": {

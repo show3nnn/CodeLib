@@ -26,6 +26,8 @@ class ResourceTranslationTests(unittest.TestCase):
             self.assertEqual(set(document["texts"]), set(source_texts(json.loads(data), resource)))
             self.assertEqual(document["status"], "draft")
             self.assertFalse(any(re.search("[А-Яа-яЁё]", value) for value in document["texts"].values()))
+            if resource == "releases":
+                self.assertFalse(any(re.search(r"\\u[0-9a-fA-F]{4}", value) for value in document["texts"].values()))
             self.assertEqual(document, json.loads((self.root / f"localization/drafts/{resource}.en.json").read_text()))
 
     def test_holes_empty_unknown_and_protected_fields_are_rejected(self):
