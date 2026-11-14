@@ -29,10 +29,13 @@ public struct Preferences: Codable, Sendable {
     public var syntaxHighlighting = true
     public var showLineNumbers = true
     public var achievementSounds = true
+    /// Reserved for the eventual app-wide language choice. Unknown values are
+    /// preserved for forward compatibility; presentation does not read this yet.
+    public var preferredLanguage: String?
     public init() {}
 
     private enum CodingKeys: String, CodingKey {
-        case theme, textSize, codeSize, syntaxHighlighting, showLineNumbers, achievementSounds
+        case theme, textSize, codeSize, syntaxHighlighting, showLineNumbers, achievementSounds, preferredLanguage
     }
 
     public init(from decoder: any Decoder) throws {
@@ -44,6 +47,7 @@ public struct Preferences: Codable, Sendable {
         syntaxHighlighting = try values.decodeIfPresent(Bool.self, forKey: .syntaxHighlighting) ?? true
         showLineNumbers = try values.decodeIfPresent(Bool.self, forKey: .showLineNumbers) ?? true
         achievementSounds = try values.decodeIfPresent(Bool.self, forKey: .achievementSounds) ?? true
+        preferredLanguage = try values.decodeIfPresent(String.self, forKey: .preferredLanguage)
     }
 }
 

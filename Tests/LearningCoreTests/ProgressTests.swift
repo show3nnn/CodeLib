@@ -45,6 +45,7 @@ struct ProgressTests {
         #expect(store.document.schemaVersion == 1)
         #expect(store.document.preferences.syntaxHighlighting)
         #expect(store.document.preferences.showLineNumbers)
+        #expect(store.document.preferences.preferredLanguage == nil)
         #expect(store.document.preferences.theme == "dark")
         #expect(store.document.exercises["legacy.stable.id"]?.draft == state.draft)
         #expect(store.document.completed("legacy.stable.id"))
@@ -53,6 +54,44 @@ struct ProgressTests {
         #expect(!reopened.document.preferences.syntaxHighlighting)
         #expect(!reopened.document.preferences.showLineNumbers)
         #expect(reopened.document.completed("legacy.stable.id"))
+    }
+
+    @Test func languagePreferenceRoundTripsWithoutChangingLearningData() throws {
+        let url = try location()
+        let store = try ProgressStore(url: url)
+        try store.update { document in
+            document.profile = LocalProfile(nickname: "Ученик", avatar: .leaf)
+            var progress = ExerciseProgress()
+            progress.draft = ""
+            progress.answer = "canonical answer"
+            progress.attempts = 3
+            progress.completion = .automatic
+            document.exercises["future.exercise"] = progress
+            document.lastExerciseID = "future.exercise"
+            document.lessonPositions = ["future.lesson": "future.exercise"]
+            var achievements = AchievementState()
+            achievements.awards["future.award"] = AchievementAward(recognizedAt: Date(timeIntervalSince1970: 1000), historical: false)
+            achievements.studyDays = ["2026-11-14"]
+            document.achievements = achievements
+        }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let baseline = store.document
+        for language in ["en", "ru", "future-language"] {
+            try store.update { $0.preferences.preferredLanguage = language }
+            let reopened = try ProgressStore(url: url)
+            #expect(reopened.document.preferences.preferredLanguage == language)
+            var unchanged = reopened.document
+            unchanged.preferences.preferredLanguage = nil
+            #expect(try encoder.encode(unchanged) == encoder.encode(baseline))
+        }
+        let export = url.appendingPathExtension("export")
+        try store.export(to: export)
+        try store.reset()
+        try store.importDocument(from: export)
+        #expect(store.document.preferences.preferredLanguage == "future-language")
+        #expect(store.document.exercises["future.exercise"]?.draft == "")
+        #expect(store.document.profile?.id == baseline.profile?.id)
     }
 
     @Test func roundTripPreservesDraftAnswersHintsAndSettings() throws {
