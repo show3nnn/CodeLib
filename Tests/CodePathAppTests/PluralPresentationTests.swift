@@ -36,4 +36,17 @@ struct PluralPresentationTests {
         #expect(String(localized: PluralPresentation.topicProgress(.lessons, done: 1, total: 4)) == "1/4 урока")
         #expect(String(localized: PluralPresentation.topicProgress(.sections, done: 0, total: 11)) == "0/11 разделов")
     }
+
+    @Test func englishCountsSelectCatalogKeysWithoutRussianFewForm() {
+        let en = Locale(identifier: "en_US")
+        for (count, taskKey, progressKey, lessonKey) in [
+            (1, "%lld задание", "%lld из %lld задания", "%lld/%lld урок"),
+            (2, "%lld заданий", "%lld из %lld заданий", "%lld/%lld уроков"),
+            (21, "%lld заданий", "%lld из %lld заданий", "%lld/%lld уроков"),
+        ] {
+            #expect(PluralPresentation.courseUnit(.tasks, count: count, locale: en).key == taskKey)
+            #expect(PluralPresentation.taskProgress(0, total: count, locale: en).key == progressKey)
+            #expect(PluralPresentation.topicProgress(.lessons, done: 0, total: count, locale: en).key == lessonKey)
+        }
+    }
 }

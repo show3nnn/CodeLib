@@ -61,6 +61,17 @@ class UICatalogTests(unittest.TestCase):
         self.assertNotEqual(placeholders("%02lld %.2f %%"), placeholders("%lld %.3f %%"))
         self.assertEqual(catalog(manifest, {"Код: %lld пт": "Code: %lld pt"})["version"], "1.0")
 
+    def test_english_plural_keys_match_selected_forms(self):
+        for key, translation in {
+            "%lld задание": "%lld task",
+            "%lld заданий": "%lld tasks",
+            "%lld из %lld задания": "%lld of %lld task",
+            "%lld из %lld заданий": "%lld of %lld tasks",
+            "%lld/%lld урок": "%lld/%lld lesson",
+            "%lld/%lld уроков": "%lld/%lld lessons",
+        }.items():
+            self.assertEqual(ui_en.TEXTS[key], translation)
+
 
 if __name__ == "__main__":
     unittest.main()
