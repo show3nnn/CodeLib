@@ -347,7 +347,9 @@ struct ExerciseView: View {
                         Button("Отметить самому") { model.selfComplete() }
                             .buttonStyle(.bordered)
                             .disabled(state.completion != .unfinished)
-                            .help(state.completion == .automatic ? "Задание уже проверено на примерах" : "Отметить выполнение без автопроверки")
+                            .help(state.completion == .automatic
+                                  ? Text("Задание уже проверено на примерах")
+                                  : Text("Отметить выполнение без автопроверки"))
                     } else {
                         Button("Отметить выполненным", systemImage: "checkmark") { model.selfComplete() }
                             .buttonStyle(.borderedProminent).disabled(state.completion == .selfReviewed)

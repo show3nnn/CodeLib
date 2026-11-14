@@ -1460,7 +1460,7 @@
       }
     },
     "Верно. %@": {
-      "comment": "Sources/CodePath/LessonView.swift:393",
+      "comment": "Sources/CodePath/LessonView.swift:395",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1604,7 +1604,7 @@
       }
     },
     "Все задания для повторения (%lld)": {
-      "comment": "Sources/CodePath/DashboardViews.swift:409",
+      "comment": "Sources/CodePath/DashboardViews.swift:412",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1676,7 +1676,7 @@
       }
     },
     "Вся программа": {
-      "comment": "Sources/CodePath/DashboardViews.swift:39; Sources/CodePath/DashboardViews.swift:417",
+      "comment": "Sources/CodePath/DashboardViews.swift:39; Sources/CodePath/DashboardViews.swift:421",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2252,7 +2252,7 @@
       }
     },
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": {
-      "comment": "Sources/CodePath/LessonView.swift:380",
+      "comment": "Sources/CodePath/LessonView.swift:382",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2270,7 +2270,7 @@
       }
     },
     "Задание проверено на примерах из условия. Изменение кода не отменяет прежнюю отметку, но новый вывод нужно проверить отдельно.": {
-      "comment": "Sources/CodePath/LessonView.swift:384",
+      "comment": "Sources/CodePath/LessonView.swift:386",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2288,7 +2288,7 @@
       }
     },
     "Задание уже проверено на примерах": {
-      "comment": "Sources/CodePath/LessonView.swift:350",
+      "comment": "Sources/CodePath/LessonView.swift:351",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4592,7 +4592,7 @@
       }
     },
     "Отметить выполнение без автопроверки": {
-      "comment": "Sources/CodePath/LessonView.swift:350",
+      "comment": "Sources/CodePath/LessonView.swift:352",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4610,7 +4610,7 @@
       }
     },
     "Отметить выполненным": {
-      "comment": "Sources/CodePath/LessonView.swift:352",
+      "comment": "Sources/CodePath/LessonView.swift:354",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5042,7 +5042,7 @@
       }
     },
     "По разделам": {
-      "comment": "Sources/CodePath/DashboardViews.swift:415",
+      "comment": "Sources/CodePath/DashboardViews.swift:419",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5060,7 +5060,7 @@
       }
     },
     "Повторить": {
-      "comment": "Sources/CodePath/LessonView.swift:362; Sources/CodePath/RootView.swift:119",
+      "comment": "Sources/CodePath/LessonView.swift:364; Sources/CodePath/RootView.swift:119",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5222,7 +5222,7 @@
       }
     },
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": {
-      "comment": "Sources/CodePath/LessonView.swift:393",
+      "comment": "Sources/CodePath/LessonView.swift:395",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5276,7 +5276,7 @@
       }
     },
     "Показать меньше": {
-      "comment": "Sources/CodePath/DashboardViews.swift:409",
+      "comment": "Sources/CodePath/DashboardViews.swift:410",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5384,7 +5384,7 @@
       }
     },
     "Попыток: %lld": {
-      "comment": "Sources/CodePath/LessonView.swift:398",
+      "comment": "Sources/CodePath/LessonView.swift:400",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5708,7 +5708,7 @@
       }
     },
     "Проверить ответ": {
-      "comment": "Sources/CodePath/LessonView.swift:356",
+      "comment": "Sources/CodePath/LessonView.swift:358",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5762,7 +5762,7 @@
       }
     },
     "Проверка запускает примеры из условия в изолированной среде и сравнивает вывод. Задание засчитывается только при совпадении на каждом примере; запуск сам по себе ничего не засчитывает.": {
-      "comment": "Sources/CodePath/LessonView.swift:367",
+      "comment": "Sources/CodePath/LessonView.swift:369",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6068,7 +6068,7 @@
       }
     },
     "Продолжить или повторить раздел": {
-      "comment": "Sources/CodePath/DashboardViews.swift:446",
+      "comment": "Sources/CodePath/DashboardViews.swift:450",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6518,7 +6518,7 @@
       }
     },
     "Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.": {
-      "comment": "Sources/CodePath/LessonView.swift:370",
+      "comment": "Sources/CodePath/LessonView.swift:372",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7418,7 +7418,7 @@
       }
     },
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": {
-      "comment": "Sources/CodePath/LessonView.swift:400",
+      "comment": "Sources/CodePath/LessonView.swift:402",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7778,7 +7778,7 @@
       }
     },
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": {
-      "comment": "Sources/CodePath/LessonView.swift:387",
+      "comment": "Sources/CodePath/LessonView.swift:389",
       "extractionState": "manual",
       "localizations": {
         "en": {

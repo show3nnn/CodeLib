@@ -406,7 +406,11 @@ struct ProgressViewScreen: View {
                                 }
                                 if review.count > 5 {
                                     Divider().padding(.vertical, 8)
-                                    Button(showAllReview ? "Показать меньше" : "Все задания для повторения (\(review.count))") { showAllReview.toggle() }
+                                    if showAllReview {
+                                        Button("Показать меньше") { showAllReview = false }
+                                    } else {
+                                        Button("Все задания для повторения (\(review.count))") { showAllReview = true }
+                                    }
                                 }
                             }
                         }

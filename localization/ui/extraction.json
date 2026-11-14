@@ -254,7 +254,7 @@
       "Sources/CodePath/ExecutionOutputView.swift:37"
     ],
     "Верно. %@": [
-      "Sources/CodePath/LessonView.swift:393"
+      "Sources/CodePath/LessonView.swift:395"
     ],
     "Вернуть стартовый код с подтверждением": [
       "Sources/CodePath/LessonView.swift:282"
@@ -278,7 +278,7 @@
       "Sources/CodePath/DashboardViews.swift:266"
     ],
     "Все задания для повторения (%lld)": [
-      "Sources/CodePath/DashboardViews.swift:409"
+      "Sources/CodePath/DashboardViews.swift:412"
     ],
     "Все категории": [
       "Sources/CodePath/AchievementViews.swift:61"
@@ -291,7 +291,7 @@
     ],
     "Вся программа": [
       "Sources/CodePath/DashboardViews.swift:39",
-      "Sources/CodePath/DashboardViews.swift:417"
+      "Sources/CodePath/DashboardViews.swift:421"
     ],
     "Входные данные программы": [
       "Sources/CodePath/ExecutionOutputView.swift:33"
@@ -389,13 +389,13 @@
       "Sources/CodePath/LessonView.swift:69"
     ],
     "Задание завершено ранее. Текущий изменённый ответ ещё не подтверждён.": [
-      "Sources/CodePath/LessonView.swift:380"
+      "Sources/CodePath/LessonView.swift:382"
     ],
     "Задание проверено на примерах из условия. Изменение кода не отменяет прежнюю отметку, но новый вывод нужно проверить отдельно.": [
-      "Sources/CodePath/LessonView.swift:384"
+      "Sources/CodePath/LessonView.swift:386"
     ],
     "Задание уже проверено на примерах": [
-      "Sources/CodePath/LessonView.swift:350"
+      "Sources/CodePath/LessonView.swift:351"
     ],
     "Закрыть": [
       "Sources/CodePath/AchievementViews.swift:123",
@@ -798,10 +798,10 @@
       "Sources/CodePath/ProfileViews.swift:134"
     ],
     "Отметить выполнение без автопроверки": [
-      "Sources/CodePath/LessonView.swift:350"
+      "Sources/CodePath/LessonView.swift:352"
     ],
     "Отметить выполненным": [
-      "Sources/CodePath/LessonView.swift:352"
+      "Sources/CodePath/LessonView.swift:354"
     ],
     "Отметить прочитанным": [
       "Sources/CodePath/ReleaseViews.swift:77"
@@ -876,10 +876,10 @@
       "Sources/CodePath/AvatarPhoto.swift:65"
     ],
     "По разделам": [
-      "Sources/CodePath/DashboardViews.swift:415"
+      "Sources/CodePath/DashboardViews.swift:419"
     ],
     "Повторить": [
-      "Sources/CodePath/LessonView.swift:362",
+      "Sources/CodePath/LessonView.swift:364",
       "Sources/CodePath/RootView.swift:119"
     ],
     "Повторить задание?": [
@@ -908,7 +908,7 @@
       "Sources/CodePath/ProfileViews.swift:166"
     ],
     "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.": [
-      "Sources/CodePath/LessonView.swift:393"
+      "Sources/CodePath/LessonView.swift:395"
     ],
     "Показан результат прежнего кода или ввода. Запустите изменённую программу заново.": [
       "Sources/CodePath/ExecutionOutputView.swift:43"
@@ -917,7 +917,7 @@
       "Sources/CodePath/SettingsView.swift:212"
     ],
     "Показать меньше": [
-      "Sources/CodePath/DashboardViews.swift:409"
+      "Sources/CodePath/DashboardViews.swift:410"
     ],
     "Полный перевод курса для %@ пока недоступен": [
       "Sources/CodePath/ErrorPresentation.swift:116"
@@ -935,7 +935,7 @@
       "Sources/CodePath/RootView.swift:39"
     ],
     "Попыток: %lld": [
-      "Sources/CodePath/LessonView.swift:398"
+      "Sources/CodePath/LessonView.swift:400"
     ],
     "Последнее занятие: %@": [
       "Sources/CodePath/DashboardViews.swift:371"
@@ -992,7 +992,7 @@
       "Sources/CodePath/LessonView.swift:24"
     ],
     "Проверить ответ": [
-      "Sources/CodePath/LessonView.swift:356"
+      "Sources/CodePath/LessonView.swift:358"
     ],
     "Проверить решение": [
       "Sources/CodePath/LessonView.swift:343"
@@ -1001,7 +1001,7 @@
       "Sources/CodePath/ExecutionReadinessView.swift:29"
     ],
     "Проверка запускает примеры из условия в изолированной среде и сравнивает вывод. Задание засчитывается только при совпадении на каждом примере; запуск сам по себе ничего не засчитывает.": [
-      "Sources/CodePath/LessonView.swift:367"
+      "Sources/CodePath/LessonView.swift:369"
     ],
     "Проверка не выполнена": [
       "Sources/CodePath/ExecutionOutputView.swift:128"
@@ -1053,7 +1053,7 @@
       "Sources/CodePath/RootView.swift:145"
     ],
     "Продолжить или повторить раздел": [
-      "Sources/CodePath/DashboardViews.swift:446"
+      "Sources/CodePath/DashboardViews.swift:450"
     ],
     "Продолжить обучение": [
       "Sources/CodePath/CodePathApp.swift:31",
@@ -1131,7 +1131,7 @@
       "Sources/CodePath/DashboardViews.swift:232"
     ],
     "Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.": [
-      "Sources/CodePath/LessonView.swift:370"
+      "Sources/CodePath/LessonView.swift:372"
     ],
     "Сброс не выполнен: %@": [
       "Sources/CodePath/ErrorPresentation.swift:30"
@@ -1294,7 +1294,7 @@
       "Sources/CodePath/ReleaseViews.swift:114"
     ],
     "Урок завершён. Отличная работа! Можно повторить материал или перейти дальше.": [
-      "Sources/CodePath/LessonView.swift:400"
+      "Sources/CodePath/LessonView.swift:402"
     ],
     "Уроки не найдены": [
       "Sources/CodePath/DashboardViews.swift:305"
@@ -1355,7 +1355,7 @@
       "Sources/CodePath/SettingsView.swift:209"
     ],
     "Это ваша отметка, не автоматическая проверка. Изменения кода не перепроверяются.": [
-      "Sources/CodePath/LessonView.swift:387"
+      "Sources/CodePath/LessonView.swift:389"
     ],
     "ввод": [
       "Sources/CodePath/ExecutionOutputView.swift:150"
@@ -1412,11 +1412,11 @@
     "Sources/CodePath/CodeEditor.swift": "58d9cb6ad0a49e3ab5146e11f9f18415aa11997e7fad3abb9ac2f59662ebd9c5",
     "Sources/CodePath/CodeExecutionController.swift": "e8b77163e1519e585d231882b3ef0cb6a49e8e83a84f31c00be0878386ee8399",
     "Sources/CodePath/CodePathApp.swift": "3a51c0b2358ff3e40e7e4f1864579cf507b6e47560699b5ba66c261c9893897b",
-    "Sources/CodePath/DashboardViews.swift": "61365c332c17f461eee565302e14ee36366fcaca8e27af0aae336461bbd7078f",
+    "Sources/CodePath/DashboardViews.swift": "aeb0d5c0daa75aaf8dd393c198c5113b0539fff2e9ad0f664624a3b67cf1860e",
     "Sources/CodePath/ErrorPresentation.swift": "46ebd44e8bc9a1e1afed1b2803bf94e162a89911b2920bdc768eb25bd8ddcda3",
     "Sources/CodePath/ExecutionOutputView.swift": "3a3a2125448c98d0028d21b58f6c492473dec9991ca48f2491555297992c9f9b",
     "Sources/CodePath/ExecutionReadinessView.swift": "d206d1c57e56bdd9e64c5e9a3aef6c7aa854de53593f00cf6779ce415b44d90e",
-    "Sources/CodePath/LessonView.swift": "d9b8c44fbe77131c30b783721a9ab4e58b776e354d806b87215dc18d86c37bee",
+    "Sources/CodePath/LessonView.swift": "d54afee688c703b6b5d5683bb6f245fc53b9497283fb291977fd3c716210db8a",
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
     "Sources/CodePath/PluralPresentation.swift": "1b29379377bcb4a985acb6260a8de7a4cd510aa894eb3e486e17d195b311ac51",
     "Sources/CodePath/PresentationLocale.swift": "da11478601af870270bfd82a0d1d961c1161493516cb119e8a4c211f4094c183",
