@@ -6,6 +6,39 @@ import LearningCore
 
 @Suite(.serialized) @MainActor
 struct AppModelTests {
+    @Test func executionRejectionNeverGradesOrMutatesProgress() throws {
+        _ = try setup()
+        let model = AppModel()
+        let first = try #require(model.course?.exercises.first(where: { $0.kind == .code }))
+        model.open(first)
+        model.updateState(first.id) { $0.draft = String(repeating: "x", count: 65_537) }
+        let before = try Data(contentsOf: model.dataURL)
+        model.runCode(stdin: "")
+        #expect(model.execution.failure == .invalidRequest)
+        #expect(!model.execution.isBusy)
+        #expect(model.state(for: first.id).completion == .unfinished)
+        #expect(try Data(contentsOf: model.dataURL) == before)
+        model.updateState(first.id) { $0.draft = "int main(){}" }
+        let input = String(repeating: "👩🏽‍💻", count: 5000)
+        model.execution.inputs[first.id] = input
+        let beforeInput = try Data(contentsOf: model.dataURL)
+        model.runCode(stdin: input)
+        #expect(model.execution.failure == .invalidRequest)
+        #expect(model.execution.inputs[first.id] == input)
+        #expect(try Data(contentsOf: model.dataURL) == beforeInput)
+    }
+
+    @Test func compilerBytePositionsConvertToUTF16WithoutChangingSource() {
+        let source = "// 👩🏽‍💻\nint привет = 1; missing;\n"
+        let bytesBefore = "int привет = 1; ".utf8.count
+        let navigation = EditorNavigation(source: source, line: 2, byteColumn: bytesBefore + 1)
+        #expect(navigation.range?.location == (source as NSString).range(of: "missing").location)
+        #expect(navigation.range?.length == 1)
+        #expect(EditorNavigation(source: source, line: 999, byteColumn: 1).range == nil)
+        #expect(EditorNavigation(source: source, line: 0, byteColumn: 1).range == nil)
+        #expect(navigation.source == source)
+    }
+
     func setup() throws -> URL {
         let root = ProcessInfo.processInfo.environment["CODEPATH_TEST_ROOT"]
             ?? FileManager.default.currentDirectoryPath + "/.build/test-data"

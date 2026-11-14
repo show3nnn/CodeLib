@@ -212,7 +212,7 @@ struct SettingsView: View {
                         Button("О codelib") { openWindow(id: "about") }
                         Button("История обновлений") { openWindow(id: "release-history") }
                     }.buttonStyle(.bordered)
-                    Text("Код проверяется самостоятельно. Встроенного исполнения кода и AI-помощника в этой версии нет.")
+                    Text("C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Задачи пока проверяются самостоятельно; AI-помощника нет.")
                         .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 }
             }

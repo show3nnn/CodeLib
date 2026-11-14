@@ -17,12 +17,17 @@ final class AppModel {
     var storageError: AppFailure?
     var saveError: AppFailure?
     var hasUnsavedChanges = false
-    var page: Page = .home
-    var selectedExerciseID: String?
+    var page: Page = .home {
+        didSet { if page != .lesson { execution.cancel() } }
+    }
+    var selectedExerciseID: String? {
+        didSet { if oldValue != selectedExerciseID { execution.cancel() } }
+    }
     var message: AppFailure?
     private var updateHistoryPresented = false
     var achievementNotifications: [String] = []
     private var pendingAwards: Set<String> = []
+    let execution = CodeExecutionController()
 
     // Presentation follows committed data, never an in-memory completion from a failed write.
     var startupRoute: StartupRoute {
@@ -266,6 +271,13 @@ final class AppModel {
     func selfComplete() {
         guard let exercise, exercise.kind == .code else { return }
         updateState(exercise.id) { $0.completion = .selfReviewed }
+    }
+
+    func runCode(stdin: String) {
+        guard let exercise, exercise.kind == .code else { return }
+        flush()
+        _ = execution.run(exerciseID: exercise.id, source: state(for: exercise.id).draft ?? exercise.starter, stdin: stdin)
+        // Running is not grading, completion or an achievement event.
     }
 
     func exportProgress() {

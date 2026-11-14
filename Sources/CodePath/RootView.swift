@@ -30,6 +30,8 @@ struct RootView: View {
             }
         }
         .frame(minWidth: 760, minHeight: 560)
+        .background(ExecutionWindowObserver { model.execution.cancel() }.frame(width: 0, height: 0))
+        .onDisappear { model.execution.cancel() }
         .task(id: model.startupRoute) {
             if model.takeUpdateHistoryPresentation() { openWindow(id: "release-history") }
         }

@@ -8,7 +8,7 @@ RUN="$PWD/.build/ui-smoke/run-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$RUN/data" "$RUN/screenshots"
 export CODEPATH_DATA_DIR="$RUN/data"
 "$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" "$@"
-if [[ "${1:-}" != "--settings-only" ]]; then
+if [[ "${1:-}" != "--settings-only" && "${1:-}" != "--execution-only" ]]; then
     "$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --reopen
     "$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --reopen --simulate-update
 fi

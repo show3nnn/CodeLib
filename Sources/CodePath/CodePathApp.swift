@@ -68,9 +68,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     #endif
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         model?.flush()
-        guard model?.hasUnsavedChanges == true else { return .terminateNow }
+        guard model?.hasUnsavedChanges == true else { model?.execution.cancel(); return .terminateNow }
         let alert = Self.unsavedChangesAlert()
-        return alert.runModal() == .alertSecondButtonReturn ? .terminateNow : .terminateCancel
+        if alert.runModal() == .alertSecondButtonReturn { model?.execution.cancel(); return .terminateNow }
+        return .terminateCancel
     }
 
     static func unsavedChangesAlert() -> NSAlert {

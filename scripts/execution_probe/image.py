@@ -4,6 +4,7 @@ import gzip
 import hashlib
 import io
 import json
+import os
 from pathlib import Path, PurePosixPath
 import stat
 import tarfile
@@ -26,9 +27,7 @@ def artifact(item):
         with urllib.request.urlopen(url, timeout=60) as response:
             data = response.read(item["bytes"] + 1)
         check(data, item)
-        temporary = path.with_suffix(".partial")
-        temporary.write_bytes(data)
-        temporary.replace(path)
+        atomic_write(path, data)
     data = path.read_bytes()
     check(data, item)
     return data
@@ -37,6 +36,12 @@ def artifact(item):
 def check(data, item):
     if len(data) != item["bytes"] or hashlib.sha256(data).hexdigest() != item["sha256"]:
         raise ValueError(f"Size/SHA256 mismatch: {item['name']}; no automatic fingerprint refresh")
+
+
+def atomic_write(path, data):
+    temporary = path.with_name(path.name + f".{os.getpid()}.partial")
+    temporary.write_bytes(data)
+    temporary.replace(path)
 
 
 def archive_entries(data):
@@ -102,9 +107,10 @@ def main():
     # Do not install the kernel package (it pulls initramfs tooling). Verify it only.
     # The agent moves it aside before apk add.
     entries["init"] = (stat.S_IFREG | 0o755, (HERE / "init.sh").read_bytes())
+    entries["supervisor.c"] = (stat.S_IFREG | 0o444, (HERE / "supervisor.c").read_bytes())
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    (OUTPUT / "Image").write_bytes(kernel)
-    (OUTPUT / "initrd.gz").write_bytes(gzip.compress(cpio(entries), compresslevel=1, mtime=0))
+    atomic_write(OUTPUT / "Image", kernel)
+    atomic_write(OUTPUT / "initrd.gz", gzip.compress(cpio(entries), compresslevel=1, mtime=0))
     print(f"Guest prepared in {OUTPUT}; no files mounted from the host", flush=True)
 
 

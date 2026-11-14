@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Reviewed source change: the 0.2.0 interface redesign note was added and translated below.
-RELEASES_SHA256 = "c3f1824bcf381201cd7f874e9b81d3a8158c537fb92f7951d5f1a72926924ebd"
+# Reviewed source change: only the real 0.3.0 execution note was added and translated below.
+RELEASES_SHA256 = "a2c9e47e78b082c295ef663737068e8e3351734152bd1b15fd35d9d76af78321"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -19,6 +19,18 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.3.0": note("Real C++ execution inside codelib",
+        "You can now compile and run a program from the editor: provide input, see output and diagnostics, and stop execution. C++ runs in a separate disposable Linux environment without network access or access to Mac files. A successful run does not yet mean the task was solved automatically.",
+        {
+            "cpp-execution": ("Write it — run it", "Run and Command-R compile the current draft as C++17 using GCC and execute the program. Compilation is isolated too. If the code or input changes, the previous result is marked as out of date."),
+            "console-diagnostics": ("Input, output and the error location", "The console accepts stdin and shows stdout, stderr and the exit code. Compiler errors include a line and position: click to jump to the editor without changing source text or undo history."),
+            "isolated-lifecycle": ("Stop the entire environment", "Stop and Command-period terminate the environment and its descendants. Time, memory, output and process limits apply. The helper signature and image checksums are verified before launch; at most one program runs at a time."),
+            "honest-results": ("Running is not grading", "Running does not change progress, self-review marks or awards. Automatic grading of code tasks will come separately. Only stdin is passed for now: file examples are not loaded, and files created by the program disappear after execution."),
+        },
+        {
+            "Среда входит в приложение: для запуска не нужны сеть, Xcode или установка компилятора в macOS. Сейчас поддерживаются Mac с Apple silicon.": "The environment is included in the app: running needs no network, Xcode or compiler installation in macOS. Apple silicon Macs are currently supported.",
+            "Переход к другому заданию, закрытие окна и завершение приложения останавливают прежний запуск; черновики сохраняются прежним способом.": "Switching tasks, closing the window and quitting the app stop the previous run; drafts are saved in the same way as before.",
+        }),
     "0.2.0": note("A new look for the main screens",
         "Continuing CHANGELOG1 §13–15: the home screen, navigation and catalog, the lesson screen, statistics with profile and settings, the achievements collection and the history windows are redesigned in one style — graphite glass surfaces with restrained green accents. Course content, IDs, progress and drafts are unchanged.",
         {

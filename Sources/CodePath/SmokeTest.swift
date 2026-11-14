@@ -3,6 +3,7 @@ import AppKit
 import CoreGraphics
 import LearningCore
 import SwiftUI
+import ExecutionSupport
 
 /// Explicit developer launch mode; renders real AppKit/SwiftUI windows and exits.
 @MainActor
@@ -27,7 +28,91 @@ enum SmokeTest {
             model.update { $0.preferences.achievementSounds = false }
             check(AchievementCatalog.soundURL != nil, "Original achievement sound is bundled")
             check(!AchievementAudio.play(enabled: false), "Disabled achievement sound does not play")
-            if ProcessInfo.processInfo.arguments.contains("--settings-only") {
+            if ProcessInfo.processInfo.arguments.contains("--execution-only") {
+                var setup = OnboardingState()
+                setup.draft = LocalProfile(nickname: "C++ smoke", avatar: .leaf)
+                check(model.saveOnboarding(setup, finish: true), "Execution setup persists")
+                model.open(first)
+                let code = "#include <iostream>\nint main(){int a,b;std::cin>>a>>b;std::cout<<a+b;}\n"
+                model.execution.inputs[first.id] = "-7 -8\n"
+                model.updateState(first.id) { $0.draft = code }
+                model.update { $0.exercises["future.execution-empty"] = ExerciseProgress(); $0.exercises["future.execution-empty"]?.draft = "" }
+                let before = try Data(contentsOf: model.dataURL)
+                func waitForExecution() async throws {
+                    let deadline = ContinuousClock.now.advanced(by: .seconds(45))
+                    while model.execution.isBusy && ContinuousClock.now < deadline {
+                        try await Task.sleep(for: .milliseconds(25))
+                    }
+                    if model.execution.isBusy { throw ContentError.invalid("Execution helper did not finish") }
+                }
+                model.runCode(stdin: "-7 -8\n")
+                check(model.execution.isBusy, "Run uses the real app execution controller")
+                check(!model.execution.run(exerciseID: first.id, source: code, stdin: "0 0"), "Second VM request is refused while the slot is occupied")
+                try await waitForExecution()
+                check(model.execution.failure == nil, "Signed bundle and guest hashes pass inside the real app")
+                check(model.execution.result?.status == .success && model.execution.result?.stdout == "-15", "Real packaged app compiles and runs stdin C++")
+                check(try Data(contentsOf: model.dataURL) == before, "Running does not change persisted progress, awards or drafts")
+                check(model.state(for: first.id).completion == .unfinished, "Successful execution is not automatic task completion")
+                let console = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 640, height: 660), styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+                console.contentView = NSHostingView(rootView: ExecutionConsoleView(model: model, exerciseID: first.id,
+                    source: code, initialInput: "", navigate: { _ in }).padding(24)
+                    .frame(width: 640, height: 660, alignment: .topLeading).background(WorkspaceBackdrop())
+                    .environment(\.locale, PresentationLocale.locale).preferredColorScheme(.light))
+                console.orderFront(nil)
+                await settle()
+                try snapshot(window: console, to: directory.appendingPathComponent("execution-console-success.png"))
+                console.orderOut(nil)
+                if let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) {
+                    await settle()
+                    try snapshot(window: window, to: directory.appendingPathComponent("execution-light.png"))
+                    model.update { $0.preferences.theme = "dark" }
+                    window.setContentSize(NSSize(width: 760, height: 740))
+                    await settle()
+                    try snapshot(window: window, to: directory.appendingPathComponent("execution-compact-dark.png"))
+                }
+                model.updateState(first.id) { $0.draft = "int main(){\n return missing;\n}" }
+                model.runCode(stdin: "")
+                try await waitForExecution()
+                check(model.execution.result?.status == .compileError, "Real compiler error is not a successful execution")
+                let diagnostics = CompilerDiagnostic.parse(model.execution.result?.stderr ?? "")
+                check(diagnostics.first?.line == 2 && diagnostics.first?.column == 9, "Compiler diagnostics retain row and byte column")
+                if let diagnostic = diagnostics.first {
+                    let errorSource = model.state(for: first.id).draft ?? ""
+                    let navigation = EditorNavigation(source: errorSource, line: diagnostic.line, byteColumn: diagnostic.column)
+                    let editorWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 600, height: 320), styleMask: [.titled], backing: .buffered, defer: false)
+                    editorWindow.contentView = NSHostingView(rootView: CodeEditor(text: .constant(errorSource), fontSize: 16, navigation: navigation).frame(width: 600, height: 320))
+                    editorWindow.orderFront(nil)
+                    await settle()
+                    if let editor = findEditor(in: editorWindow.contentView) {
+                        check(editor.selectedRange().location == (errorSource as NSString).range(of: "missing").location, "Real NSTextView navigates to compiler diagnostic")
+                        check(editor.string == errorSource && editor.undoManager?.canUndo != true, "Diagnostic navigation does not change source or create undo edits")
+                    } else { failures.append("Diagnostic navigation has a real editor") }
+                    editorWindow.orderOut(nil)
+                }
+                model.updateState(first.id) { $0.draft = "#include <unistd.h>\nint main(){sleep(90);}" }
+                model.runCode(stdin: "")
+                let bootDeadline = ContinuousClock.now.advanced(by: .seconds(10))
+                while model.execution.isBusy && model.execution.state != .phase(.running) && ContinuousClock.now < bootDeadline {
+                    try await Task.sleep(for: .milliseconds(25))
+                }
+                check(model.execution.state == .phase(.running), "UI receives the real running phase")
+                model.execution.cancel()
+                try await waitForExecution()
+                check(model.execution.result?.status == .cancelled, "Stop reaps the real helper and VM")
+                model.runCode(stdin: "")
+                check(model.execution.isBusy, "Slot is reusable after cancellation")
+                if let next = course.exercises.dropFirst().first { model.open(next) }
+                try await waitForExecution()
+                check(model.execution.result?.status == .cancelled, "Changing exercise cancels the old job")
+                let document = try ProgressStore(url: model.dataURL).document
+                check(document.exercises["future.execution-empty"]?.draft == "", "Execution leaves unknown empty drafts intact on disk")
+                check(document.exercises[first.id]?.completion == .unfinished, "Run/compile error/cancel never grade the exercise")
+                model.open(first)
+                model.runCode(stdin: "")
+                if let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) { window.close() }
+                try await waitForExecution()
+                check(model.execution.result?.status == .cancelled, "Closing the hosting window cancels the real job")
+            } else if ProcessInfo.processInfo.arguments.contains("--settings-only") {
                 var setup = OnboardingState()
                 setup.draft = LocalProfile(nickname: "Ученик 👩🏽‍💻", avatar: .leaf)
                 check(model.saveOnboarding(setup, finish: true), "Settings review creates an isolated persisted profile")

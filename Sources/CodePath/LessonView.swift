@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import LearningCore
+import ExecutionSupport
 
 // Display labels are UI resources, never persisted grading values or core dependencies.
 extension ExerciseKind {
@@ -80,7 +81,9 @@ struct LessonView: View {
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 24) {
                                     Color.clear.frame(height: 0).id("top")
-                                    ExerciseView(model: model, exercise: exercise).id(exercise.id)
+                                    ExerciseView(model: model, exercise: exercise, revealEditor: {
+                                        proxy.scrollTo("editor-\(exercise.id)", anchor: .top)
+                                    }).id(exercise.id)
                                 }.padding(24).frame(maxWidth: 980).frame(maxWidth: .infinity)
                             }
                             .onChange(of: exercise.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
@@ -156,8 +159,10 @@ private struct TheoryView: View {
 private struct ExerciseView: View {
     @Bindable var model: AppModel
     let exercise: Exercise
+    let revealEditor: () -> Void
     @State private var showRepeatConfirmation = false
     @State private var showResetCodeConfirmation = false
+    @State private var editorNavigation: EditorNavigation?
     private var state: ExerciseProgress { model.state(for: exercise.id) }
     private var draft: Binding<String> {
         Binding(get: { state.draft ?? exercise.starter }, set: { value in
@@ -262,32 +267,50 @@ private struct ExerciseView: View {
                     HStack(spacing: 12) {
                         Label("main.cpp", systemImage: "curlybraces").font(.system(size: 12, weight: .medium, design: .monospaced))
                         Spacer(minLength: 0)
+                        if model.execution.isBusy {
+                            Button("Стоп", systemImage: "stop.fill") { model.execution.cancel() }
+                                .keyboardShortcut(".", modifiers: .command).disabled(model.execution.state == .stopping)
+                        } else {
+                            Button("Запустить", systemImage: "play.fill") {
+                                model.runCode(stdin: model.execution.inputs[exercise.id] ?? exercise.testCases.first?.input ?? "")
+                            }.buttonStyle(.borderedProminent).keyboardShortcut("r", modifiers: .command)
+                                .accessibilityIdentifier("editor.run")
+                        }
                         Button("Сбросить", systemImage: "arrow.counterclockwise") { showResetCodeConfirmation = true }
-                            .disabled(draft.wrappedValue == exercise.starter).help("Вернуть стартовый код с подтверждением")
+                            .labelStyle(.iconOnly).disabled(draft.wrappedValue == exercise.starter).help("Вернуть стартовый код с подтверждением")
                         Button("Копировать", systemImage: "doc.on.doc") {
                             NSPasteboard.general.clearContents()
                             NSPasteboard.general.setString(draft.wrappedValue, forType: .string)
                         }
+                        .labelStyle(.iconOnly)
                     }.buttonStyle(.borderless).controlSize(.small).padding(14).background(.primary.opacity(0.035))
                     Divider()
                     CodeEditor(text: draft, fontSize: model.document.preferences.codeSize,
-                               syntaxHighlighting: model.document.preferences.syntaxHighlighting,
-                               showLineNumbers: model.document.preferences.showLineNumbers)
+                                syntaxHighlighting: model.document.preferences.syntaxHighlighting,
+                                showLineNumbers: model.document.preferences.showLineNumbers,
+                                navigation: editorNavigation)
                         .frame(minHeight: 320, idealHeight: 400)
                         .accessibilityIdentifier("lesson.editor")
                     Divider()
                     HStack {
                         Text("C++17").font(.system(.caption, design: .monospaced))
                         Spacer()
-                        Label("Черновик · без запуска кода", systemImage: "doc.text")
+                        Label("Изолированный запуск · Linux / GCC", systemImage: "lock.shield")
                             .font(.caption)
                     }
                     .foregroundStyle(.secondary).padding(.horizontal, 14).padding(.vertical, 10)
                 }.background(Color(nsColor: .textBackgroundColor))
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(.primary.opacity(0.1)) }
+                    .id("editor-\(exercise.id)")
                 Text("Tab / Shift+Tab — отступы · Control+Tab — выйти из редактора · Enter сохраняет отступ")
                     .font(.caption).foregroundStyle(.secondary)
+                ExecutionConsoleView(model: model, exerciseID: exercise.id, source: draft.wrappedValue,
+                                     initialInput: exercise.testCases.first?.input ?? "") { diagnostic in
+                    revealEditor()
+                    editorNavigation = EditorNavigation(source: model.execution.sourceSnapshot,
+                                                        line: diagnostic.line, byteColumn: diagnostic.column)
+                }
             }
         } else {
             if !exercise.starter.isEmpty { CodeBlock(code: exercise.starter, fontSize: model.document.preferences.codeSize) }
@@ -324,7 +347,7 @@ private struct ExerciseView: View {
                 }
             }
             if exercise.kind == .code && state.completion == .unfinished {
-                Text("Самопроверка: сравните результат с условием и разбором. Приложение пока не компилирует и не проверяет ваш код.")
+                Text("Самопроверка: сравните вывод с условием и разбором. Запуск программы не является автоматической проверкой решения.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
             if state.completion != .unfinished {

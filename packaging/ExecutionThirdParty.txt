@@ -1,0 +1,24 @@
+codelib offline execution guest — developer-built Alpine Linux aarch64
+
+The guest contains Alpine Linux 3.22.8, Linux 6.12.117, GCC 14.2.0,
+GNU binutils 2.44, musl 1.2.5, BusyBox and their dependencies.
+They are not macOS installations; they execute only inside a disposable VM.
+The exact artifacts and SHA256 are in scripts/execution_probe/image-lock.json.
+
+Licenses include GPL-2.0-only (Linux, BusyBox), GPL-3.0-or-later
+(GCC, binutils components), LGPL-2.1-or-later with GCC runtime exceptions,
+MIT (musl and other components), BSD licenses, and the zlib license.
+Alpine package signatures are checked before installing packages in the guest.
+
+Upstream sources, build recipes and per-package license metadata:
+https://gitlab.alpinelinux.org/alpine/aports/-/tree/3.22-stable/main
+https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/
+https://distfiles.alpinelinux.org/distfiles/
+https://www.gnu.org/licenses/
+https://www.kernel.org/
+
+This is a locally built personal-use application, not a bundled proprietary
+compiler distribution. Before distributing guest binaries to other people,
+provide the corresponding source and all applicable notices/license texts
+for the exact locked package versions. This notice is not a substitute for
+those redistribution obligations. No third-party assets or binaries are in Git.

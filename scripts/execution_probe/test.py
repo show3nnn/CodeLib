@@ -6,29 +6,68 @@ from pathlib import Path
 import subprocess
 import time
 import signal
+import uuid
+import os
+import select
+import shutil
+import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / ".build/execution-probe"
+HELPER = OUTPUT / "helper"
+ASSETS = OUTPUT
 
 
 def execute(source, stdin="", standard="17"):
     started = time.monotonic()
     process = subprocess.run(
-        [str(OUTPUT / "helper"), str(OUTPUT / "Image"), str(OUTPUT / "initrd.gz")],
-        input=json.dumps(dict(source=source, stdin=stdin, standard=standard)),
+        [str(HELPER), str(ASSETS)],
+        input=json.dumps(dict(version=1, id=str(uuid.uuid4()), source=source, stdin=stdin, standard=standard)),
         text=True, capture_output=True, timeout=40,
     )
-    result = json.loads(process.stdout)
+    events = [json.loads(line) for line in process.stdout.splitlines()]
+    result = events[-1]["result"]
     result["seconds"] = round(time.monotonic() - started, 3)
     if process.stderr:
         result["hostStderr"] = process.stderr[:4096]
     return result
 
 
+def vm_pids():
+    # Observe only Apple's VM worker. Never terminate pre-existing VM processes.
+    lines = subprocess.check_output(["ps", "-axo", "pid=,comm="], text=True).splitlines()
+    return {int(line.split()[0]) for line in lines if "com.apple.Virtualization.VirtualMachine" in line}
+
+
+def await_phase(process, phase):
+    deadline = time.monotonic() + 12
+    buffer = b""
+    while time.monotonic() < deadline:
+        ready, _, _ = select.select([process.stdout], [], [], max(0, deadline - time.monotonic()))
+        if not ready:
+            break
+        chunk = os.read(process.stdout.fileno(), 16384)
+        if not chunk:
+            break
+        buffer += chunk
+        while b"\n" in buffer:
+            line, buffer = buffer.split(b"\n", 1)
+            if json.loads(line).get("phase") == phase:
+                return
+    raise AssertionError("Helper did not reach " + phase)
+
+
 def main():
+    global HELPER, ASSETS
     parser = argparse.ArgumentParser()
     parser.add_argument("--quick", action="store_true")
+    parser.add_argument("--app", type=Path)
     args = parser.parse_args()
+    report_path = OUTPUT / ("quick-report.json" if args.quick else "report.json")
+    if args.app:
+        HELPER = args.app.resolve() / "Contents/Helpers/CodelibExecutionHelper"
+        ASSETS = args.app.resolve() / "Contents/Resources/ExecutionGuest"
     results = []
 
     def check(name, source, predicate, stdin="", standard="17"):
@@ -37,7 +76,7 @@ def main():
         summary = {k: (v[:240] + "…" if isinstance(v, str) and len(v) > 240 else v) for k, v in result.items()}
         print(("PASS " if passed else "FAIL ") + name + ": " + json.dumps(summary), flush=True)
         results.append(dict(name=name, passed=passed, result=result))
-        (OUTPUT / "report.json").write_text(json.dumps(results, indent=2) + "\n")
+        report_path.write_text(json.dumps(results, indent=2) + "\n")
         if not passed:
             raise SystemExit(1)
 
@@ -114,6 +153,11 @@ int e=errno;for(int i=0;i<n;i++){kill(children[i],9);waitpid(children[i],nullptr
           lambda r: r["status"] == "runtimeError" and r["exitCode"] == 137)
     check("output bounded", '#include <unistd.h>\nint main(){char b[4096]={};for(;;)write(1,b,sizeof b);}',
           lambda r: r["status"] == "outputLimit" and len(r["stdout"].encode()) <= 65536)
+    check("exactly 64 KiB output is allowed", '#include <unistd.h>\nint main(){char b[4096]={};for(int i=0;i<16;i++)if(write(1,b,sizeof b)!=sizeof b)return 1;}',
+          lambda r: r["status"] == "success" and len(r["stdout"]) == 65536)
+    for code in [152, 153]:
+        check("ordinary exit is not a signal " + str(code), "int main(){return " + str(code) + ";}",
+              lambda r, code=code: r["status"] == "runtimeError" and r["exitCode"] == code)
     check("crash is not success", "#include <cstdlib>\nint main(){std::abort();}",
           lambda r: r["status"] == "runtimeError" and r["exitCode"] != 0)
     check("guest write discarded", '#include <fstream>\nint main(){std::ofstream("/work/ephemeral")<<"discard me";}',
@@ -146,21 +190,101 @@ int main(){pid_t p=fork();if(p==0){setsid();for(;;)sleep(1);}return p<0?1:0;}
           lambda r: r["status"] == "timeout" and r["seconds"] < 35)
     started = time.monotonic()
     with subprocess.Popen(
-        [str(OUTPUT / "helper"), str(OUTPUT / "Image"), str(OUTPUT / "initrd.gz")],
+        [str(HELPER), str(ASSETS)],
         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     ) as process:
         try:
-            process.communicate(json.dumps(dict(source="#include <unistd.h>\nint main(){sleep(90);}", stdin="", standard="17")), timeout=5)
+            process.communicate(json.dumps(dict(version=1, id=str(uuid.uuid4()), source="#include <unistd.h>\nint main(){sleep(90);}", stdin="", standard="17")), timeout=5)
             raise AssertionError("Sleep completed before cancellation")
         except subprocess.TimeoutExpired:
             process.send_signal(signal.SIGTERM)
             stdout, stderr = process.communicate(timeout=10)
-    result = json.loads(stdout)
+    result = json.loads(stdout.splitlines()[-1])["result"]
     assert result["status"] == "cancelled", (result, stderr)
     results.append(dict(name="host cancellation stops VM", passed=True, result=result))
-    (OUTPUT / "report.json").write_text(json.dumps(results, indent=2) + "\n")
+    report_path.write_text(json.dumps(results, indent=2) + "\n")
     print(f"PASS host cancellation stops VM: {time.monotonic() - started:.3f}s", flush=True)
-    print(f"{len(results)} execution checks passed (including rejection before VM boot); report: {OUTPUT / 'report.json'}")
+
+    for name, payload in [
+        ("truncated JSON fails closed", '{"version":'),
+        ("oversized frame fails closed", "x" * 800001),
+        ("unsupported protocol fails closed", json.dumps(dict(version=99, id=str(uuid.uuid4()), source="", stdin="", standard="17"))),
+    ]:
+        p = subprocess.run([str(HELPER), str(ASSETS)], input=payload, text=True, capture_output=True, timeout=10)
+        events = [json.loads(line) for line in p.stdout.splitlines()]
+        assert p.returncode != 0 and events[-1]["result"]["status"] == "backendError", (name, p.stdout, p.stderr)
+        assert not any(event.get("phase") for event in events), name
+        results.append(dict(name=name, passed=True))
+        print("PASS " + name, flush=True)
+    with tempfile.TemporaryDirectory(prefix="fault-", dir=OUTPUT) as directory:
+        folder = Path(directory)
+        for name in ["missing images fail closed", "symlink image fails closed", "modified initrd fails closed"]:
+            if name.startswith("symlink"):
+                (folder / "Image").symlink_to(ASSETS / "Image")
+            elif name.startswith("modified"):
+                (folder / "Image").unlink()
+                shutil.copyfile(ASSETS / "Image", folder / "Image")
+                (folder / "initrd.gz").write_bytes(b"modified")
+            p = subprocess.run(
+                [str(HELPER), str(folder)], text=True, capture_output=True, timeout=10,
+                input=json.dumps(dict(version=1, id=str(uuid.uuid4()), source="int main(){}", stdin="", standard="17")))
+            events = [json.loads(line) for line in p.stdout.splitlines()]
+            assert p.returncode != 0 and events[-1]["result"]["status"] == "backendError", name
+            assert not any(event.get("phase") for event in events), name
+            results.append(dict(name=name, passed=True))
+            print("PASS " + name, flush=True)
+    baseline = vm_pids()
+    with subprocess.Popen([str(HELPER), str(ASSETS)], text=True,
+                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1) as p:
+        p.stdin.write(json.dumps(dict(version=1, id=str(uuid.uuid4()), source="#include <unistd.h>\nint main(){sleep(90);}", stdin="", standard="17")))
+        p.stdin.close()
+        await_phase(p, "running")
+        owned_workers = vm_pids() - baseline
+        assert owned_workers, "Real Apple VM worker was not observable"
+        p.kill()
+        p.wait(timeout=5)
+    deadline = time.monotonic() + 8
+    while owned_workers & vm_pids() and time.monotonic() < deadline:
+        time.sleep(0.05)
+    assert not owned_workers & vm_pids(), "VM worker survived helper death"
+    results.append(dict(name="SIGKILL helper releases its VM worker", passed=True))
+    print("PASS SIGKILL helper releases its VM worker", flush=True)
+    # A separate owner mimics an app crash; the helper must notice reparenting.
+    wrapper = r'''
+import json,subprocess,sys,uuid
+p=subprocess.Popen([sys.argv[1],sys.argv[2]],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,bufsize=1)
+p.stdin.write(json.dumps(dict(version=1,id=str(uuid.uuid4()),source="#include <unistd.h>\nint main(){sleep(90);}",stdin="",standard="17")))
+p.stdin.close()
+for line in p.stdout:
+    if json.loads(line).get("phase")=="running":
+        print(p.pid,flush=True)
+        p.wait()
+        break
+'''
+    baseline = vm_pids()
+    with subprocess.Popen([sys.executable, "-c", wrapper, str(HELPER), str(ASSETS)],
+                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True) as owner:
+        ready, _, _ = select.select([owner.stdout], [], [], 12)
+        assert ready, "Owner never reached running"
+        helper_pid = int(owner.stdout.readline())
+        owned_workers = vm_pids() - baseline
+        owner.kill()
+        owner.wait(timeout=5)
+    deadline = time.monotonic() + 8
+    while owned_workers & vm_pids() and time.monotonic() < deadline:
+        time.sleep(0.05)
+    assert owned_workers and not owned_workers & vm_pids(), "VM survived owner death"
+    # Do not signal any PID outside those created explicitly by this test.
+    try:
+        os.kill(helper_pid, 0)
+    except ProcessLookupError:
+        pass
+    else:
+        raise AssertionError("Helper survived owner death")
+    results.append(dict(name="owner crash cancels helper and VM", passed=True))
+    print("PASS owner crash cancels helper and VM", flush=True)
+    report_path.write_text(json.dumps(results, indent=2) + "\n")
+    print(f"{len(results)} execution checks passed (including rejection before VM boot); report: {report_path}")
 
 
 if __name__ == "__main__":

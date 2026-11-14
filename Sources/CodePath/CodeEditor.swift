@@ -2,11 +2,33 @@ import AppKit
 import LearningCore
 import SwiftUI
 
+struct EditorNavigation {
+    let id = UUID()
+    let source: String
+    let line: Int
+    let byteColumn: Int
+
+    var range: NSRange? {
+        guard line > 0, byteColumn > 0 else { return nil }
+        let lines = source.split(separator: "\n", omittingEmptySubsequences: false)
+        guard line <= lines.count else { return nil }
+        let text = String(lines[line - 1])
+        guard byteColumn <= text.utf8.count + 1 else { return nil }
+        var bytes = Array(text.utf8.prefix(byteColumn - 1))
+        while !bytes.isEmpty && String(bytes: bytes, encoding: .utf8) == nil { bytes.removeLast() }
+        let prefix = String(bytes: bytes, encoding: .utf8) ?? ""
+        let start = lines.prefix(line - 1).reduce(0) { $0 + $1.utf16.count + 1 } + prefix.utf16.count
+        let full = source as NSString
+        return start < full.length ? full.rangeOfComposedCharacterSequence(at: start) : NSRange(location: start, length: 0)
+    }
+}
+
 struct CodeEditor: NSViewRepresentable {
     @Binding var text: String
     let fontSize: Double
     var syntaxHighlighting = true
     var showLineNumbers = true
+    var navigation: EditorNavigation?
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -63,10 +85,18 @@ struct CodeEditor: NSViewRepresentable {
         view.syntaxHighlighting = syntaxHighlighting
         scroll.rulersVisible = showLineNumbers
         view.refreshPresentation()
+        if let navigation, context.coordinator.lastNavigation != navigation.id, navigation.source == text,
+           let range = navigation.range {
+            context.coordinator.lastNavigation = navigation.id
+            view.setSelectedRange(range)
+            view.scrollRangeToVisible(range)
+            view.window?.makeFirstResponder(view)
+        }
     }
 
     @MainActor final class Coordinator: NSObject, NSTextViewDelegate {
         var parent: CodeEditor
+        var lastNavigation: UUID?
         init(_ parent: CodeEditor) { self.parent = parent }
         func textDidChange(_ notification: Notification) {
             guard let view = notification.object as? EditingTextView else { return }

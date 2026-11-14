@@ -21,7 +21,7 @@ struct ResourceTranslationTests {
     }
 
     @Test func completeDraftsCannotBecomeProductionResources() throws {
-        for (resource, count) in [(ResourceTranslation.Resource.catalog, 10), (.releases, 163)] {
+        for (resource, count) in [(ResourceTranslation.Resource.catalog, 10), (.releases, 175)] {
             let data = try source(resource)
             let translation = try draft(resource)
             let coverage = try translation.coverage(for: data)

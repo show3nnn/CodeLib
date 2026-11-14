@@ -1,21 +1,12 @@
-// Developer-only proof of isolation. Not linked to the application.
+// The host launches only this trusted helper, never a user-generated native executable.
 import Foundation
 import Virtualization
 import Darwin
-
-struct Request: Decodable {
-    let source: String
-    let stdin: String
-    let standard: String
-}
-
-struct Response: Encodable {
-    let status: String
-    let stdout: String
-    let stderr: String
-    let exitCode: Int?
-    let detail: String
-}
+#if canImport(ExecutionSupport)
+import ExecutionSupport
+#endif
+typealias Request = ExecutionRequest
+typealias Response = ExecutionResult
 
 final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     // Limits are host policy, never fields supplied by source code or guest output.
@@ -28,6 +19,7 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     private var reader: DispatchSourceRead?
     private var deadline: DispatchSourceTimer?
     private var watchdog: DispatchSourceTimer?
+    private var parentWatch: DispatchSourceTimer?
     private var signals: [DispatchSourceSignal] = []
     private var buffer = Data()
     private var consoleBytes = 0
@@ -35,9 +27,11 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     private var finishing = false
     private var sent = false
     private var pending: Response?
+    private let ownerPID: pid_t
 
-    init(request: Request, kernel: URL, initrd: URL) throws {
+    init(request: Request, kernel: URL, initrd: URL, ownerPID: pid_t) throws {
         self.request = request
+        self.ownerPID = ownerPID
         super.init()
         let boot = VZLinuxBootLoader(kernelURL: kernel)
         boot.initialRamdiskURL = initrd
@@ -71,7 +65,7 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
         let timer = DispatchSource.makeTimerSource(queue: .main)
         timer.schedule(deadline: .now() + .seconds(30))
         timer.setEventHandler { [self] in
-            finish(Response(status: "timeout", stdout: "", stderr: "", exitCode: nil, detail: "Whole-VM wall limit"))
+            finish(Response(status: .timeout, detail: "Whole-VM wall limit"))
         }
         timer.resume()
         deadline = timer
@@ -83,19 +77,28 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
         hardTimer.setEventHandler { _exit(124) }
         hardTimer.resume()
         watchdog = hardTimer
+        let parent = ownerPID
+        let parentTimer = DispatchSource.makeTimerSource(queue: .main)
+        parentTimer.schedule(deadline: .now(), repeating: .milliseconds(250))
+        parentTimer.setEventHandler { [self] in
+            if getppid() != parent { finish(Response(status: .cancelled, detail: "Owner process exited")) }
+        }
+        parentTimer.resume()
+        parentWatch = parentTimer
         for number in [SIGTERM, SIGINT] {
             signal(number, SIG_IGN)
             let source = DispatchSource.makeSignalSource(signal: number, queue: .main)
             source.setEventHandler { [self] in
-                finish(Response(status: "cancelled", stdout: "", stderr: "", exitCode: nil, detail: "Host cancellation"))
+                finish(Response(status: .cancelled, detail: "Host cancellation"))
             }
             source.resume()
             signals.append(source)
         }
+        send(ExecutionEvent(id: request.id, phase: .booting))
         machine.start { [self] result in
             if case .failure(let error) = result {
-                if let pending { emit(pending) }
-                else { finish(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: String(describing: error))) }
+                if let pending { emitResult(pending) }
+                else { finish(Response(status: .backendError, detail: String(describing: error))) }
             } else if let pending {
                 stopAndEmit(pending)
             }
@@ -109,7 +112,7 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
         guard count > 0 else { return }
         consoleBytes += count
         guard consoleBytes <= Self.consoleLimit else {
-            finish(Response(status: "outputLimit", stdout: "", stderr: "", exitCode: nil, detail: "Bounded guest transport"))
+            finish(Response(status: .outputLimit, detail: "Bounded guest transport"))
             return
         }
         buffer.append(contentsOf: bytes.prefix(count))
@@ -131,19 +134,23 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
             // A serial write can block if a guest stops reading. Keep it off the VM queue.
             let handle = input.fileHandleForWriting
             DispatchQueue.global().async { try? handle.write(contentsOf: data) }
+        } else if sent && line.hasPrefix("CODELIB_PHASE_1|") {
+            let value = String(line.dropFirst("CODELIB_PHASE_1|".count))
+            if let phase = ExecutionPhase(rawValue: value), phase != .booting {
+                send(ExecutionEvent(id: request.id, phase: phase))
+            }
         } else if line.hasPrefix("CODELIB_RESULT_1|") {
             let fields = line.split(separator: "|", omittingEmptySubsequences: false)
-            let statuses = ["success", "compileError", "runtimeError", "cpuLimit", "outputLimit", "backendError"]
-            guard fields.count == 5, statuses.contains(String(fields[1])),
+            guard fields.count == 5, let status = ExecutionStatus(rawValue: String(fields[1])),
                   sent || fields[1] == "backendError",
                   let code = Int(fields[2]), (-255...255).contains(code),
                   let out = Data(base64Encoded: String(fields[3])),
                   let err = Data(base64Encoded: String(fields[4])),
                   out.count <= Self.sourceLimit, err.count <= Self.sourceLimit else {
-                finish(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: "Invalid bounded guest response"))
+                finish(Response(status: .backendError, detail: "Invalid bounded guest response"))
                 return
             }
-            finish(Response(status: String(fields[1]), stdout: String(decoding: out, as: UTF8.self),
+            finish(Response(status: status, stdout: String(decoding: out, as: UTF8.self),
                             stderr: String(decoding: err, as: UTF8.self), exitCode: code, detail: "Ephemeral Linux VM"))
         }
         // Kernel/APK boot messages are data, not protocol responses or instructions.
@@ -165,42 +172,47 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     private func stopAndEmit(_ result: Response) {
         // Forced VM stop, NOT a guest requestStop() which malicious code could ignore.
         if machine.state == .stopped || machine.state == .error {
-            emit(result)
+            emitResult(result)
         } else if machine.canStop {
-            machine.stop { error in
+            machine.stop { [self] error in
                 if let error {
-                    emit(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil,
-                                  detail: "VM stop failed: \(error)"))
-                } else { emit(result) }
+                    emitResult(Response(status: .backendError, detail: "VM stop failed: \(error)"))
+                } else { emitResult(result) }
             }
         } else {
-            emit(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: "VM cannot be stopped in its current state"))
+            emitResult(Response(status: .backendError, detail: "VM cannot be stopped in its current state"))
         }
     }
 
     func guestDidStop(_ virtualMachine: VZVirtualMachine) {
-        if let pending { emit(pending) }
-        else { finish(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: "Guest stopped before result")) }
+        if let pending { emitResult(pending) }
+        else { finish(Response(status: .backendError, detail: "Guest stopped before result")) }
     }
 
     func virtualMachine(_ virtualMachine: VZVirtualMachine, didStopWithError error: Error) {
-        finish(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: String(describing: error)))
+        finish(Response(status: .backendError, detail: String(describing: error)))
+    }
+
+    private func emitResult(_ result: Response) -> Never {
+        send(ExecutionEvent(id: request.id, result: result))
+        exit(result.status == .backendError ? 1 : 0)
     }
 }
 
-func emit(_ result: Response) -> Never {
-    if let data = try? JSONEncoder().encode(result) {
-        FileHandle.standardOutput.write(data + Data([10]))
-    }
-    exit(result.status == "backendError" ? 1 : 0)
+func send(_ event: ExecutionEvent) {
+    if let data = try? JSONEncoder().encode(event) { FileHandle.standardOutput.write(data + Data([10])) }
 }
 
 @main enum Main {
     static func main() {
-        guard CommandLine.arguments.count == 3, VZVirtualMachine.isSupported else {
-            emit(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: "Usage: helper <kernel> <initrd>; virtualization required"))
-        }
+        let ownerPID = getppid()
         do {
+            if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--verify-assets" {
+                try ExecutionAssets(directory: URL(fileURLWithPath: CommandLine.arguments[2])).validate()
+                print("Execution guest SHA256 verified")
+                exit(0)
+            }
+            guard CommandLine.arguments.count == 2, VZVirtualMachine.isSupported else { throw ExecutionFailure.unavailable }
             var data = Data()
             while let chunk = try FileHandle.standardInput.read(upToCount: 16_384), !chunk.isEmpty {
                 data.append(chunk)
@@ -208,15 +220,17 @@ func emit(_ result: Response) -> Never {
             }
             guard data.count <= 800_000 else { throw CocoaError(.fileReadTooLarge) }
             let request = try JSONDecoder().decode(Request.self, from: data)
-            guard request.source.utf8.count <= ExecutionProbe.sourceLimit,
-                  request.stdin.utf8.count <= ExecutionProbe.inputLimit,
-                  ["17", "20"].contains(request.standard) else { throw CocoaError(.coderInvalidValue) }
-            let probe = try ExecutionProbe(request: request, kernel: URL(fileURLWithPath: CommandLine.arguments[1]),
-                                           initrd: URL(fileURLWithPath: CommandLine.arguments[2]))
+            try request.validate()
+            let assets = ExecutionAssets(directory: URL(fileURLWithPath: CommandLine.arguments[1]))
+            try assets.validate()
+            guard ownerPID > 1, getppid() == ownerPID else { throw ExecutionFailure.transportFailed }
+            let probe = try ExecutionProbe(request: request, kernel: assets.directory.appendingPathComponent("Image"),
+                                           initrd: assets.directory.appendingPathComponent("initrd.gz"), ownerPID: ownerPID)
             probe.start()
             withExtendedLifetime(probe) { dispatchMain() }
         } catch {
-            emit(Response(status: "backendError", stdout: "", stderr: "", exitCode: nil, detail: String(describing: error)))
+            send(ExecutionEvent(id: nil, result: Response(status: .backendError, detail: String(describing: error))))
+            exit(1)
         }
     }
 }

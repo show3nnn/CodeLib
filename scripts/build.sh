@@ -16,8 +16,9 @@ for bundle in "$BIN"/*.bundle; do
     fi
 done
 cp packaging/Info.plist "$APP/Contents/Info.plist"
+bash scripts/package_execution.sh "$APP"
 xcrun swift -module-cache-path "$SWIFTPM_MODULECACHE_OVERRIDE" scripts/generate_icon.swift "$PWD/.build"
 xcrun iconutil --convert icns .build/CodePath.iconset --output "$APP/Contents/Resources/CodePath.icns"
-codesign --force --deep --sign - "$APP"
+codesign --force --sign - "$APP"
 codesign --verify --deep --strict "$APP"
 echo "Собрано: $APP"
