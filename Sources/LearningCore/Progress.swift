@@ -70,7 +70,9 @@ public struct ProgressDocument: Codable, Sendable {
             var avatarCheck = onboarding.draft
             avatarCheck.nickname = "Аватар"
             try avatarCheck.validate()
-            if onboarding.step == .appearance || onboarding.completedVersion == 1 { try onboarding.draft.validate() }
+            if onboarding.step == .appearance || onboarding.step == .environment || onboarding.completedVersion == 1 {
+                try onboarding.draft.validate()
+            }
             if onboarding.completedVersion == 1 && profile == nil { throw StorageError.invalidData }
         }
         guard ["system", "light", "dark"].contains(preferences.theme),

@@ -2,10 +2,33 @@ import Foundation
 import Darwin
 import Testing
 import LearningCore
+import ExecutionSupport
 @testable import CodePathApp
 
 @Suite(.serialized) @MainActor
 struct AppModelTests {
+    @Test func readinessRequiresRealSuccessfulMatchingOutput() {
+        let valid = ExecutionResult(status: .success, stdout: "codelib-ready", exitCode: 0)
+        #expect(CodeExecutionController.readinessOutcome(result: valid, cancelled: false) == .ready)
+        #expect(CodeExecutionController.readinessOutcome(result: valid, cancelled: true) == .cancelled)
+        #expect(CodeExecutionController.readinessOutcome(result: nil, cancelled: false) == .failed)
+        #expect(CodeExecutionController.readinessOutcome(result: .init(status: .cancelled), cancelled: false) == .cancelled)
+        #expect(CodeExecutionController.readinessOutcome(result: .init(status: .success, stdout: "wrong", exitCode: 0), cancelled: false) == .failed)
+        #expect(CodeExecutionController.readinessOutcome(result: .init(status: .compileError, exitCode: 1), cancelled: false) == .failed)
+    }
+    @Test func onboardingEnvironmentStepPersistsAndCanBeSkipped() throws {
+        _ = try setup()
+        let model = AppModel()
+        var setup = OnboardingState()
+        setup.draft = LocalProfile(nickname: "Ученик", avatar: .leaf)
+        setup.step = .environment
+        #expect(model.saveOnboarding(setup))
+        let restored = AppModel()
+        #expect(restored.document.onboarding?.step == .environment)
+        #expect(restored.execution.readiness == .unchecked)
+        #expect(restored.saveOnboarding(setup, finish: true))
+        #expect(AppModel().document.profile?.nickname == "Ученик")
+    }
     @Test func executionRejectionNeverGradesOrMutatesProgress() throws {
         _ = try setup()
         let model = AppModel()

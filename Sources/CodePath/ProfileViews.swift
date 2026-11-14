@@ -188,7 +188,20 @@ struct OnboardingView: View {
                     HStack {
                         Button("Назад") { advance(to: .profile) }
                         Spacer()
+                        Button("Далее") { advance(to: .environment) }
+                            .buttonStyle(.borderedProminent).controlSize(.large)
+                    }
+                case .environment:
+                    Text("Подготовим ваш Mac к программированию").font(.largeTitle.bold())
+                    ExecutionReadinessView(execution: model.execution)
+                    HStack {
+                        Button("Назад") {
+                            if model.execution.readiness == .checking { model.execution.cancel() }
+                            advance(to: .appearance)
+                        }
+                        Spacer()
                         Button("Начать обучение") {
+                            if model.execution.readiness == .checking { model.execution.cancel() }
                             failed = !model.saveOnboarding(state, theme: theme, finish: true)
                         }.buttonStyle(.borderedProminent).controlSize(.large)
                     }

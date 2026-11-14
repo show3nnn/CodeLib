@@ -1,5 +1,16 @@
 """English authoring for compiler-extracted UI keys. Not the entire UI; developer-only."""
 TEXTS = {
+    "Подготовим ваш Mac к программированию": "Let's prepare your Mac for programming",
+    "Среда C++": "C++ environment",
+    "Компилятор уже входит в приложение. Проверка запускает небольшую программу в одноразовой изолированной среде; Xcode и Command Line Tools не нужны.": "The compiler is already included in the app. The check runs a small program in a disposable isolated environment; Xcode and Command Line Tools are not required.",
+    "Среда ещё не проверена. Можно продолжить обучение и проверить её позже в настройках.": "The environment has not been checked yet. You can continue learning and check it later in Settings.",
+    "Проверяем компиляцию и запуск…": "Checking compilation and execution…",
+    "Последняя проверка успешна: тестовая программа выполнена.": "The last check succeeded: the test program ran.",
+    "Не удалось проверить среду. Убедитесь, что используете полное приложение на Mac с Apple silicon и доступной виртуализацией, затем повторите проверку.": "The environment could not be checked. Make sure you are using the complete app on a Mac with Apple silicon and available virtualization, then try again.",
+    "Проверить среду": "Check environment",
+    "Остановить проверку": "Stop check",
+    "Проверка отменена. Её можно повторить позже.": "The check was cancelled. You can try again later.",
+    "Проверка не изменяет учебный прогресс. Если её пропустить, задания и редактор останутся доступны.": "The check does not change learning progress. If you skip it, exercises and the editor remain available.",
     "    << \"Hello!\";": "    << \"Hello!\";",
     "  // Начни здесь": "  // Start here",
     "  std::cout": "  std::cout",

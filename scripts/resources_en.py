@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Reviewed source change: the 0.4.0 grading note was added and translated below.
-RELEASES_SHA256 = "22ce65790ea58b7d9bd8825b61fc2af751069da70394a88867ecfd7ef8ab972e"
+# Reviewed source change: the 0.5.0 environment-check note is translated below.
+RELEASES_SHA256 = "8b23bcd923d70aca3ba7c292d884fdb4bd84321dd90c2538395086ac78b5d624"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -19,6 +19,11 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.5.0": note("Checking the C++ environment",
+        "During setup you can check the bundled C++ environment and repeat the check later in Settings. The app compiles and runs a small program in a disposable isolated environment.",
+        {
+            "environment-check": ("Check without installing", "The compiler is included in the app: Xcode and Command Line Tools are not required. Success is shown only after the test program runs. You can stop or skip the check and continue learning."),
+        }),
     "0.4.0": note("Checking a solution against examples",
         "Code tasks can now be checked for real: codelib runs the program on the condition\\u2019s examples in the isolated environment and shows the result for each example. The task counts only when the output matches on every example; a successful run by itself still never completes it.",
         {

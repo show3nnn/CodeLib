@@ -55,4 +55,19 @@ struct ProfileTests {
         #expect(restored.exercises["future.stable.id"]?.draft == "")
         #expect(restored.schemaVersion == 1)
     }
+
+    @Test func environmentStepRequiresValidProfileAndPreservesLegacyData() throws {
+        var document = ProgressDocument()
+        document.exercises["future.id"] = ExerciseProgress()
+        document.exercises["future.id"]?.draft = ""
+        var setup = OnboardingState()
+        setup.step = .environment
+        document.onboarding = setup
+        #expect(throws: (any Error).self) { try document.validate() }
+        setup.draft = LocalProfile(nickname: "Анна")
+        document.onboarding = setup
+        let restored = try ProgressStore.decode(JSONEncoder().encode(document))
+        #expect(restored.onboarding?.step == .environment)
+        #expect(restored.exercises["future.id"]?.draft == "")
+    }
 }

@@ -60,6 +60,9 @@ struct SettingsView: View {
             EditProfileView(model: model, profile: model.document.profile ?? LocalProfile())
         }
         .disabled(model.storageError != nil)
+        .onDisappear {
+            if model.execution.readiness == .checking { model.execution.cancel() }
+        }
         .confirmationDialog("Удалить весь учебный прогресс?", isPresented: $confirmReset) {
             Button("Сбросить прогресс", role: .destructive) { model.reset() }
         } message: { Text("Ответы, черновики и настройки будут сброшены. Рекомендуем сначала экспортировать данные.") }
@@ -180,6 +183,9 @@ struct SettingsView: View {
 
     private var dataPane: some View {
         VStack(alignment: .leading, spacing: 20) {
+            Card {
+                ExecutionReadinessView(execution: model.execution)
+            }
             Card {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Ваши данные под вашим контролем", systemImage: "externaldrive.badge.checkmark").font(.headline)

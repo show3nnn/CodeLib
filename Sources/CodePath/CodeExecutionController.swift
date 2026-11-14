@@ -23,10 +23,20 @@ struct GradingCaseResult: Identifiable, Sendable, Equatable {
 
 @MainActor @Observable
 final class CodeExecutionController {
+    enum Readiness: Equatable {
+        case unchecked, checking, ready, failed, cancelled
+    }
+    static func readinessOutcome(result: ExecutionResult?, cancelled: Bool) -> Readiness {
+        if cancelled || result?.status == .cancelled { return .cancelled }
+        guard let result, result.status == .success, result.exitCode == 0,
+              result.stdout == "codelib-ready" else { return .failed }
+        return .ready
+    }
     enum State: Equatable {
         case idle, verifying, phase(ExecutionPhase), stopping, finished
     }
     private(set) var state: State = .idle
+    private(set) var readiness: Readiness = .unchecked
     private(set) var result: ExecutionResult?
     private(set) var failure: ExecutionFailure?
     private(set) var backendFailure: ExecutionBackendFailure?
@@ -63,6 +73,35 @@ final class CodeExecutionController {
             application: bundle.bundleURL
         )
         #endif
+    }
+
+    /// The same single slot and verified helper are used as for user programs.
+    /// A successful compiler invocation alone is not sufficient: check its output too.
+    @discardableResult
+    func checkReadiness() -> Bool {
+        guard task == nil else { return false }
+        let request = ExecutionRequest(source: "#include <iostream>\nint main() { std::cout << \"codelib-ready\"; }\n", stdin: "")
+        let assets: ExecutionAssets
+        do { assets = try Self.bundledAssets() }
+        catch {
+            readiness = .failed
+            return false
+        }
+        let cancellation = ExecutionCancellation()
+        self.cancellation = cancellation
+        jobID = request.id
+        readiness = .checking
+        state = .verifying
+        task = Task { [weak self] in
+            let outcome = await Task.detached(priority: .userInitiated) {
+                Result { try ExecutionProcess.run(request: request, assets: assets, cancellation: cancellation, onPhase: { _ in }) }
+            }.value
+            guard let self, self.jobID == request.id else { return }
+            let result = try? outcome.get()
+            self.readiness = Self.readinessOutcome(result: result, cancelled: cancellation.isCancelled)
+            self.finish()
+        }
+        return true
     }
 
     @discardableResult

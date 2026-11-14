@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "locale": "en",
   "resource": "releases",
-  "sourceSHA256": "22ce65790ea58b7d9bd8825b61fc2af751069da70394a88867ecfd7ef8ab972e",
+  "sourceSHA256": "8b23bcd923d70aca3ba7c292d884fdb4bd84321dd90c2538395086ac78b5d624",
   "status": "draft",
   "texts": {
     "release.0.1.0.feature.course.detail": "16 sections, 60 lessons and 272 tasks, including assessments and console projects.",
@@ -193,6 +193,10 @@
     "release.0.4.0.improvement.cb02bcbee7ad9e19cfdbee759c0e02aa8eb34a786a193db8042153d68d8146e5": "Self-review hints are clearer: running and checking against examples are different things.",
     "release.0.4.0.improvement.e6f706d65169ca6d75cc9fbb3b4e25bed3cdaf88433ccde220aa88b7da6097a3": "The first section\\u2019s text is updated: running a program is already available rather than \\u201ccoming later\\u201d.",
     "release.0.4.0.summary": "Code tasks can now be checked for real: codelib runs the program on the condition\\u2019s examples in the isolated environment and shows the result for each example. The task counts only when the output matches on every example; a successful run by itself still never completes it.",
-    "release.0.4.0.title": "Checking a solution against examples"
+    "release.0.4.0.title": "Checking a solution against examples",
+    "release.0.5.0.feature.environment-check.detail": "The compiler is included in the app: Xcode and Command Line Tools are not required. Success is shown only after the test program runs. You can stop or skip the check and continue learning.",
+    "release.0.5.0.feature.environment-check.title": "Check without installing",
+    "release.0.5.0.summary": "During setup you can check the bundled C++ environment and repeat the check later in Settings. The app compiles and runs a small program in a disposable isolated environment.",
+    "release.0.5.0.title": "Checking the C++ environment"
   }
 }

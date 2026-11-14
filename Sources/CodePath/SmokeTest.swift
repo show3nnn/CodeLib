@@ -45,6 +45,17 @@ enum SmokeTest {
                     }
                     if model.execution.isBusy { throw ContentError.invalid("Execution helper did not finish") }
                 }
+                check(model.execution.readiness == .unchecked, "Readiness starts unchecked")
+                check(model.execution.checkReadiness(), "Readiness starts using the execution slot")
+                check(!model.execution.run(exerciseID: first.id, source: code, stdin: ""), "Readiness owns the single execution slot")
+                try await waitForExecution()
+                check(model.execution.readiness == .ready, "Readiness compiles and runs a real isolated program")
+                check(try Data(contentsOf: model.dataURL) == before, "Readiness leaves progress and drafts unchanged")
+                check(model.execution.checkReadiness(), "Readiness can be retried")
+                model.execution.cancel()
+                try await waitForExecution()
+                check(model.execution.readiness == .cancelled, "Cancelled readiness does not report success")
+                check(try Data(contentsOf: model.dataURL) == before, "Cancelled readiness leaves progress unchanged")
                 model.runCode(stdin: "-7 -8\n")
                 check(model.execution.isBusy, "Run uses the real app execution controller")
                 check(!model.execution.run(exerciseID: first.id, source: code, stdin: "0 0"), "Second VM request is refused while the slot is occupied")

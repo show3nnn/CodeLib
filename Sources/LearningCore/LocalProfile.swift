@@ -62,7 +62,7 @@ public struct LocalProfile: Codable, Sendable, Equatable {
 }
 
 public struct OnboardingState: Codable, Sendable {
-    public enum Step: String, Codable, Sendable { case welcome, profile, appearance }
+    public enum Step: String, Codable, Sendable { case welcome, profile, appearance, environment }
     public var step: Step = .welcome
     public var draft: LocalProfile = .init()
     public var completedVersion = 0

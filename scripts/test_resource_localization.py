@@ -19,7 +19,7 @@ class ResourceTranslationTests(unittest.TestCase):
         return data, copy.deepcopy(author), fingerprint
 
     def test_complete_drafts_are_reproducible_and_not_promoted(self):
-        for resource, count in [("catalog", 10), ("releases", 189)]:
+        for resource, count in [("catalog", 10), ("releases", 193)]:
             data, author, fingerprint = self.fixture(resource)
             document = build(data, resource, author, fingerprint)
             self.assertEqual(len(document["texts"]), count)
