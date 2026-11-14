@@ -8,6 +8,16 @@ public struct LocalizedContent: Sendable {
     public let catalog: CourseCatalog
     public let history: ReleaseHistory
 
+    /// Persist the choice only after this entire content snapshot has loaded.
+    /// This does not validate UI strings or authorize exposing a language:
+    /// callers must check every presentation resource and resolve pending
+    /// edits before calling it, then publish only after the write succeeds.
+    @discardableResult
+    public func commitContentSelection(to store: ProgressStore) throws -> Self {
+        try store.update { $0.preferences.preferredLanguage = locale.rawValue }
+        return self
+    }
+
     public static func load(locale: CourseLocale, courseData: Data, catalogData: Data, historyData: Data,
                             courseTranslation: CourseTranslation? = nil,
                             catalogTranslation: ResourceTranslation? = nil,

@@ -61,11 +61,16 @@ struct LocalizedContentTests {
         }
         let store = try ProgressStore(url: root.appendingPathComponent(".build/test-data/snapshot-\(UUID().uuidString)/progress.json"))
         try store.update { document in
+            document.profile = LocalProfile(nickname: "Пилот", avatar: .star)
             var progress = ExerciseProgress()
             progress.draft = ""
             progress.answer = "answer"
             document.exercises["unknown.exercise"] = progress
             document.lastExerciseID = "unknown.exercise"
+            document.lessonPositions = ["unknown.lesson": "unknown.exercise"]
+            var achievements = AchievementState()
+            achievements.awards["unknown.award"] = AchievementAward(recognizedAt: Date(timeIntervalSince1970: 1000), historical: true)
+            document.achievements = achievements
         }
         let saved = try Data(contentsOf: store.url)
         let english = try LocalizedContent.load(locale: .english, courseData: course, catalogData: catalog, historyData: history,
@@ -81,5 +86,35 @@ struct LocalizedContentTests {
         #expect(reopened.exercises["unknown.exercise"]?.draft == "")
         #expect(reopened.exercises["unknown.exercise"]?.answer == "answer")
         #expect(reopened.lastExerciseID == "unknown.exercise")
+
+        // Simulate the future caller's ordering without enabling any UI language.
+        // Assignment occurs only after both preparation and persistence succeed.
+        var active = try russian.commitContentSelection(to: store)
+        let russianBytes = try Data(contentsOf: store.url)
+        #expect(throws: ContentError.translationNotReady(missing: 0, unknown: 0)) {
+            active = try LocalizedContent.load(locale: .english, courseData: course, catalogData: catalog, historyData: history,
+                courseTranslation: courseDraft, catalogTranslation: catalogDraft, historyTranslation: historyDraft)
+                .commitContentSelection(to: store)
+        }
+        #expect(active.locale == .russian)
+        #expect(try Data(contentsOf: store.url) == russianBytes)
+        active = try english.commitContentSelection(to: store)
+        #expect(active.locale == .english)
+        #expect(try ProgressStore(url: store.url).document.preferences.preferredLanguage == "en")
+        let staleStore = try ProgressStore(url: store.url)
+        active = try russian.commitContentSelection(to: store)
+        let currentBytes = try Data(contentsOf: store.url)
+        #expect(throws: StorageError.conflictingRevision) {
+            active = try english.commitContentSelection(to: staleStore)
+        }
+        #expect(active.locale == .russian)
+        #expect(try Data(contentsOf: store.url) == currentBytes)
+        let final = try ProgressStore(url: store.url).document
+        #expect(final.preferences.preferredLanguage == "ru")
+        #expect(final.profile == reopened.profile)
+        #expect(final.lessonPositions == reopened.lessonPositions)
+        #expect(final.achievements?.awards["unknown.award"]?.recognizedAt == Date(timeIntervalSince1970: 1000))
+        #expect(final.exercises["unknown.exercise"]?.draft == "")
+        #expect(final.exercises["unknown.exercise"]?.answer == "answer")
     }
 }
