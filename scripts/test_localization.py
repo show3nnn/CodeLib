@@ -186,6 +186,17 @@ class LocalizationAuthoringTests(unittest.TestCase):
         self.assertIn("make_unique<int>(n)", exercise["solution"])
         self.assertIn(("4", "4 1"), [(case["input"], case["output"]) for case in exercise["testCases"]])
 
+    def test_route_cost_formula_is_given_in_both_languages(self):
+        texts, _ = generator.build_texts(self.course, self.source)
+        exercises = {exercise["id"]: exercise for section in self.course["sections"] for lesson in section["lessons"]
+                     for exercise in lesson["exercises"]}
+        for exercise_id in ("cpp.mission.count", "cpp.mission.first"):
+            with self.subTest(exercise=exercise_id):
+                exercise = exercises[exercise_id]
+                self.assertIn("distance*rate", exercise["prompt"])
+                self.assertIn("distance*rate", texts[f"{exercise_id}.prompt"])
+                self.assertIn("return distance * rate;", exercise["solution"])
+
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):
             with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)

@@ -1,5 +1,5 @@
 """English draft of the full data/input section; not an available app language."""
-SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
+SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
 SECTION_ID = "cpp.section.data"
 
 ENTITIES = {

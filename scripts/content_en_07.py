@@ -1,7 +1,7 @@
 """Complete text-field draft: characters and strings. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
+SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
 SECTION_ID = "cpp.section.text"
 ENTITIES = {
     SECTION_ID: dict(title="7. Characters and strings", summary="Read messages, process ASCII and distinguish bytes from letters."),

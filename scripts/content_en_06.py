@@ -1,7 +1,7 @@
 """Complete text-field draft: functions and decomposition. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
+SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
 SECTION_ID = "cpp.section.functions"
 ENTITIES = {
     SECTION_ID: dict(title="6. Functions and decomposition", summary="Give actions names, separate responsibilities and build a mini-project."),
@@ -54,12 +54,12 @@ ENTITIES = {
     "cpp.mission.cost": task("Route estimate", "Write int cost(int distance,int rate,int fee), returning distance*rate+fee. main reads distance,rate,fee (0–100) and prints the result.",
         ["The fixed fee is added once.", "All data comes through three parameters; cin is needed only in main."], "The function works with any caller because it does not depend on how input is obtained."),
     "cpp.mission.composition": output("Composing calls", ["The result of the inner call is needed first.", "add(2,3) gives 5, which is passed to twice."], "The outer call receives the inner call's value, not the expression's text."),
-    "cpp.mission.count": task("Affordable trips", "Input: budget (0–10000), n (0–100), then n pairs distance,rate (0–100). Write int cost(int distance,int rate). Print the number of trips whose cost is ≤ budget. Evaluate each trip independently; the budget is not spent.",
+    "cpp.mission.count": task("Affordable trips", "Input: budget (0–10000), n (0–100), then n pairs distance,rate (0–100). Write int cost(int distance,int rate), returning distance*rate. Print the number of trips whose cost is ≤ budget. Evaluate each trip independently; the budget is not spent.",
         ["Do not subtract costs from the budget: the trips are independent.", "For each pair, compare the result of cost with the original budget."], "Independent evaluation is an important requirement. It changes the algorithm compared with buying all trips together."),
     "cpp.mission.separation": task("Who should read the input?", "The function cost(distance, rate) is needed by both a screen and tests. Why is it better not to read std::cin inside it?",
         ["This is about separating responsibilities, not a language restriction.", "A test can call the function with specific arguments without preparing a stream."], "Separating computation from external interaction also benefits the app's independent learning core.",
         {"Так её результат зависит только от явно переданных данных и легче проверяется": "Its result then depends only on explicitly passed data and is easier to test", "В функциях запрещён std::cin": "std::cin is forbidden inside functions", "Без std::cin вычисления всегда быстрее": "Computations are always faster without std::cin"}),
-    "cpp.mission.first": task("The first suitable route", "Input: budget (0–10000), n (0–100), then n pairs distance,rate (0–100). Use cost to find the number of the first route whose cost is ≤ budget (numbered from 1). If none is suitable, print 0. Read all pairs.",
+    "cpp.mission.first": task("The first suitable route", "Input: budget (0–10000), n (0–100), then n pairs distance,rate (0–100). Write int cost(int distance,int rate), returning distance*rate. Use cost to find the number of the first route whose cost is ≤ budget (numbered from 1). If none is suitable, print 0. Read all pairs.",
         ["Do not overwrite the number after the first success.", "Update found only when found==0; continue reading the remaining pairs."], "Zero is outside the valid route numbers 1–n, so it serves as an explicit 'not found' marker."),
 }
 SKILLS = {"функции": "functions", "параметры": "parameters", "return": "return", "область видимости": "scope", "передача по значению": "pass by value", "объявления": "declarations", "перегрузка": "overloading", "контракты": "contracts", "предикаты": "predicates", "мини-проект": "mini-project", "декомпозиция": "decomposition", "поиск": "search"}
