@@ -501,10 +501,28 @@ enum SmokeTest {
             let russian = try Course.bundled()
             let russianCatalog = try CourseCatalog.bundled(availableCourseIDs: [russian.id])
             let exercise = russian.exercises[0]
+            guard let originalChoice = russian.exercises.first(where: { $0.kind == .choice }),
+                  let originalAnswer = originalChoice.answer else {
+                throw ContentError.invalid("Russian preview fixture has no canonical choice")
+            }
             var setup = OnboardingState()
             setup.draft = LocalProfile(nickname: "Пилот 👩🏽‍💻", avatar: .leaf)
             check(model.saveOnboarding(setup, finish: true), "Isolated profile is saved")
             model.updateState(exercise.id) { $0.draft = ""; $0.answer = "literal %@"; $0.hintLevel = 1 }
+            let awardDate = Date(timeIntervalSince1970: 1_700_000_000)
+            model.update {
+                var choiceState = ExerciseProgress()
+                choiceState.answer = originalAnswer
+                choiceState.completion = .automatic
+                choiceState.attempts = 2
+                $0.exercises[originalChoice.id] = choiceState
+                var future = ExerciseProgress()
+                future.draft = "// будущий черновик 👩🏽‍💻"
+                $0.exercises["future.preview.exercise"] = future
+                $0.lessonPositions = ["future.preview.lesson": "future.preview.exercise"]
+                if $0.achievements == nil { $0.achievements = AchievementState() }
+                $0.achievements?.awards["future.preview.award"] = AchievementAward(recognizedAt: awardDate, historical: true)
+            }
             let before = try Data(contentsOf: model.dataURL)
             await settle()
             menuBeforePreview = menuTitles(in: NSApp.mainMenu)
@@ -553,6 +571,52 @@ enum SmokeTest {
                   "Empty draft and literal answer survive preview")
             check(!model.selectContentLanguage(.russian), "Preview cannot commit a language selection")
             check(try Data(contentsOf: model.dataURL) == before, "Preview does not write progress")
+
+            // Exercise the same validated import/export methods used by native
+            // panels, but only in a new isolated data directory.
+            let fixtureRoot = URL(fileURLWithPath: isolatedData, isDirectory: true)
+            let exportURL = fixtureRoot.appendingPathComponent("preview-export.json")
+            try model.exportProgress(to: exportURL)
+            let importedRoot = fixtureRoot.appendingPathComponent("imported-progress", isDirectory: true)
+            setenv("CODEPATH_DATA_DIR", importedRoot.path, 1)
+            let imported = AppModel()
+            setenv("CODEPATH_DATA_DIR", isolatedData, 1)
+            try imported.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
+            imported.importProgress(from: exportURL)
+            check(imported.message == nil && imported.storageError == nil && !imported.hasUnsavedChanges,
+                  "English preview imports exported progress")
+            check(imported.document.profile == model.document.profile && imported.document.profile?.id != nil,
+                  "Export and import preserve profile identity")
+            check(imported.state(for: exercise.id).draft == "" && imported.state(for: exercise.id).answer == "literal %@" &&
+                  imported.state(for: exercise.id).hintLevel == 1,
+                  "Export and import preserve empty draft, literal answer and hint")
+            check(imported.state(for: originalChoice.id).answer == originalAnswer &&
+                  imported.state(for: originalChoice.id).completion == .automatic &&
+                  AnswerChecker.check(imported.state(for: originalChoice.id).answer, for: choice) == true,
+                  "Imported canonical choice remains correctly checked in English")
+            check(imported.document.lessonPositions?["future.preview.lesson"] == "future.preview.exercise" &&
+                  imported.state(for: "future.preview.exercise").draft == "// будущий черновик 👩🏽‍💻" &&
+                  imported.document.achievements?.awards["future.preview.award"]?.recognizedAt == awardDate &&
+                  imported.document.achievements?.awards["future.preview.award"]?.historical == true,
+                  "Export and import preserve unknown positions, draft and award")
+            check(imported.document.preferences.preferredLanguage == model.document.preferences.preferredLanguage,
+                  "Export and import do not invent a language preference")
+            let importedBytes = try Data(contentsOf: imported.dataURL)
+            let invalidURL = fixtureRoot.appendingPathComponent("invalid-preview-import.json")
+            try Data("{invalid".utf8).write(to: invalidURL)
+            imported.importProgress(from: invalidURL)
+            let afterInvalidImport = try Data(contentsOf: imported.dataURL)
+            check(imported.message != nil && afterInvalidImport == importedBytes,
+                  "Invalid English-preview import leaves imported progress untouched")
+            setenv("CODEPATH_DATA_DIR", importedRoot.path, 1)
+            let reopenedImport = AppModel()
+            setenv("CODEPATH_DATA_DIR", isolatedData, 1)
+            check(reopenedImport.document.profile == model.document.profile &&
+                  reopenedImport.state(for: exercise.id).draft == "" &&
+                  reopenedImport.state(for: originalChoice.id).answer == originalAnswer &&
+                  reopenedImport.document.achievements?.awards["future.preview.award"]?.recognizedAt == awardDate,
+                  "Imported progress survives reopening")
+            check(try Data(contentsOf: model.dataURL) == before, "Export and separate import leave original progress untouched")
 
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1000, height: 760),
                                   styleMask: [.titled, .resizable], backing: .buffered, defer: false)
