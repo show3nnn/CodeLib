@@ -1,7 +1,7 @@
 """Complete text-field draft: ownership and RAII. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
+SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
 SECTION_ID = "cpp.section.ownership"
 ENTITIES = {
     SECTION_ID: dict(title="11. Ownership and RAII", summary="Understand dynamic memory, but prefer automatic resource management."),
@@ -29,7 +29,7 @@ ENTITIES = {
     "cpp.raii.manual": task("Two owners of release", "Should you write delete p.get() for an int that unique_ptr p still owns?",
         ["get provides the address without relinquishing ownership.", "unique_ptr will later try to release its object too."], "Manual release of a managed resource must not duplicate its owner's responsibility.",
         {"Нет, это нарушает модель владения и может привести к повторному освобождению": "No, it violates the ownership model and can cause a double deletion", "Да, иначе память всегда утечёт": "Yes, otherwise the memory always leaks", "Да, но только для отрицательных чисел": "Yes, but only for negative numbers"}),
-    "cpp.raii.reset": task("End a resource explicitly", "Input: n (−100–100). Create a unique_ptr<int>, copy its value into saved, call reset(), then print saved and the result of p==nullptr.",
+    "cpp.raii.reset": task("End a resource explicitly", "Input: n (−100–100). Create p as a unique_ptr<int> owning an int initialized to n. Copy its value into saved, call reset(), then print saved and the result of p==nullptr.",
         ["Copy the value before reset.", "After reset, you may compare p with nullptr but must not read *p."], "An owner can release its resource before its block ends."),
     "cpp.invalidation": lesson("When addresses become stale", "Do not keep access to an element across a structural container change.",
         "vector may reallocate memory as it grows. If push_back causes reallocation, previous pointers, references and iterators to its elements are invalidated. Without reallocation, push_back preserves references to existing elements, but the previous end changes. Thus, 'it always breaks everything' is inaccurate too.\n\nA simple safe strategy is to save an index, append, then obtain the element again using that index, if it still denotes the intended record. reserve sets capacity without creating elements; resize changes size and creates or removes elements. Erasing may shift records, so an index alone is not a universal stable ID. This app associates learning progress with stable IDs, not array positions.",

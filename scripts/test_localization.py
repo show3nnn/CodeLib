@@ -177,6 +177,15 @@ class LocalizationAuthoringTests(unittest.TestCase):
                                 self.assertIn(output, texts[f'{exercise["id"]}.prompt'])
         self.assertGreater(checked, 0)
 
+    def test_raii_reset_prompt_identifies_owned_input_value(self):
+        exercise = next(exercise for section in self.course["sections"] for lesson in section["lessons"]
+                        for exercise in lesson["exercises"] if exercise["id"] == "cpp.raii.reset")
+        texts, _ = generator.build_texts(self.course, self.source)
+        self.assertIn("int со значением n", exercise["prompt"])
+        self.assertIn("int initialized to n", texts["cpp.raii.reset.prompt"])
+        self.assertIn("make_unique<int>(n)", exercise["solution"])
+        self.assertIn(("4", "4 1"), [(case["input"], case["output"]) for case in exercise["testCases"]])
+
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):
             with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)

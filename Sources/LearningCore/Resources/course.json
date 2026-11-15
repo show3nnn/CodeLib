@@ -7736,7 +7736,7 @@
               "id": "cpp.raii.reset",
               "title": "Явное завершение ресурса",
               "kind": "code",
-              "prompt": "Ввод: n (−100…100). Создайте unique_ptr<int>, скопируйте его значение в saved, вызовите reset(), выведите saved и результат p==nullptr.",
+              "prompt": "Ввод: n (−100…100). Создайте p как unique_ptr<int>, владеющий int со значением n. Скопируйте значение в saved, вызовите reset(), выведите saved и результат p==nullptr.",
               "starter": "#include <iostream>\n#include <memory>\n\nint main() {\n    // TODO\n}\n",
               "solution": "#include <iostream>\n#include <memory>\n\nint main() {\n    int n = 0;\n    std::cin >> n;\n    auto p = std::make_unique<int>(n);\n    int saved = *p;\n    p.reset();\n    std::cout << saved << \" \" << (p == nullptr);\n}\n",
               "answer": null,

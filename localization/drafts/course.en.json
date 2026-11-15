@@ -2,7 +2,7 @@
   "courseID": "cpp-foundations",
   "formatVersion": 1,
   "locale": "en",
-  "sourceSHA256": "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac",
+  "sourceSHA256": "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738",
   "status": "draft",
   "texts": {
     "cpp-foundations.summary": "A hands-on C++17 course: from your first program to containers, memory, objects and console projects. Reference solutions are also checked in C++20.",
@@ -1959,7 +1959,7 @@
     "cpp.raii.reset.explanation": "An owner can release its resource before its block ends.",
     "cpp.raii.reset.hint.1": "Copy the value before reset.",
     "cpp.raii.reset.hint.2": "After reset, you may compare p with nullptr but must not read *p.",
-    "cpp.raii.reset.prompt": "Input: n (−100–100). Create a unique_ptr<int>, copy its value into saved, call reset(), then print saved and the result of p==nullptr.",
+    "cpp.raii.reset.prompt": "Input: n (−100–100). Create p as a unique_ptr<int> owning an int initialized to n. Copy its value into saved, call reset(), then print saved and the result of p==nullptr.",
     "cpp.raii.reset.skill.683a62ce15fbabb1ac867022e56e6e4f4f581762d77c3abb2f8dc8b165b3b1b9": "move",
     "cpp.raii.reset.skill.764e83303f97bbff7fc047a17c1f2224588f2dd563e9431adeb9e63863fc4f61": "RAII",
     "cpp.raii.reset.skill.fa246323c0bccfcbe9c29621fea98f10a830527e0ea884f696ba11f234de92c6": "unique_ptr",

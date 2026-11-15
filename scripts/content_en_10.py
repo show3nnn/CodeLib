@@ -1,7 +1,7 @@
 """Complete text-field draft: references, pointers and lifetime. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
+SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
 SECTION_ID = "cpp.section.memory"
 ENTITIES = {
     SECTION_ID: dict(title="10. References, pointers and lifetime", summary="Distinguish an object, a name and access to a living object."),

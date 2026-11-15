@@ -1,7 +1,7 @@
 """Complete text-field draft: associative containers, files and errors. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "3e64532482e4897d937021bdd71f710144bd38f8bb58f7cc77cf708bd811ecac"
+SOURCE_SHA256 = "0d885fd09e7283998cc71c3b2efbc284e7e29578f5db14ebc26107490dd09738"
 SECTION_ID = "cpp.section.datafiles"
 ENTITIES = {
     SECTION_ID: dict(title="14. Containers, files and errors", summary="Move from sequences to maps and reliable input."),
