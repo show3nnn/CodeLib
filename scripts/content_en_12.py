@@ -1,7 +1,7 @@
 """Complete text-field draft: structures and classes. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
+SOURCE_SHA256 = "372257186edab31a608d4b6cc4d6268e99aad05d245e1aa636e463535d5c1c2c"
 SECTION_ID = "cpp.section.objects"
 ENTITIES = {
     SECTION_ID: dict(title="12. Structures and classes", summary="Combine data and operations while keeping clear state rules."),
@@ -22,14 +22,14 @@ ENTITIES = {
         "A method is a function called on an object: counter.add();. Inside a method, that object's fields are accessible by name. The method int value() const promises not to modify the object's ordinary state through this and can be called on a const object. For our simple classes, this is an enforceable read-only restriction.\n\nIn class, fields and methods are private by default. A public: section exposes the interface. Private fields cannot be read directly from main; access goes through methods. This is not secrecy against an attacker, but a language boundary that preserves state rules. Initial field values protect against accidental uninitialized state.",
         "A const method does not promise the absence of every possible side effect throughout the program: mutable fields, external resources and other access paths exist. In this class, value only reads count_. Make specific claims without overstating the keyword's meaning.",
         "Methods modify or read a particular object's state. const on a reading method makes the intention explicit."),
-    "cpp.methods.counter": task("Landing counter", "Create Counter with private int count_=0, public add() and value() const. Input: n (0–100). Call add n times and print value.",
+    "cpp.methods.counter": task("Landing counter", "Create Counter with private int count_=0, public add() and value() const. The add method increases count_ by 1, and value returns it. Input: n (0–100). Call add n times and print value.",
         ["main must not access count_ directly.", "Public methods manage state and return the observable value."], "The class separates the counter's representation from operations on it."),
     "cpp.methods.points": task("Sum fields with a method", "Create struct Pair with x,y and the method int sum() const. Input: x,y (−100–100). Print the result of sum.",
         ["A struct's fields are public by default.", "Inside the method, return x+y accesses the current object's fields."], "Methods are allowed in struct too."),
     "cpp.methods.constmethod": task("Reading a const object", "Why mark a simple reading method value() as const?",
         ["const and constexpr are not the same.", "This restricts access to the object's state."], "Both the caller and compiler can see the read-only contract.",
         {"Чтобы разрешить его вызов у const-объекта и запретить обычное изменение его полей через этот метод": "To allow calls on a const object and prohibit ordinary modification of its fields through this method", "Чтобы результат всегда вычислялся при компиляции": "To ensure the result is always computed at compile time", "Чтобы метод мог вызываться только один раз": "To allow the method to be called only once"}),
-    "cpp.methods.two": task("Independent counters", "Use Counter with add and value. Input: a,b (0–100). Create two Counters, increment the first a times and the second b times, and print their values separated by a space.",
+    "cpp.methods.two": task("Independent counters", "Use Counter with an initial value of 0: add increases the counter by 1, and value returns it. Input: a,b (0–100). Create two Counters, increment the first a times and the second b times, and print their values separated by a space.",
         ["Fields belong to objects, not a single global counter.", "Call the method on the appropriate object name."], "One type defines the rules for many independent states."),
     "cpp.constructors": lesson("Constructors and invariants", "Create an object in a valid state from the start.",
         "A constructor has the type's name and no return type: Meter(int start) : value_(start) {}. The list after the colon initializes fields before the constructor body runs. This is not an ordinary method call after creation. Fields are initialized in their declaration order in the class, not the list's order.\n\nAn invariant is a rule for valid state. For example, a battery's charge is always 0–100. A constructor can clamp the starting charge, and charge adds energy with a limit of 100. Private fields prevent main from bypassing these methods through accidental assignment. explicit on a single-argument constructor prevents unwanted implicit conversion; direct construction Battery b(start) remains valid.",

@@ -197,6 +197,22 @@ class LocalizationAuthoringTests(unittest.TestCase):
                 self.assertIn("distance*rate", texts[f"{exercise_id}.prompt"])
                 self.assertIn("return distance * rate;", exercise["solution"])
 
+    def test_counter_and_namespace_contracts_match_solutions(self):
+        texts, _ = generator.build_texts(self.course, self.source)
+        exercises = {exercise["id"]: exercise for section in self.course["sections"] for lesson in section["lessons"]
+                     for exercise in lesson["exercises"]}
+        for exercise_id in ("cpp.methods.counter", "cpp.methods.two"):
+            with self.subTest(exercise=exercise_id):
+                exercise = exercises[exercise_id]
+                self.assertIn("на 1", exercise["prompt"])
+                self.assertIn("by 1", texts[f"{exercise_id}.prompt"])
+                self.assertIn("++count_", exercise["solution"])
+                self.assertIn("return count_", exercise["solution"])
+        exercise = exercises["cpp.translation.namespace"]
+        self.assertIn("n*2", exercise["prompt"])
+        self.assertIn("n*2", texts["cpp.translation.namespace.prompt"])
+        self.assertIn("return n * 2;", exercise["solution"])
+
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):
             with self.assertRaises(ValueError): generator.build_texts(self.course, self.source)

@@ -1,7 +1,7 @@
 """Complete text-field draft: university review and capstone. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
+SOURCE_SHA256 = "372257186edab31a608d4b6cc4d6268e99aad05d245e1aa636e463535d5c1c2c"
 SECTION_ID = "cpp.section.final"
 ENTITIES = {
     SECTION_ID: dict(title="16. University review", summary="Check explanations, tests and the capstone project."),
@@ -11,7 +11,7 @@ ENTITIES = {
         "A declaration is an interface; a definition is an implementation. A successful build does not replace requirements testing."),
     "cpp.translation.prototype": task("Restore the interface", "Write the declaration int shipping(int boxes); before main and the definition after main. shipping returns 5+2*boxes. Input: boxes (0–100); output: the result.",
         ["A declaration alone is not enough for a complete program.", "The declaration and definition must have matching parameter and return types."], "A prototype makes the name known before the body, while the definition provides the implementation."),
-    "cpp.translation.namespace": task("Your own namespace", "Define namespace lab with int twice(int n). main reads n (−100–100), calls lab::twice and prints the result. Do not use a global using namespace directive.",
+    "cpp.translation.namespace": task("Your own namespace", "Define namespace lab with int twice(int n), returning n*2. main reads n (−100–100), calls lab::twice and prints the result. Do not use a global using namespace directive.",
         ["Write the namespace as namespace lab { ... }.", "A qualified call uses lab::twice."], "Qualification distinguishes identically named entities from different scopes."),
     "cpp.translation.linker": task("Where did the body go?", "A declared function is called, but no linked object file contains its ordinary definition. Which stage typically reports an unresolved symbol?",
         ["The declaration was enough to analyze the call.", "The call can no longer be connected to an implementation."], "This is a typical build-tool diagnostic, not a promise that every possible program violation is diagnosed.",

@@ -1,7 +1,7 @@
 """Complete text-field draft: standard algorithms. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "a5958d7dd0f3de0b71674c9e6bda0bcc492caee9a6fbc16bcb927baaaea5d79a"
+SOURCE_SHA256 = "372257186edab31a608d4b6cc4d6268e99aad05d245e1aa636e463535d5c1c2c"
 SECTION_ID = "cpp.section.algorithms"
 ENTITIES = {
     SECTION_ID: dict(title="9. Standard algorithms", summary="Iterators, searching, sorting and estimating costs."),
