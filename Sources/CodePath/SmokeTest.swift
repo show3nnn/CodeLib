@@ -567,6 +567,44 @@ enum SmokeTest {
             check(String(localized: failure.resource(locale: model.presentationLocale)) ==
                   "Import canceled; current data has been preserved: Another process is writing progress. Try saving again.",
                   "Nested error and context use the same English locale")
+            let reasons: [(StorageError, String, String)] = [
+                (.unsupportedVersion(7), "Версия данных 7 не поддерживается. Файл не изменён.",
+                 "Data version 7 is not supported. The file has not been changed."),
+                (.invalidData, "Файл прогресса повреждён или содержит недопустимые значения. Файл не изменён.",
+                 "The progress file is damaged or contains invalid values. The file has not been changed."),
+                (.conflictingRevision, "Данные изменены другим экземпляром приложения. Закройте и откройте codelib снова.",
+                 "Another instance of the app has changed the data. Close and reopen codelib."),
+                (.locked, "Другой процесс записывает прогресс. Повторите сохранение.",
+                 "Another process is writing progress. Try saving again."),
+                (.protectedExport, "Выберите другой файл экспорта: нельзя заменять рабочий прогресс, резервную копию или служебные файлы.",
+                 "Choose a different export file: you cannot replace active progress, its backup or internal files.")
+            ]
+            let operations: [(AppFailure.Operation, String, String)] = [
+                (.export, "Не удалось экспортировать: ", "Export failed: "),
+                (.importProgress, "Импорт отменён, текущие данные сохранены: ", "Import canceled; current data has been preserved: "),
+                (.reset, "Сброс не выполнен: ", "Reset failed: "),
+                (.restore, "Восстановление не выполнено: ", "Restore failed: ")
+            ]
+            for (reason, ruDetail, enDetail) in reasons {
+                for (operation, ruPrefix, enPrefix) in operations {
+                    let contextual = AppFailure(reason, operation: operation)
+                    check(String(localized: contextual.resource(locale: Locale(identifier: "ru"))) == ruPrefix + ruDetail,
+                          "Russian storage failure: \(reason), \(operation)")
+                    check(String(localized: contextual.resource(locale: Locale(identifier: "en"))) == enPrefix + enDetail,
+                          "English storage failure: \(reason), \(operation)")
+                }
+            }
+            let diagnosticLiteral = "opaque %@ · Пилот 👩🏽‍💻"
+            let opaqueFailure = AppFailure(ContentError.invalid(diagnosticLiteral), operation: .export)
+            check(String(localized: opaqueFailure.resource(locale: Locale(identifier: "en"))) == "Export failed: \(diagnosticLiteral)",
+                  "Opaque legacy diagnostic stays literal inside English context")
+            let systemFailure = AppFailure(NSError(domain: NSPOSIXErrorDomain, code: Int(EACCES),
+                                                    userInfo: [NSLocalizedDescriptionKey: "misleading %@"]),
+                                           operation: .importProgress)
+            check(String(localized: systemFailure.resource(locale: Locale(identifier: "en"))) ==
+                  "Import canceled; current data has been preserved: Access to the file was denied. Check permissions or choose another location." &&
+                  systemFailure.diagnostics?.contains("misleading %@") == true,
+                  "System error uses English domain-code summary while retaining opaque diagnostics")
             check(model.state(for: exercise.id).draft == "" && model.state(for: exercise.id).answer == "literal %@",
                   "Empty draft and literal answer survive preview")
             check(!model.selectContentLanguage(.russian), "Preview cannot commit a language selection")
