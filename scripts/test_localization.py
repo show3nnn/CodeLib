@@ -13,6 +13,14 @@ from localization_tools import source_texts
 
 NUMBER = re.compile(r"(?<![\w])[-−]?\d+(?:[.,]\d+)?(?![\w])")
 COMPARISON = re.compile(r"(?<![<>=!])(?:<=|>=|==|!=|≤|≥)(?![=<>])")
+# Narrow, recognizable syntax only. This is not a C++ lexer and intentionally
+# does not treat ordinary English words or paths as code.
+CPP_INLINE = {
+    "include": re.compile(r'#\s*include\s*[<"][\w./]+[>"]'),
+    "escape": re.compile(r'\\(?:\\|[ntr0"\'])'),
+    "member_call": re.compile(r"\b[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+\s*\("),
+    "standard": re.compile(r"\b(?:C\+\+17|C\+\+20)\b"),
+}
 
 
 def numeric_tokens(text):
@@ -21,6 +29,11 @@ def numeric_tokens(text):
 
 def comparison_tokens(text):
     return Counter({"≤": "<=", "≥": ">="}.get(value, value) for value in COMPARISON.findall(text))
+
+
+def inline_cpp_tokens(text):
+    return {kind: {re.sub(r"\s+", "", token) for token in pattern.findall(text)}
+            for kind, pattern in CPP_INLINE.items()}
 
 
 class LocalizationAuthoringTests(unittest.TestCase):
@@ -128,6 +141,41 @@ class LocalizationAuthoringTests(unittest.TestCase):
             if key.endswith((".theory", ".prompt", ".explanation", ".microscope", ".recap")) or ".hint." in key:
                 with self.subTest(field=key):
                     self.assertFalse(set(identifier.findall(original)) - set(identifier.findall(texts[key])))
+
+    def test_inline_cpp_markers_are_not_lost_in_translation(self):
+        # Presence only: reordered or added examples are allowed. No claim that
+        # the surrounding expression, runtime behavior or translation is correct.
+        texts, source = generator.build_texts(self.course, self.source)
+        for key, original in source.items():
+            if key.endswith((".theory", ".prompt", ".explanation", ".microscope", ".recap")) or ".hint." in key:
+                original_tokens = inline_cpp_tokens(original)
+                translated_tokens = inline_cpp_tokens(texts[key])
+                with self.subTest(field=key):
+                    for kind in CPP_INLINE:
+                        self.assertFalse(original_tokens[kind] - translated_tokens[kind], kind)
+
+    def test_inline_cpp_marker_guard_detects_changes(self):
+        original = inline_cpp_tokens(r'#include <vector>  vec.size()  \n  \\  C++20')
+        changed = inline_cpp_tokens(r'#include <string>  vec.empty()  \t  \\  C++17')
+        for kind in CPP_INLINE:
+            self.assertTrue(original[kind] - changed[kind], kind)
+        self.assertEqual(inline_cpp_tokens("# include <vector>  vec.size (")["include"], {"#include<vector>"})
+
+    def test_literal_fixture_output_mentioned_in_prompt_survives_translation(self):
+        # Compare only single-line fixture output explicitly present in the RU
+        # prompt. Short strings and multiline examples need human review.
+        texts, _ = generator.build_texts(self.course, self.source)
+        checked = 0
+        for section in self.course["sections"]:
+            for lesson in section["lessons"]:
+                for exercise in lesson["exercises"]:
+                    for fixture in exercise["testCases"]:
+                        output = fixture["output"]
+                        if len(output) >= 4 and "\n" not in output and "\r" not in output and output in exercise["prompt"]:
+                            checked += 1
+                            with self.subTest(exercise=exercise["id"], output=output):
+                                self.assertIn(output, texts[f'{exercise["id"]}.prompt'])
+        self.assertGreater(checked, 0)
 
     def test_duplicate_authors_and_protected_fields_are_rejected(self):
         with patch.object(generator, "AUTHORS", [*generator.AUTHORS, generator.AUTHORS[0]]):
