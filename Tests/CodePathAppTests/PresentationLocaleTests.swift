@@ -57,6 +57,21 @@ import Testing
         #expect(1.0.formatted(PresentationLocale.percent).contains("100"))
     }
 
+    @Test func explicitPresentationLocaleFlowsIntoResourcesDatesAndPercent() throws {
+        let english = Locale(identifier: "en_US")
+        let utc = try #require(TimeZone(secondsFromGMT: 0))
+        let instant = try #require(ISO8601DateFormatter().date(from: "2024-03-01T00:30:00Z"))
+        let resource: LocalizedStringResource = "Профиль"
+        #expect(PresentationLocale.resource(resource, locale: english).locale == english)
+        #expect(PresentationLocale.percent(locale: english).locale == english)
+        #expect(PresentationLocale.date(instant, timeZone: utc, locale: english) ==
+                instant.formatted(Date.FormatStyle(date: .abbreviated, time: .omitted, locale: english,
+                                                   calendar: Calendar(identifier: .gregorian), timeZone: utc)))
+        #expect(PresentationLocale.date(instant, timeZone: utc, locale: english) !=
+                PresentationLocale.date(instant, timeZone: utc))
+        #expect(PresentationLocale.locale.identifier == "ru")
+    }
+
     @Test func releaseDatesAreCalendarDaysAndUseTheRequestedLocale() {
         let english = Locale(identifier: "en_US")
         let russian = Locale(identifier: "ru_RU")

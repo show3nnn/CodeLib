@@ -95,7 +95,7 @@ struct SettingsView: View {
                         Spacer(minLength: 0)
                     }
                     if let date = profile.createdAt {
-                        Text("С вами с \(PresentationLocale.date(date))").font(.callout).foregroundStyle(.white.opacity(0.65))
+                        Text("С вами с \(PresentationLocale.date(date, locale: model.presentationLocale))").font(.callout).foregroundStyle(.white.opacity(0.65))
                     }
                     Button { editProfile = true } label: {
                         Label("Редактировать профиль", systemImage: "pencil").font(.callout.weight(.medium))
@@ -113,8 +113,8 @@ struct SettingsView: View {
                 let completed = model.document.completedCount(in: course)
                 let awards = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                 HStack(spacing: 14) {
-                    Metric(value: "\(completed)", label: PluralPresentation.metricLabel(.tasks, count: completed), icon: "checkmark.circle")
-                    Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
+                    Metric(value: "\(completed)", label: PluralPresentation.metricLabel(.tasks, count: completed, locale: model.presentationLocale), icon: "checkmark.circle", locale: model.presentationLocale)
+                    Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards, locale: model.presentationLocale), icon: "trophy", locale: model.presentationLocale)
                 }
                 HStack {
                     Button("Мой прогресс", systemImage: "chart.bar") { showMain(.progress) }

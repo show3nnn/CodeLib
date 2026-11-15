@@ -29,9 +29,9 @@ struct HomeView: View {
                     let awards = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                     courseHero(course)
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 14) {
-                        Metric(value: "\(completedTasks)", label: PluralPresentation.metricLabel(.tasks, count: completedTasks), icon: "checkmark.circle")
-                        Metric(value: "\(completedLessons)", label: PluralPresentation.metricLabel(.lessons, count: completedLessons), icon: "book.closed")
-                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
+                        Metric(value: "\(completedTasks)", label: PluralPresentation.metricLabel(.tasks, count: completedTasks, locale: model.presentationLocale), icon: "checkmark.circle", locale: model.presentationLocale)
+                        Metric(value: "\(completedLessons)", label: PluralPresentation.metricLabel(.lessons, count: completedLessons, locale: model.presentationLocale), icon: "book.closed", locale: model.presentationLocale)
+                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards, locale: model.presentationLocale), icon: "trophy", locale: model.presentationLocale)
                     }
                     HStack {
                         Text("Следующий шаг").font(.system(size: 21, weight: .bold)).tracking(-0.4)
@@ -47,7 +47,7 @@ struct HomeView: View {
                                     VStack(alignment: .leading, spacing: 6) {
                                         Text(lesson.title).font(.headline)
                                         Text(lesson.summary).font(.callout).foregroundStyle(.secondary).lineLimit(2)
-                                        Text(PluralPresentation.lessonTasks(lesson.exercises.count, minutes: lesson.minutes))
+                                        Text(PluralPresentation.lessonTasks(lesson.exercises.count, minutes: lesson.minutes, locale: model.presentationLocale))
                                             .font(.caption).foregroundStyle(.secondary)
                                     }
                                     Spacer(minLength: 0)
@@ -87,10 +87,10 @@ struct HomeView: View {
                     HStack {
                         Text("Прогресс курса").foregroundStyle(.white.opacity(0.65))
                         Spacer()
-                        Text(model.fraction, format: PresentationLocale.percent).foregroundStyle(.mint).monospacedDigit()
+                        Text(model.fraction, format: PresentationLocale.percent(locale: model.presentationLocale)).foregroundStyle(.mint).monospacedDigit()
                     }.font(.caption.weight(.medium))
                     ProgressView(value: model.fraction).tint(.mint)
-                    CourseCounts(course: course)
+                    CourseCounts(course: course, locale: model.presentationLocale)
                         .font(.caption).foregroundStyle(.white.opacity(0.55))
                 }
             }
@@ -154,6 +154,7 @@ struct Metric: View {
     let value: String
     let label: LocalizedStringResource
     let icon: String
+    var locale: Locale = PresentationLocale.locale
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 8) {
@@ -162,7 +163,7 @@ struct Metric: View {
                     Spacer()
                     Text(value).font(.system(size: 30, weight: .semibold, design: .rounded)).monospacedDigit()
                 }
-                Text(PresentationLocale.resource(label)).font(.caption).foregroundStyle(.secondary)
+                Text(PresentationLocale.resource(label, locale: locale)).font(.caption).foregroundStyle(.secondary)
             }
         }
     }
@@ -173,10 +174,11 @@ struct Metric: View {
 struct CourseCounts: View {
     let course: Course
     var slashes = false
+    var locale: Locale = PresentationLocale.locale
     var body: some View {
-        let sections = Text(PluralPresentation.courseUnit(.sections, count: course.sections.count))
-        let lessons = Text(PluralPresentation.courseUnit(.lessons, count: course.lessons.count))
-        let tasks = Text(PluralPresentation.courseUnit(.tasks, count: course.exercises.count))
+        let sections = Text(PluralPresentation.courseUnit(.sections, count: course.sections.count, locale: locale))
+        let lessons = Text(PluralPresentation.courseUnit(.lessons, count: course.lessons.count, locale: locale))
+        let tasks = Text(PluralPresentation.courseUnit(.tasks, count: course.exercises.count, locale: locale))
         if slashes {
             Text("\(sections)  /  \(lessons)  /  \(tasks)")
         } else {
@@ -234,7 +236,7 @@ struct CatalogView: View {
                         }
                         Text(model.course?.summary ?? "").foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                         if let course = model.course {
-                            CourseCounts(course: course, slashes: true)
+                            CourseCounts(course: course, slashes: true, locale: model.presentationLocale)
                                 .font(.caption.monospaced()).foregroundStyle(.secondary)
                         }
                         ViewThatFits(in: .horizontal) {
@@ -330,12 +332,12 @@ struct ProgressViewScreen: View {
                                     Circle().stroke(.green.opacity(0.1), lineWidth: 7)
                                     Circle().trim(from: 0, to: model.fraction).stroke(.green, style: StrokeStyle(lineWidth: 7, lineCap: .round))
                                         .rotationEffect(.degrees(-90))
-                                    Text(model.fraction, format: PresentationLocale.percent)
+                                    Text(model.fraction, format: PresentationLocale.percent(locale: model.presentationLocale))
                                         .font(.system(size: 21, weight: .semibold, design: .rounded)).monospacedDigit()
                                 }.frame(width: 88, height: 88)
                                     .accessibilityElement(children: .ignore)
                                     .accessibilityLabel("Прогресс курса")
-                                    .accessibilityValue(Text(model.fraction, format: PresentationLocale.percent))
+                                    .accessibilityValue(Text(model.fraction, format: PresentationLocale.percent(locale: model.presentationLocale)))
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("C++ · ваш путь").font(.caption.weight(.semibold)).foregroundStyle(.green)
                                     Text("\(finished.count) из \(course.exercises.count)")
@@ -355,7 +357,7 @@ struct ProgressViewScreen: View {
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .automatic }.count)", label: "проверено автоматически", icon: "checkmark.seal")
                         Metric(value: "\(finished.filter { model.state(for: $0.id).completion == .selfReviewed }.count)", label: "отмечено вами", icon: "person.crop.circle.badge.checkmark")
                         Metric(value: "\(course.exercises.count - finished.count)", label: "впереди", icon: "arrow.forward.circle")
-                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards), icon: "trophy")
+                        Metric(value: "\(awards)", label: PluralPresentation.metricLabel(.achievements, count: awards, locale: model.presentationLocale), icon: "trophy", locale: model.presentationLocale)
                     }
                     Text("Однозначные ответы и подходящие кодовые задания можно проверить автоматически. Самостоятельные отметки учитываются отдельно; запуск сам по себе задание не засчитывает.")
                         .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -368,7 +370,7 @@ struct ProgressViewScreen: View {
                                 Text("Первый урок")
                             }
                             if let date = model.document.lastStudyDate {
-                                Text("Последнее занятие: \(PresentationLocale.date(date, includeTime: true))").font(.callout).foregroundStyle(.secondary)
+                                Text("Последнее занятие: \(PresentationLocale.date(date, includeTime: true, locale: model.presentationLocale))").font(.callout).foregroundStyle(.secondary)
                             }
                             Button("Продолжить практику", systemImage: "arrow.right") { model.resume() }
                                 .buttonStyle(.borderedProminent).controlSize(.large)
@@ -439,11 +441,11 @@ struct ProgressViewScreen: View {
                                         }.frame(minHeight: 44, alignment: .top)
                                         ProgressView(value: Double(done), total: Double(tasks.count)).tint(.green)
                                         HStack {
-                                            Text(PluralPresentation.taskProgress(done, total: tasks.count))
+                                            Text(PluralPresentation.taskProgress(done, total: tasks.count, locale: model.presentationLocale))
                                             Spacer(minLength: 0)
                                             Text(PluralPresentation.topicProgress(.lessons,
                                                 done: section.lessons.filter { model.document.lessonCompleted($0) }.count,
-                                                total: section.lessons.count))
+                                                total: section.lessons.count, locale: model.presentationLocale))
                                         }.font(.caption).foregroundStyle(.secondary)
                                     }
                                 }.contentShape(RoundedRectangle(cornerRadius: 22))
@@ -456,12 +458,12 @@ struct ProgressViewScreen: View {
     }
 
     @ViewBuilder private func topicCounts(_ course: Course, completedLessons: Int) -> some View {
-        Label { Text(PluralPresentation.topicProgress(.lessons, done: completedLessons, total: course.lessons.count)) }
+        Label { Text(PluralPresentation.topicProgress(.lessons, done: completedLessons, total: course.lessons.count, locale: model.presentationLocale)) }
             icon: { Image(systemName: "book.closed") }
         Label {
             Text(PluralPresentation.topicProgress(.sections,
                 done: course.sections.filter { section in section.lessons.allSatisfy { model.document.lessonCompleted($0) } }.count,
-                total: course.sections.count))
+                total: course.sections.count, locale: model.presentationLocale))
         } icon: { Image(systemName: "square.stack") }
     }
 }

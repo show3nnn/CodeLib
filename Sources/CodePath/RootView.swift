@@ -80,10 +80,10 @@ struct RootView: View {
                             HStack {
                                 Text("ВАШ C++").font(.system(size: 10, weight: .bold)).tracking(1.5)
                                 Spacer()
-                                Text(model.fraction, format: PresentationLocale.percent).monospacedDigit()
+                                Text(model.fraction, format: PresentationLocale.percent(locale: model.presentationLocale)).monospacedDigit()
                             }.foregroundStyle(.secondary)
                             ProgressView(value: model.fraction).tint(.green)
-                            Text(PluralPresentation.taskProgress(model.document.completedCount(in: course), total: course.exercises.count))
+                            Text(PluralPresentation.taskProgress(model.document.completedCount(in: course), total: course.exercises.count, locale: model.presentationLocale))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }

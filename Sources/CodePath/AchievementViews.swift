@@ -85,9 +85,9 @@ struct AchievementCollectionView: View {
                                 if let earned {
                                     Group {
                                         if earned.historical {
-                                            Text("Учтено из прежнего прогресса · \(PresentationLocale.date(earned.recognizedAt))")
+                                            Text("Учтено из прежнего прогресса · \(PresentationLocale.date(earned.recognizedAt, locale: model.presentationLocale))")
                                         } else {
-                                            Text("Получено · \(PresentationLocale.date(earned.recognizedAt))")
+                                            Text("Получено · \(PresentationLocale.date(earned.recognizedAt, locale: model.presentationLocale))")
                                         }
                                     }.font(.caption).foregroundStyle(.secondary)
                                 } else if !hidden, let course = model.course {

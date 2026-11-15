@@ -11,7 +11,7 @@ struct CodePathApp: App {
     var body: some Scene {
         Window("codelib", id: "main") {
             RootView(model: model)
-                .environment(\.locale, PresentationLocale.locale)
+                .environment(\.locale, model.presentationLocale)
                 .tint(.green)
                 .preferredColorScheme(model.colorScheme)
                 .onAppear {
@@ -39,13 +39,13 @@ struct CodePathApp: App {
             }
         }
         Settings {
-            SettingsView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
+            SettingsView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }
         Window("О codelib", id: "about") {
-            AboutView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
+            AboutView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }.windowResizability(.contentSize)
         Window("История обновлений codelib", id: "release-history") {
-            ReleaseHistoryView(model: model).environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).tint(.green)
+            ReleaseHistoryView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }.defaultSize(width: 680, height: 720)
     }
 }

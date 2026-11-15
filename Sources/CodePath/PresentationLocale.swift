@@ -5,13 +5,14 @@ import Foundation
 enum PresentationLocale {
     static let locale = Locale(identifier: "ru")
 
-    static func resource(_ value: LocalizedStringResource) -> LocalizedStringResource {
+    static func resource(_ value: LocalizedStringResource, locale: Locale = PresentationLocale.locale) -> LocalizedStringResource {
         var result = value
         result.locale = locale
         return result
     }
 
-    static func date(_ value: Date, includeTime: Bool = false, timeZone: TimeZone = .current) -> String {
+    static func date(_ value: Date, includeTime: Bool = false, timeZone: TimeZone = .current,
+                     locale: Locale = PresentationLocale.locale) -> String {
         value.formatted(Date.FormatStyle(date: .abbreviated, time: includeTime ? .shortened : .omitted,
                                         locale: locale, calendar: Calendar(identifier: .gregorian), timeZone: timeZone))
     }
@@ -39,6 +40,10 @@ enum PresentationLocale {
     }
 
     static var percent: FloatingPointFormatStyle<Double>.Percent {
+        percent(locale: locale)
+    }
+
+    static func percent(locale: Locale) -> FloatingPointFormatStyle<Double>.Percent {
         .percent.precision(.fractionLength(0)).locale(locale)
     }
 }

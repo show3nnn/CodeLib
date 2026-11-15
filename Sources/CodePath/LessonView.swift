@@ -40,7 +40,7 @@ struct LessonView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(lesson.title).font(.system(size: 19, weight: .semibold)).tracking(-0.3)
                         Text(PluralPresentation.taskProgress(lesson.exercises.filter { model.document.completed($0.id) }.count,
-                                                             total: lesson.exercises.count, completed: true))
+                                                             total: lesson.exercises.count, completed: true, locale: model.presentationLocale))
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
