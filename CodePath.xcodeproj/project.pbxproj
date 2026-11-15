@@ -8,7 +8,7 @@
         A00000000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000010, A00000000000000000000011); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
         A00000000000000000000003 = {isa = PBXGroup; children = (A00000000000000000000006, A00000000000000000000031, A00000000000000000000023, A00000000000000000000004); sourceTree = "<group>";};
         A00000000000000000000004 = {isa = PBXGroup; children = (A00000000000000000000007, A00000000000000000000032); name = Products; sourceTree = "<group>";};
-        A00000000000000000000005 = {isa = PBXNativeTarget; buildConfigurationList = A00000000000000000000008; buildPhases = (A00000000000000000000009, A00000000000000000000012, A00000000000000000000013, A00000000000000000000043); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (A00000000000000000000006); name = CodePath; packageProductDependencies = (A00000000000000000000021, A00000000000000000000041); productName = CodePath; productReference = A00000000000000000000007; productType = "com.apple.product-type.application";};
+        A00000000000000000000005 = {isa = PBXNativeTarget; buildConfigurationList = A00000000000000000000008; buildPhases = (A00000000000000000000009, A00000000000000000000012, A00000000000000000000013, A00000000000000000000043, A00000000000000000000044); buildRules = (); dependencies = (); fileSystemSynchronizedGroups = (A00000000000000000000006); name = CodePath; packageProductDependencies = (A00000000000000000000021, A00000000000000000000041); productName = CodePath; productReference = A00000000000000000000007; productType = "com.apple.product-type.application";};
         A00000000000000000000006 = {isa = PBXFileSystemSynchronizedRootGroup; path = Sources/CodePath; sourceTree = "<group>";};
         A00000000000000000000007 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = codelib.app; sourceTree = BUILT_PRODUCTS_DIR;};
         A00000000000000000000008 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000014, A00000000000000000000015); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
@@ -38,6 +38,7 @@
         A00000000000000000000041 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000020; productName = ExecutionSupport;};
         A00000000000000000000042 = {isa = PBXBuildFile; productRef = A00000000000000000000041;};
         A00000000000000000000043 = {isa = PBXShellScriptBuildPhase; alwaysOutOfDate = 1; buildActionMask = 2147483647; files = (); inputPaths = (); name = "Package isolated execution"; outputPaths = (); runOnlyForDeploymentPostprocessing = 0; shellPath = /bin/bash; shellScript = "bash \"$SRCROOT/scripts/package_execution.sh\" \"$TARGET_BUILD_DIR/$WRAPPER_NAME\"";};
+        A00000000000000000000044 = {isa = PBXShellScriptBuildPhase; alwaysOutOfDate = 1; buildActionMask = 2147483647; files = (); inputPaths = (); name = "Check release localization"; outputPaths = (); runOnlyForDeploymentPostprocessing = 0; shellPath = /bin/bash; shellScript = "if [ \"$CONFIGURATION\" = \"Release\" ]; then\n    PYTHONDONTWRITEBYTECODE=1 python3 \"$SRCROOT/scripts/check_release_localization.py\" \"$TARGET_BUILD_DIR/$WRAPPER_NAME\"\nfi";};
     };
     rootObject = A00000000000000000000001;
 }
