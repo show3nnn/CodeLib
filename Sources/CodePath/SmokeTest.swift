@@ -480,6 +480,9 @@ enum SmokeTest {
     private static func localizationPreview(model: AppModel, directory: URL) async {
         var checks: [String] = []
         var failures: [String] = []
+        var menuBeforePreview: [String] = []
+        var menuDuringPreview: [String] = []
+        var menuAfterPreview: [String] = []
         func check(_ condition: Bool, _ name: String) {
             if condition { checks.append(name) } else { failures.append(name) }
         }
@@ -500,7 +503,10 @@ enum SmokeTest {
             check(model.saveOnboarding(setup, finish: true), "Isolated profile is saved")
             model.updateState(exercise.id) { $0.draft = ""; $0.answer = "literal %@"; $0.hintLevel = 1 }
             let before = try Data(contentsOf: model.dataURL)
+            menuBeforePreview = menuTitles(in: NSApp.mainMenu)
             try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
+            await settle()
+            menuDuringPreview = menuTitles(in: NSApp.mainMenu)
             check(model.presentationLocale.language.languageCode?.identifier == "en", "Preview uses explicit English locale")
             check(model.course?.lessons.first?.title == "Programs and main", "Preview projects English course")
             check(model.catalog?.entries.first?.title != russianCatalog.entries.first?.title,
@@ -590,14 +596,18 @@ enum SmokeTest {
                 check(try Data(contentsOf: onboardingModel.dataURL) == onboardingBytes,
                       "Onboarding preview does not write fixture: \(step.rawValue)")
             }
-            window.orderOut(nil)
             model.endEnglishSmokePreview()
+            await settle()
+            menuAfterPreview = menuTitles(in: NSApp.mainMenu)
+            window.orderOut(nil)
             check(model.presentationLocale == PresentationLocale.locale && model.course?.lessons.first?.title == russian.lessons.first?.title,
                   "Closing preview restores Russian content")
             check(try Data(contentsOf: model.dataURL) == before, "RU/EN preview round trip leaves progress unchanged")
         } catch { failures.append(String(describing: error)) }
         do {
-            let report: [String: Any] = ["checks": checks, "failures": failures, "developerOnly": true]
+            let report: [String: Any] = ["checks": checks, "failures": failures, "developerOnly": true,
+                                         "menuBeforePreview": menuBeforePreview, "menuDuringPreview": menuDuringPreview,
+                                         "menuAfterPreview": menuAfterPreview]
             try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
                 .write(to: directory.appendingPathComponent("localization-preview-report.json"), options: .atomic)
         } catch { failures.append(String(describing: error)) }
@@ -636,6 +646,11 @@ enum SmokeTest {
             if activateMenuItem(title, in: item.submenu) { return true }
         }
         return false
+    }
+
+    private static func menuTitles(in menu: NSMenu?) -> [String] {
+        guard let menu else { return [] }
+        return menu.items.flatMap { [$0.title] + menuTitles(in: $0.submenu) }
     }
 
     private static func snapshot(window: NSWindow, to url: URL) throws {

@@ -327,7 +327,7 @@
       "Sources/CodePath/ExecutionOutputView.swift:162"
     ],
     "Выйти без сохранения": [
-      "Sources/CodePath/CodePathApp.swift:82"
+      "Sources/CodePath/CodePathApp.swift:95"
     ],
     "Горы": [
       "Sources/CodePath/ProfileViews.swift:11"
@@ -439,7 +439,7 @@
       "Sources/CodePath/SettingsView.swift:44"
     ],
     "Изменения не сохранены": [
-      "Sources/CodePath/CodePathApp.swift:79"
+      "Sources/CodePath/CodePathApp.swift:92"
     ],
     "Измените запрос или фильтр состояния.": [
       "Sources/CodePath/DashboardViews.swift:308"
@@ -478,13 +478,13 @@
       "Sources/CodePath/ReleaseViews.swift:63"
     ],
     "История обновлений": [
-      "Sources/CodePath/CodePathApp.swift:28",
+      "Sources/CodePath/CodePathApp.swift:31",
       "Sources/CodePath/ReleaseViews.swift:33",
       "Sources/CodePath/ReleaseViews.swift:50",
       "Sources/CodePath/SettingsView.swift:231"
     ],
     "История обновлений codelib": [
-      "Sources/CodePath/CodePathApp.swift:47"
+      "Sources/CodePath/CodePathApp.swift:60"
     ],
     "История обновлений отсутствует": [
       "Sources/CodePath/ErrorPresentation.swift:135"
@@ -671,7 +671,7 @@
       "Sources/CodePath/ReleaseViews.swift:64"
     ],
     "Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные.": [
-      "Sources/CodePath/CodePathApp.swift:80"
+      "Sources/CodePath/CodePathApp.swift:93"
     ],
     "Не удалось запустить изолированную среду.": [
       "Sources/CodePath/ExecutionOutputView.swift:213"
@@ -742,8 +742,8 @@
       "Sources/CodePath/LessonView.swift:250"
     ],
     "О codelib": [
-      "Sources/CodePath/CodePathApp.swift:27",
-      "Sources/CodePath/CodePathApp.swift:44",
+      "Sources/CodePath/CodePathApp.swift:28",
+      "Sources/CodePath/CodePathApp.swift:57",
       "Sources/CodePath/SettingsView.swift:230"
     ],
     "Образы среды повреждены или изменены. Запуск заблокирован; пересоберите или восстановите приложение.": [
@@ -751,7 +751,7 @@
     ],
     "Обучение": [
       "Sources/CodePath/AppModel.swift:139",
-      "Sources/CodePath/CodePathApp.swift:33"
+      "Sources/CodePath/CodePathApp.swift:39"
     ],
     "Один понятный шаг. Ещё немного собственного кода.": [
       "Sources/CodePath/DashboardViews.swift:20"
@@ -769,7 +769,7 @@
       "Sources/CodePath/ExecutionReadinessView.swift:33"
     ],
     "Остаться": [
-      "Sources/CodePath/CodePathApp.swift:81"
+      "Sources/CodePath/CodePathApp.swift:94"
     ],
     "От первой строки к самостоятельному коду": [
       "Sources/CodePath/DashboardViews.swift:118"
@@ -968,7 +968,7 @@
       "Sources/CodePath/LessonView.swift:12"
     ],
     "Предыдущее задание": [
-      "Sources/CodePath/CodePathApp.swift:34"
+      "Sources/CodePath/CodePathApp.swift:41"
     ],
     "Прежние задания, ответы и черновики останутся на месте.": [
       "Sources/CodePath/ProfileViews.swift:169"
@@ -1059,7 +1059,7 @@
       "Sources/CodePath/DashboardViews.swift:452"
     ],
     "Продолжить обучение": [
-      "Sources/CodePath/CodePathApp.swift:31",
+      "Sources/CodePath/CodePathApp.swift:36",
       "Sources/CodePath/DashboardViews.swift:123",
       "Sources/CodePath/DashboardViews.swift:254",
       "Sources/CodePath/LessonView.swift:144"
@@ -1195,7 +1195,7 @@
       "Sources/CodePath/LessonView.swift:49"
     ],
     "Следующее задание": [
-      "Sources/CodePath/CodePathApp.swift:36"
+      "Sources/CodePath/CodePathApp.swift:45"
     ],
     "Следующий шаг": [
       "Sources/CodePath/DashboardViews.swift:37"
@@ -1219,7 +1219,7 @@
       "Sources/CodePath/ProfileViews.swift:137"
     ],
     "Сохранить изменения": [
-      "Sources/CodePath/CodePathApp.swift:38"
+      "Sources/CodePath/CodePathApp.swift:49"
     ],
     "Среда C++": [
       "Sources/CodePath/ExecutionReadinessView.swift:10"
@@ -1411,7 +1411,7 @@
     "Sources/CodePath/AvatarPhoto.swift": "4062b8de59455312b56fbf02057dc5f0b416c8558745e829e2b71e61b158e2d0",
     "Sources/CodePath/CodeEditor.swift": "58d9cb6ad0a49e3ab5146e11f9f18415aa11997e7fad3abb9ac2f59662ebd9c5",
     "Sources/CodePath/CodeExecutionController.swift": "e8b77163e1519e585d231882b3ef0cb6a49e8e83a84f31c00be0878386ee8399",
-    "Sources/CodePath/CodePathApp.swift": "21596c373dcfa7f3fb4639783c5e9b69588d9f2c4ada6d156767eacd41bec49e",
+    "Sources/CodePath/CodePathApp.swift": "b04a030181ac8acc1a46979c7c14ec7d2a16bc707f5b2caa6d81554cfec70552",
     "Sources/CodePath/DashboardViews.swift": "d7f50e56e2fb25d2dc43b812bf7a2f66a6e5fe86166a7a2692d941a8c3ab4fea",
     "Sources/CodePath/ErrorPresentation.swift": "94b46bcd1144d0b42d73e8ba171beb9460a6a609739680a0c6aaffe80fc37eee",
     "Sources/CodePath/ExecutionOutputView.swift": "07c266afc3d8e5021d28c67ac308836d1a7ae950e86a9bf76eed074f9abea97b",
@@ -1424,7 +1424,7 @@
     "Sources/CodePath/ReleaseViews.swift": "f30ea805aa3a87c00960a49ea0feaf9721fb3decbbecc8c75f32d6e2d280717b",
     "Sources/CodePath/RootView.swift": "a3425d2a2f542f0d36aa3f3f9ddcbaea17602baf56cbb2504e69d0f6ea875d43",
     "Sources/CodePath/SettingsView.swift": "0e77f0ff2240d3d54fe0ac32eb9534f4daa5e0d57a281fd9e99840d1bf52e2d2",
-    "Sources/CodePath/SmokeTest.swift": "c64038c775d27884f4d36ad78d6d5827078c559747e3c05ca596eb0c4ced2943",
+    "Sources/CodePath/SmokeTest.swift": "a3de8ccc1a7fa8af32b30da3e8152c9ffade9ff0123c399e7f2afeec37efd5e8",
     "Sources/CodePath/SyntaxColors.swift": "6f550340e4bce08f18df1840bec48dae7d4bd697f8ed2042dbbb3e2189bffe5a",
     "Sources/CodePath/WelcomeCodeView.swift": "bc83d4901e9ce9d41939fdf5aec76aea1b502495612f4adfeb0b7f4661ae4823"
   }

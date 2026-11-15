@@ -1892,7 +1892,7 @@
       }
     },
     "Выйти без сохранения": {
-      "comment": "Sources/CodePath/CodePathApp.swift:82",
+      "comment": "Sources/CodePath/CodePathApp.swift:95",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2540,7 +2540,7 @@
       }
     },
     "Изменения не сохранены": {
-      "comment": "Sources/CodePath/CodePathApp.swift:79",
+      "comment": "Sources/CodePath/CodePathApp.swift:92",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2774,7 +2774,7 @@
       }
     },
     "История обновлений": {
-      "comment": "Sources/CodePath/CodePathApp.swift:28; Sources/CodePath/ReleaseViews.swift:33; Sources/CodePath/ReleaseViews.swift:50; Sources/CodePath/SettingsView.swift:231",
+      "comment": "Sources/CodePath/CodePathApp.swift:31; Sources/CodePath/ReleaseViews.swift:33; Sources/CodePath/ReleaseViews.swift:50; Sources/CodePath/SettingsView.swift:231",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2792,7 +2792,7 @@
       }
     },
     "История обновлений codelib": {
-      "comment": "Sources/CodePath/CodePathApp.swift:47",
+      "comment": "Sources/CodePath/CodePathApp.swift:60",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3872,7 +3872,7 @@
       }
     },
     "Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные.": {
-      "comment": "Sources/CodePath/CodePathApp.swift:80",
+      "comment": "Sources/CodePath/CodePathApp.swift:93",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4286,7 +4286,7 @@
       }
     },
     "О codelib": {
-      "comment": "Sources/CodePath/CodePathApp.swift:27; Sources/CodePath/CodePathApp.swift:44; Sources/CodePath/SettingsView.swift:230",
+      "comment": "Sources/CodePath/CodePathApp.swift:28; Sources/CodePath/CodePathApp.swift:57; Sources/CodePath/SettingsView.swift:230",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4322,7 +4322,7 @@
       }
     },
     "Обучение": {
-      "comment": "Sources/CodePath/AppModel.swift:139; Sources/CodePath/CodePathApp.swift:33",
+      "comment": "Sources/CodePath/AppModel.swift:139; Sources/CodePath/CodePathApp.swift:39",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4430,7 +4430,7 @@
       }
     },
     "Остаться": {
-      "comment": "Sources/CodePath/CodePathApp.swift:81",
+      "comment": "Sources/CodePath/CodePathApp.swift:94",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5564,7 +5564,7 @@
       }
     },
     "Предыдущее задание": {
-      "comment": "Sources/CodePath/CodePathApp.swift:34",
+      "comment": "Sources/CodePath/CodePathApp.swift:41",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6104,7 +6104,7 @@
       }
     },
     "Продолжить обучение": {
-      "comment": "Sources/CodePath/CodePathApp.swift:31; Sources/CodePath/DashboardViews.swift:123; Sources/CodePath/DashboardViews.swift:254; Sources/CodePath/LessonView.swift:144",
+      "comment": "Sources/CodePath/CodePathApp.swift:36; Sources/CodePath/DashboardViews.swift:123; Sources/CodePath/DashboardViews.swift:254; Sources/CodePath/LessonView.swift:144",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6860,7 +6860,7 @@
       }
     },
     "Следующее задание": {
-      "comment": "Sources/CodePath/CodePathApp.swift:36",
+      "comment": "Sources/CodePath/CodePathApp.swift:45",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7004,7 +7004,7 @@
       }
     },
     "Сохранить изменения": {
-      "comment": "Sources/CodePath/CodePathApp.swift:38",
+      "comment": "Sources/CodePath/CodePathApp.swift:49",
       "extractionState": "manual",
       "localizations": {
         "en": {

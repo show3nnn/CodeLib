@@ -24,29 +24,42 @@ struct CodePathApp: App {
         .defaultSize(width: 1180, height: 800)
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("О codelib") { openWindow(id: "about") }
-                Button("История обновлений") { openWindow(id: "release-history") }
+                Button { openWindow(id: "about") } label: {
+                    Text(PresentationLocale.resource("О codelib", locale: model.presentationLocale))
+                }
+                Button { openWindow(id: "release-history") } label: {
+                    Text(PresentationLocale.resource("История обновлений", locale: model.presentationLocale))
+                }
             }
             CommandGroup(after: .newItem) {
-                Button("Продолжить обучение") { model.resume() }.keyboardShortcut("r", modifiers: [.command, .shift])
+                Button { model.resume() } label: {
+                    Text(PresentationLocale.resource("Продолжить обучение", locale: model.presentationLocale))
+                }.keyboardShortcut("r", modifiers: [.command, .shift])
             }
-            CommandMenu("Обучение") {
-                Button("Предыдущее задание") { model.move(-1) }.keyboardShortcut("[", modifiers: .command)
+            CommandMenu(PresentationLocale.resource("Обучение", locale: model.presentationLocale)) {
+                Button { model.move(-1) } label: {
+                    Text(PresentationLocale.resource("Предыдущее задание", locale: model.presentationLocale))
+                }.keyboardShortcut("[", modifiers: .command)
                     .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: -1) == nil)
-                Button("Следующее задание") { model.move(1) }.keyboardShortcut("]", modifiers: .command)
+                Button { model.move(1) } label: {
+                    Text(PresentationLocale.resource("Следующее задание", locale: model.presentationLocale))
+                }.keyboardShortcut("]", modifiers: .command)
                     .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: 1) == nil)
-                Button("Сохранить изменения") { model.flush() }.keyboardShortcut("s", modifiers: .command)
+                Button { model.flush() } label: {
+                    Text(PresentationLocale.resource("Сохранить изменения", locale: model.presentationLocale))
+                }.keyboardShortcut("s", modifiers: .command)
             }
         }
+        .environment(\.locale, model.presentationLocale)
         Settings {
             SettingsView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }
-        Window("О codelib", id: "about") {
+        Window(PresentationLocale.resource("О codelib", locale: model.presentationLocale), id: "about") {
             AboutView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
-        }.windowResizability(.contentSize)
-        Window("История обновлений codelib", id: "release-history") {
+        }.windowResizability(.contentSize).environment(\.locale, model.presentationLocale)
+        Window(PresentationLocale.resource("История обновлений codelib", locale: model.presentationLocale), id: "release-history") {
             ReleaseHistoryView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
-        }.defaultSize(width: 680, height: 720)
+        }.defaultSize(width: 680, height: 720).environment(\.locale, model.presentationLocale)
     }
 }
 
