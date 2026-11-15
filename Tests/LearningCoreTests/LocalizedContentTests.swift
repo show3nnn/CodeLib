@@ -11,6 +11,48 @@ struct LocalizedContentTests {
         try Data(contentsOf: root.appendingPathComponent(path))
     }
 
+    @Test func bundledSnapshotDoesNotExposeDraftEnglish() throws {
+        let russian = try LocalizedContent.bundled()
+        #expect(russian.locale == .russian)
+        #expect(russian.course.id == "cpp-foundations")
+        #expect(russian.catalog.entries.contains { $0.id == russian.course.id && $0.availability == .available })
+        #expect(!russian.history.releases.isEmpty)
+        #expect(throws: ContentError.translationUnavailable("en")) {
+            try LocalizedContent.bundled(locale: .english)
+        }
+    }
+
+    @Test func partialAndDraftBundledTranslationsAreRejected() throws {
+        func fixture(_ translations: [String]) throws -> Bundle {
+            let directory = root.appendingPathComponent(".build/test-data/localized-bundle-\(UUID().uuidString).bundle")
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            for name in ["course", "catalog", "releases"] {
+                try data("Sources/LearningCore/Resources/\(name).json").write(to: directory.appendingPathComponent("\(name).json"))
+            }
+            for name in translations {
+                try data("localization/drafts/\(name).en.json").write(to: directory.appendingPathComponent("\(name).en.json"))
+            }
+            return try #require(Bundle(url: directory))
+        }
+        let none = try fixture([])
+        let course = try fixture(["course"])
+        let catalog = try fixture(["course", "catalog"])
+        let all = try fixture(["course", "catalog", "releases"])
+        #expect(try LocalizedContent.bundled(locale: .russian, bundle: none).locale == .russian)
+        #expect(throws: ContentError.translationUnavailable("en")) {
+            try LocalizedContent.bundled(locale: .english, bundle: none)
+        }
+        #expect(throws: ContentError.resourceTranslationUnavailable(resource: "catalog", locale: "en")) {
+            try LocalizedContent.bundled(locale: .english, bundle: course)
+        }
+        #expect(throws: ContentError.resourceTranslationUnavailable(resource: "releases", locale: "en")) {
+            try LocalizedContent.bundled(locale: .english, bundle: catalog)
+        }
+        #expect(throws: ContentError.translationNotReady(missing: 0, unknown: 0)) {
+            try LocalizedContent.bundled(locale: .english, bundle: all)
+        }
+    }
+
     @Test func snapshotRequiresEveryReviewedResource() throws {
         let course = try data("Sources/LearningCore/Resources/course.json")
         let catalog = try data("Sources/LearningCore/Resources/catalog.json")

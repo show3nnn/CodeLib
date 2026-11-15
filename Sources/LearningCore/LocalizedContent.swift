@@ -18,6 +18,34 @@ public struct LocalizedContent: Sendable {
         return self
     }
 
+    /// Load the complete set from the package resources. English resources are
+    /// deliberately not bundled until the whole application is ready.
+    public static func bundled(locale: CourseLocale = .russian) throws -> Self {
+        try bundled(locale: locale, bundle: .module)
+    }
+
+    static func bundled(locale: CourseLocale, bundle: Bundle) throws -> Self {
+        func source(_ name: String, missing: ContentError) throws -> Data {
+            guard let url = bundle.url(forResource: name, withExtension: "json") else { throw missing }
+            return try Data(contentsOf: url)
+        }
+        let course = try source("course", missing: .missingCourse)
+        let catalog = try source("catalog", missing: .missingCatalog)
+        let history = try source("releases", missing: .missingReleaseHistory)
+        guard locale != .russian else {
+            return try load(locale: locale, courseData: course, catalogData: catalog, historyData: history)
+        }
+        let courseTranslation = try JSONDecoder().decode(CourseTranslation.self,
+            from: source("course.\(locale.rawValue)", missing: .translationUnavailable(locale.rawValue)))
+        let catalogTranslation = try JSONDecoder().decode(ResourceTranslation.self,
+            from: source("catalog.\(locale.rawValue)", missing: .resourceTranslationUnavailable(resource: "catalog", locale: locale.rawValue)))
+        let historyTranslation = try JSONDecoder().decode(ResourceTranslation.self,
+            from: source("releases.\(locale.rawValue)", missing: .resourceTranslationUnavailable(resource: "releases", locale: locale.rawValue)))
+        return try load(locale: locale, courseData: course, catalogData: catalog, historyData: history,
+                        courseTranslation: courseTranslation, catalogTranslation: catalogTranslation,
+                        historyTranslation: historyTranslation)
+    }
+
     public static func load(locale: CourseLocale, courseData: Data, catalogData: Data, historyData: Data,
                             courseTranslation: CourseTranslation? = nil,
                             catalogTranslation: ResourceTranslation? = nil,
