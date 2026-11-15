@@ -484,6 +484,8 @@ enum SmokeTest {
         var menuDuringPreview: [String] = []
         var menuAfterPreview: [String] = []
         var englishMenuItemsPresent = false
+        var missingEnglishMenuTitles: [String] = []
+        var staleRussianMenuTitles: [String] = []
         func check(_ condition: Bool, _ name: String) {
             if condition { checks.append(name) } else { failures.append(name) }
         }
@@ -512,11 +514,20 @@ enum SmokeTest {
             try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
             await settle()
             menuDuringPreview = menuTitles(in: NSApp.mainMenu)
-            let englishMenu = ["About codelib", "Release history", "Continue learning", "Learning",
-                               "Previous task", "Next task", "Save changes"]
-            englishMenuItemsPresent = englishMenu.allSatisfy(menuDuringPreview.contains)
+            let appItems = NSApp.mainMenu?.items.first?.submenu?.items.map(\.title) ?? []
+            let learningItems = NSApp.mainMenu?.items.first(where: { $0.title == "Learning" })?
+                .submenu?.items.map(\.title) ?? []
+            missingEnglishMenuTitles = ["About codelib", "Release history"].filter { !appItems.contains($0) }
+            missingEnglishMenuTitles += ["Previous task", "Next task", "Save changes"].filter { !learningItems.contains($0) }
+            if !menuDuringPreview.contains("Continue learning") { missingEnglishMenuTitles.append("Continue learning") }
+            if !menuDuringPreview.contains("Learning") { missingEnglishMenuTitles.append("Learning") }
+            staleRussianMenuTitles = ["О codelib", "История обновлений"].filter(appItems.contains)
+            staleRussianMenuTitles += ["Предыдущее задание", "Следующее задание", "Сохранить изменения"]
+                .filter(learningItems.contains)
+            if menuDuringPreview.contains("Продолжить обучение") { staleRussianMenuTitles.append("Продолжить обучение") }
+            englishMenuItemsPresent = missingEnglishMenuTitles.isEmpty && staleRussianMenuTitles.isEmpty
             if ProcessInfo.processInfo.arguments.contains("--strict-menu-localization") {
-                check(englishMenuItemsPresent, "Expected English app menu titles are present")
+                check(englishMenuItemsPresent, "Expected English app menu titles are in place without stale Russian titles")
             }
             check(model.presentationLocale.language.languageCode?.identifier == "en", "Preview uses explicit English locale")
             check(model.course?.lessons.first?.title == "Programs and main", "Preview projects English course")
@@ -619,7 +630,9 @@ enum SmokeTest {
         do {
             let report: [String: Any] = ["checks": checks, "failures": failures, "developerOnly": true,
                                          "menuBeforePreview": menuBeforePreview, "menuDuringPreview": menuDuringPreview,
-                                         "menuAfterPreview": menuAfterPreview, "englishMenuItemsPresent": englishMenuItemsPresent]
+                                         "menuAfterPreview": menuAfterPreview, "englishMenuItemsPresent": englishMenuItemsPresent,
+                                         "missingEnglishMenuTitles": missingEnglishMenuTitles,
+                                         "staleRussianMenuTitles": staleRussianMenuTitles]
             try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
                 .write(to: directory.appendingPathComponent("localization-preview-report.json"), options: .atomic)
         } catch { failures.append(String(describing: error)) }
