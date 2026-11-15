@@ -43,6 +43,6 @@ ENTITIES = {
         ["The old file may have been truncated when opened.", "An error check reports a problem but does not roll back changes already made."], "Do not present error detection as transactional behavior.",
         {"Нет, для атомарной замены нужны дополнительные механизмы": "No, atomic replacement needs additional mechanisms", "Да, всегда": "Yes, always", "Да, если имя файла короткое": "Yes, if the filename is short"}),
     "cpp.journalproject.batch": task("Validate the entire collection", "Input: n followed by n integers. n must be 0–100 and each number −100–100. On any failed read or violation, print Invalid and leave batch.txt unchanged. Otherwise write all n numbers, one per line, check close and print Saved or Error. Extra tokens after the n numbers are not examined.",
-        ["Do not open the file inside the validation loop.", "First fill a validated vector, then write it in full."], "An error halfway through the input does not destroy earlier results."),
+        ["Do not open the file inside the validation loop.", "First fill a validated vector, then write it in full."], "An error halfway through the input does not destroy the file's previous contents."),
 }
 SKILLS = {"проект": "project", "команды": "commands", "состояние": "state", "статистика": "statistics", "проверяемый отчёт": "checkable report", "файлы": "files", "сохранность данных": "data preservation"}
