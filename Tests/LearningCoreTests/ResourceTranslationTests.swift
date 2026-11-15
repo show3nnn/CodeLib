@@ -20,6 +20,44 @@ struct ResourceTranslationTests {
                             sourceSHA256: digest ?? draft.sourceSHA256, status: status, texts: texts ?? draft.texts)
     }
 
+    private func protectedCatalog(_ catalog: CourseCatalog) throws -> [String: Any] {
+        var root = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(catalog)) as? [String: Any])
+        var entries = try #require(root["entries"] as? [[String: Any]])
+        for index in entries.indices {
+            entries[index].removeValue(forKey: "title")
+            entries[index].removeValue(forKey: "summary")
+        }
+        root["entries"] = entries
+        return root
+    }
+
+    private func protectedHistory(_ history: ReleaseHistory) throws -> [String: Any] {
+        var root = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(history)) as? [String: Any])
+        var releases = try #require(root["releases"] as? [[String: Any]])
+        for index in releases.indices {
+            releases[index].removeValue(forKey: "title")
+            releases[index].removeValue(forKey: "summary")
+            var features = try #require(releases[index]["features"] as? [[String: Any]])
+            for feature in features.indices {
+                features[feature].removeValue(forKey: "title")
+                features[feature].removeValue(forKey: "detail")
+            }
+            releases[index]["features"] = features
+            // Preserve array lengths; exact value-to-position mapping is checked
+            // independently using each canonical source string's key.
+            for key in ["improvements", "fixes"] {
+                let values = try #require(releases[index][key] as? [String])
+                releases[index][key] = Array(repeating: "", count: values.count)
+            }
+        }
+        root["releases"] = releases
+        return root
+    }
+
+    private func canonicalJSON(_ value: Any) throws -> Data {
+        try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+    }
+
     @Test func completeDraftsCannotBecomeProductionResources() throws {
         for (resource, count) in [(ResourceTranslation.Resource.catalog, 10), (.releases, 193)] {
             let data = try source(resource)
@@ -66,6 +104,41 @@ struct ResourceTranslationTests {
         }
         #expect(history.releases.last?.stage == nil && history.releases.last?.date == nil)
         #expect(history.releases.last?.title == "The original working CodePath build")
+    }
+
+    @Test func allNonTextFieldsAndListMappingsSurviveProjection() throws {
+        let catalogData = try source(.catalog)
+        let catalog = try JSONDecoder().decode(CourseCatalog.self, from: catalogData)
+        let englishCatalog = try draft(.catalog).developerCatalogPreview(from: catalogData, availableCourseIDs: courseIDs)
+        let catalogFields = try protectedCatalog(catalog)
+        #expect(try canonicalJSON(catalogFields) == canonicalJSON(protectedCatalog(englishCatalog)))
+        var changedCatalog = catalogFields
+        changedCatalog["futureProtectedField"] = "changed"
+        #expect(try canonicalJSON(catalogFields) != canonicalJSON(changedCatalog))
+
+        let historyData = try source(.releases)
+        let history = try JSONDecoder().decode(ReleaseHistory.self, from: historyData)
+        let translation = try draft(.releases)
+        let englishHistory = try translation.developerHistoryPreview(from: historyData)
+        let historyFields = try protectedHistory(history)
+        #expect(try canonicalJSON(historyFields) == canonicalJSON(protectedHistory(englishHistory)))
+        var changedHistory = historyFields
+        var releases = try #require(changedHistory["releases"] as? [[String: Any]])
+        releases[0]["date"] = "2000-01-01"
+        changedHistory["releases"] = releases
+        #expect(try canonicalJSON(historyFields) != canonicalJSON(changedHistory))
+
+        for (original, translated) in zip(history.releases, englishHistory.releases) {
+            for (field, sourceValues, translatedValues) in [
+                ("improvement", original.improvements, translated.improvements),
+                ("fix", original.fixes, translated.fixes),
+            ] {
+                let expected = try sourceValues.map {
+                    try #require(translation.texts[ResourceTranslation.listKey(version: original.version, field: field, value: $0)])
+                }
+                #expect(translatedValues == expected)
+            }
+        }
     }
 
     @Test func keysSurviveFeatureAndListReordering() throws {
