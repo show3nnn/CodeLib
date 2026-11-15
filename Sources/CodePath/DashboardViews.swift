@@ -220,7 +220,7 @@ struct CatalogView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
-                PageHeader(eyebrow: "Каталог курсов", title: "Большие идеи начинаются\nс первой строки.", subtitle: "Выберите своё направление. Учитесь в собственном темпе.")
+                PageHeader(eyebrow: "Каталог курсов", title: "Большие идеи начинаются\nс первой строки.", subtitle: "Выберите своё направление. Учитесь в собственном темпе.", locale: model.presentationLocale)
                 Card {
                     VStack(alignment: .leading, spacing: 24) {
                         HStack(alignment: .top, spacing: 20) {
@@ -265,7 +265,7 @@ struct SyllabusView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 22) {
-                PageHeader(eyebrow: "C++17 · практика", title: "Шаги к самостоятельному коду", subtitle: "Все доступные темы открыты. Возвращайтесь к теории и задачам без потери результатов.")
+                PageHeader(eyebrow: "C++17 · практика", title: "Шаги к самостоятельному коду", subtitle: "Все доступные темы открыты. Возвращайтесь к теории и задачам без потери результатов.", locale: model.presentationLocale)
                 if let course = model.course {
                     Picker("Состояние урока", selection: $status) {
                         Text("Все").tag(LessonStatusFilter.all)
@@ -320,7 +320,7 @@ struct ProgressViewScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
-                PageHeader(eyebrow: "Ваш результат", title: "Практика становится навыком.", subtitle: "Не гонка за цифрами. Ваш путь от первой строки к самостоятельному коду.")
+                PageHeader(eyebrow: "Ваш результат", title: "Практика становится навыком.", subtitle: "Не гонка за цифрами. Ваш путь от первой строки к самостоятельному коду.", locale: model.presentationLocale)
                 if let course = model.course {
                     let finished = course.exercises.filter { model.document.completed($0.id) }
                     let completedLessons = course.lessons.filter { model.document.lessonCompleted($0) }.count

@@ -142,7 +142,7 @@ struct ExecutionOutputView: View {
                     .foregroundStyle(item.matches ? Color.green : Color.orange)
                 Text("Пример \(item.index)").font(.callout.weight(.medium))
                 Spacer(minLength: 0)
-                Text(PresentationLocale.resource(gradingLabel(item))).font(.caption).foregroundStyle(.secondary)
+                Text(PresentationLocale.resource(gradingLabel(item), locale: model.presentationLocale)).font(.caption).foregroundStyle(.secondary)
             }
             if !item.matches {
                 if item.status == .compileError { diagnostics(item.stderr) }
@@ -186,7 +186,7 @@ struct ExecutionOutputView: View {
 
     private func output(_ title: LocalizedStringResource, text: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(PresentationLocale.resource(title)).font(.caption.monospaced()).foregroundStyle(.secondary)
+            Text(PresentationLocale.resource(title, locale: model.presentationLocale)).font(.caption.monospaced()).foregroundStyle(.secondary)
             ScrollView([.horizontal, .vertical]) {
                 Group {
                     if text.isEmpty { Text("(пусто)") }

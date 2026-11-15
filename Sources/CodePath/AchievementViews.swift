@@ -35,7 +35,7 @@ struct AchievementCollectionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                PageHeader(eyebrow: "Коллекция", title: "Не только точки с запятой", subtitle: "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.")
+                PageHeader(eyebrow: "Коллекция", title: "Не только точки с запятой", subtitle: "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.", locale: model.presentationLocale)
                 let unlocked = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                 Card {
                     HStack(spacing: 24) {
@@ -59,7 +59,7 @@ struct AchievementCollectionView: View {
                         Spacer(minLength: 0)
                         Picker("Категория", selection: $category) {
                             Text("Все категории").tag(AchievementCategory?.none)
-                            ForEach(AchievementCategory.allCases, id: \.self) { Text($0.localizedTitle).tag(Optional($0)) }
+                            ForEach(AchievementCategory.allCases, id: \.self) { Text(PresentationLocale.resource($0.localizedTitle, locale: model.presentationLocale)).tag(Optional($0)) }
                         }.pickerStyle(.menu).labelsHidden().frame(maxWidth: 220)
                     }
                 }
@@ -76,11 +76,11 @@ struct AchievementCollectionView: View {
                                                 in: RoundedRectangle(cornerRadius: 13))
                                 Group {
                                     if hidden { Text("Секретное достижение") }
-                                    else { Text(verbatim: item.title()) }
+                                    else { Text(verbatim: item.title(locale: model.presentationLanguage)) }
                                 }.font(.headline)
                                 Group {
                                     if hidden { Text("Найдётся во время практики.") }
-                                    else { Text(verbatim: item.detail()) }
+                                    else { Text(verbatim: item.detail(locale: model.presentationLanguage)) }
                                 }.font(.callout).foregroundStyle(.secondary)
                                 if let earned {
                                     Group {
@@ -113,11 +113,11 @@ struct AchievementCollectionView: View {
                         .frame(width: 72, height: 72).background(Color.green.opacity(0.1), in: RoundedRectangle(cornerRadius: 20))
                     Group {
                         if hidden { Text("Секретное достижение") }
-                        else { Text(verbatim: item.title()) }
+                        else { Text(verbatim: item.title(locale: model.presentationLanguage)) }
                     }.font(.title2.bold())
                     Group {
                         if hidden { Text("Условие откроется после получения награды.") }
-                        else { Text(verbatim: item.detail()) }
+                        else { Text(verbatim: item.detail(locale: model.presentationLanguage)) }
                     }.multilineTextAlignment(.center)
                     Text("Награда выдаётся один раз и сохраняется в локальном профиле.").font(.caption).foregroundStyle(.secondary)
                     Button("Закрыть") { selected = nil }.buttonStyle(.borderedProminent)
@@ -136,8 +136,8 @@ struct AchievementBanner: View {
                 HStack(spacing: 14) {
                     Image(systemName: award.symbol).font(.title2).foregroundStyle(.green).accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Новое достижение · \(award.title())").font(.headline)
-                        Text(award.detail()).font(.caption).foregroundStyle(.secondary)
+                        Text("Новое достижение · \(award.title(locale: model.presentationLanguage))").font(.headline)
+                        Text(verbatim: award.detail(locale: model.presentationLanguage)).font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
                     Button("Коллекция") { model.page = .achievements; model.achievementNotifications.removeAll() }
@@ -179,7 +179,7 @@ struct RecentAchievementsView: View {
                     Text("Первая награда появится за настоящую практику. Коллекция уже доступна.").foregroundStyle(.secondary)
                 } else {
                     ForEach(Array(recent.prefix(3))) { award in
-                        Label(award.title(), systemImage: award.symbol).foregroundStyle(.green)
+                        Label { Text(verbatim: award.title(locale: model.presentationLanguage)) } icon: { Image(systemName: award.symbol) }.foregroundStyle(.green)
                     }
                 }
             }

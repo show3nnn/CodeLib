@@ -35,6 +35,7 @@ struct ProfileAvatar: View {
 
 struct ProfileFields: View {
     @Binding var profile: LocalProfile
+    var locale: Locale = PresentationLocale.locale
     @State private var selectedImage: NSImage?
     @State private var imageError: AppFailure?
     var body: some View {
@@ -68,8 +69,8 @@ struct ProfileFields: View {
                             .contentShape(RoundedRectangle(cornerRadius: 15))
                     }
                     .buttonStyle(.plain)
-                    .help(Text(avatar.localizedTitle))
-                    .accessibilityLabel(Text(avatar.localizedTitle))
+                    .help(Text(PresentationLocale.resource(avatar.localizedTitle, locale: locale)))
+                    .accessibilityLabel(Text(PresentationLocale.resource(avatar.localizedTitle, locale: locale)))
                     .accessibilityAddTraits(profile.avatar == avatar ? .isSelected : [])
                     .overlay { if profile.avatar == avatar { RoundedRectangle(cornerRadius: 15).strokeBorder(.green, lineWidth: 1.5) } }
                 }
@@ -82,13 +83,13 @@ struct ProfileFields: View {
                     Button("Убрать фото") { profile.photo = nil; profile.avatar = .initial }.buttonStyle(.borderless)
                 }
             }
-            if let imageError { FailureText(failure: imageError, fallback: "Не удалось подготовить аватар.").foregroundStyle(.red).font(.caption) }
+            if let imageError { FailureText(failure: imageError, fallback: "Не удалось подготовить аватар.", locale: locale).foregroundStyle(.red).font(.caption) }
             Text("Фото хранится вместе с прогрессом и входит в экспорт. Ничего не загружается в сеть.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .sheet(isPresented: Binding(get: { selectedImage != nil }, set: { if !$0 { selectedImage = nil } })) {
             if let image = selectedImage {
-                AvatarCropView(image: image) { data in
+                AvatarCropView(image: image, locale: locale) { data in
                     profile.avatar = .photo
                     profile.photo = data
                     selectedImage = nil
@@ -122,9 +123,9 @@ struct EditProfileView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Card { ProfileFields(profile: $profile) }
+                    Card { ProfileFields(profile: $profile, locale: model.presentationLocale) }
                     if failed {
-                        FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить профиль.")
+                        FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить профиль.", locale: model.presentationLocale)
                             .foregroundStyle(.red).textSelection(.enabled)
                     }
                 }.padding(24)
@@ -166,7 +167,7 @@ struct OnboardingView: View {
                         else { Text("Познакомимся?") }
                     }.font(.largeTitle.bold())
                     if model.isExistingLearner { Text("Прежние задания, ответы и черновики останутся на месте.").foregroundStyle(.secondary) }
-                    ProfileFields(profile: $state.draft)
+                    ProfileFields(profile: $state.draft, locale: model.presentationLocale)
                     HStack {
                         Button("Назад") { advance(to: .welcome) }
                         Spacer()
@@ -210,7 +211,7 @@ struct OnboardingView: View {
                     }
                 }
                 if failed {
-                    FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить настройку. Повторите действие.")
+                    FailureText(failure: model.saveError ?? model.message, fallback: "Не удалось сохранить настройку. Повторите действие.", locale: model.presentationLocale)
                         .foregroundStyle(.red).textSelection(.enabled)
                 }
                 Text("Настройка хранится только на этом Mac").font(.caption).foregroundStyle(.secondary)
@@ -235,7 +236,7 @@ struct OnboardingView: View {
 
     private func themePreview(_ title: LocalizedStringResource, dark: Bool) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(PresentationLocale.resource(title)).font(.headline)
+            Text(PresentationLocale.resource(title, locale: model.presentationLocale)).font(.headline)
             Text("C++ · первый шаг").font(.caption)
             Text("std::cout << 42;").font(.system(.body, design: .monospaced)).foregroundStyle(dark ? .mint : .green)
         }.padding(20).frame(maxWidth: .infinity, alignment: .leading)

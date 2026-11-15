@@ -178,6 +178,7 @@ final class AppModel {
     var lesson: Lesson? { course?.lesson(containing: selectedExerciseID) }
     /// Remains fixed until the complete presentation can switch as one unit.
     var presentationLocale: Locale { PresentationLocale.locale }
+    var presentationLanguage: String { presentationLocale.language.languageCode?.identifier ?? "ru" }
     var colorScheme: ColorScheme? {
         switch document.preferences.theme { case "light": .light; case "dark": .dark; default: nil }
     }

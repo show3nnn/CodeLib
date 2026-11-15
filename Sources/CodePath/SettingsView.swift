@@ -32,7 +32,7 @@ struct SettingsView: View {
                     Image(systemName: "slider.horizontal.3").font(.title2).foregroundStyle(.secondary)
                 }
                 Picker("Раздел настроек", selection: $pane) {
-                    ForEach(Pane.allCases, id: \.self) { pane in Text(pane.title).tag(pane) }
+                    ForEach(Pane.allCases, id: \.self) { pane in Text(PresentationLocale.resource(pane.title, locale: model.presentationLocale)).tag(pane) }
                 }.pickerStyle(.segmented).labelsHidden().controlSize(.large).accessibilityIdentifier("settings.pane")
             }.padding(24)
             Divider()
@@ -42,7 +42,7 @@ struct SettingsView: View {
                         Card {
                             VStack(alignment: .leading, spacing: 12) {
                                 Label("Изменения ещё не сохранены", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
-                                FailureText(failure: model.saveError, fallback: "Идёт запись на диск.")
+                                FailureText(failure: model.saveError, fallback: "Идёт запись на диск.", locale: model.presentationLocale)
                                 HStack {
                                     Button("Повторить сохранение") { model.flush() }
                                     Button("Экспорт") { model.exportProgress() }

@@ -151,13 +151,14 @@ enum ErrorPresentation {
 struct FailureText: View {
     let failure: AppFailure?
     let fallback: LocalizedStringResource
+    var locale: Locale = PresentationLocale.locale
     var body: some View {
         if let failure {
             VStack(alignment: .leading, spacing: 6) {
-                Text(failure.resource()).fixedSize(horizontal: false, vertical: true)
+                Text(failure.resource(locale: locale)).fixedSize(horizontal: false, vertical: true)
                 FailureDiagnostics(failure: failure)
             }
-        } else { Text(PresentationLocale.resource(fallback)) }
+        } else { Text(PresentationLocale.resource(fallback, locale: locale)) }
     }
 }
 

@@ -181,7 +181,7 @@ struct ExerciseView: View {
             Card {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
-                        Text(exercise.kind.localizedTitle).textCase(.uppercase).font(.system(size: 10, weight: .bold)).tracking(1.5).foregroundStyle(.green)
+                        Text(PresentationLocale.resource(exercise.kind.localizedTitle, locale: model.presentationLocale)).textCase(.uppercase).font(.system(size: 10, weight: .bold)).tracking(1.5).foregroundStyle(.green)
                         Spacer()
                         HStack(spacing: 4) {
                             ForEach(1...3, id: \.self) { level in
@@ -374,7 +374,7 @@ struct ExerciseView: View {
                 }
             }
             if state.completion != .unfinished {
-                Label { Text(state.completion.localizedTitle) } icon: {
+                Label { Text(PresentationLocale.resource(state.completion.localizedTitle, locale: model.presentationLocale)) } icon: {
                     Image(systemName: state.completion == .automatic ? "checkmark.seal.fill" : "person.crop.circle.badge.checkmark")
                 }
                     .foregroundStyle(.green).font(.subheadline.weight(.medium))

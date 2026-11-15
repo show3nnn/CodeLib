@@ -10,13 +10,13 @@ struct RootView: View {
         Group {
             if let error = model.contentError {
                 VStack {
-                    ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error.resource()))
+                    ContentUnavailableView("Не удалось загрузить курс", systemImage: "exclamationmark.triangle", description: Text(error.resource(locale: model.presentationLocale)))
                     FailureDiagnostics(failure: error)
                 }.padding()
             } else if let error = model.storageError {
                 VStack(spacing: 20) {
                     ContentUnavailableView("Прогресс не открыт", systemImage: "externaldrive.badge.exclamationmark",
-                                           description: Text("\(Text(error.resource()))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
+                                           description: Text("\(Text(error.resource(locale: model.presentationLocale)))\nИсходный файл не изменён. Можно восстановить предыдущую сохранённую версию из резервной копии."))
                     Text(model.dataURL.path).font(.caption).textSelection(.enabled)
                     FailureDiagnostics(failure: error)
                     Button("Восстановить резервную копию") { model.restoreBackup() }
@@ -41,7 +41,7 @@ struct RootView: View {
                 Button("Скопировать диагностику") { message.copyDiagnostics() }
             }
         } message: {
-            if let message = model.message { Text(message.resource()) }
+            if let message = model.message { Text(message.resource(locale: model.presentationLocale)) }
         }
     }
 
@@ -112,7 +112,7 @@ struct RootView: View {
                 if model.hasUnsavedChanges {
                     HStack {
                         Label {
-                            if let error = model.saveError { Text("Не сохранено: \(Text(error.resource()))") }
+                            if let error = model.saveError { Text("Не сохранено: \(Text(error.resource(locale: model.presentationLocale)))") }
                             else { Text("Не сохранено: идёт запись") }
                         } icon: { Image(systemName: "exclamationmark.triangle") }
                         Spacer()
@@ -135,7 +135,7 @@ struct RootView: View {
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 AchievementBanner(model: model)
             }.background(WorkspaceBackdrop())
-            .navigationTitle(Text(model.page.title))
+            .navigationTitle(Text(PresentationLocale.resource(model.page.title, locale: model.presentationLocale)))
             .toolbar {
                 if model.page != .lesson {
                     ToolbarItem {
@@ -150,7 +150,7 @@ struct RootView: View {
 
     private func navigationRow(_ page: AppModel.Page) -> some View {
         Label {
-            Text(page.title).font(.system(size: 14, weight: model.page == page ? .semibold : .medium))
+            Text(PresentationLocale.resource(page.title, locale: model.presentationLocale)).font(.system(size: 14, weight: model.page == page ? .semibold : .medium))
         } icon: {
             Image(systemName: page.icon).symbolVariant(model.page == page ? .fill : .none)
                 .foregroundStyle(model.page == page ? Color.green : .secondary)
@@ -162,11 +162,12 @@ struct PageHeader: View {
     let eyebrow: LocalizedStringResource
     let title: LocalizedStringResource
     let subtitle: LocalizedStringResource
+    var locale: Locale = PresentationLocale.locale
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(PresentationLocale.resource(eyebrow)).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
-            Text(PresentationLocale.resource(title)).font(.system(size: 32, weight: .bold)).tracking(-0.8)
-            Text(PresentationLocale.resource(subtitle)).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            Text(PresentationLocale.resource(eyebrow, locale: locale)).textCase(.uppercase).font(.caption.weight(.semibold)).tracking(2).foregroundStyle(.tint)
+            Text(PresentationLocale.resource(title, locale: locale)).font(.system(size: 32, weight: .bold)).tracking(-0.8)
+            Text(PresentationLocale.resource(subtitle, locale: locale)).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }.frame(maxWidth: .infinity, alignment: .leading)
     }
 }

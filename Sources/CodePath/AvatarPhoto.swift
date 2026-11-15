@@ -47,6 +47,7 @@ enum AvatarPhoto {
 
 struct AvatarCropView: View {
     let image: NSImage
+    var locale: Locale = PresentationLocale.locale
     let save: (Data) -> Void
     @State private var zoom = 1.0
     @State private var x = 0.0
@@ -64,7 +65,7 @@ struct AvatarCropView: View {
             Slider(value: $zoom, in: 1...3) { Text("Масштаб") }
             Slider(value: $x, in: -1...1) { Text("По горизонтали") }
             Slider(value: $y, in: -1...1) { Text("По вертикали") }
-            if let error { FailureText(failure: error, fallback: "Не удалось подготовить аватар.").foregroundStyle(.red) }
+            if let error { FailureText(failure: error, fallback: "Не удалось подготовить аватар.", locale: locale).foregroundStyle(.red) }
             HStack {
                 Button("Отмена") { dismiss() }
                 Spacer()

@@ -69,17 +69,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         model?.flush()
         guard model?.hasUnsavedChanges == true else { model?.execution.cancel(); return .terminateNow }
-        let alert = Self.unsavedChangesAlert()
+        let alert = Self.unsavedChangesAlert(locale: model?.presentationLocale ?? PresentationLocale.locale)
         if alert.runModal() == .alertSecondButtonReturn { model?.execution.cancel(); return .terminateNow }
         return .terminateCancel
     }
 
-    static func unsavedChangesAlert() -> NSAlert {
+    static func unsavedChangesAlert(locale: Locale = PresentationLocale.locale) -> NSAlert {
         let alert = NSAlert()
-        alert.messageText = String(localized: PresentationLocale.resource("Изменения не сохранены"))
-        alert.informativeText = String(localized: PresentationLocale.resource("Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные."))
-        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Остаться")))
-        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Выйти без сохранения")))
+        alert.messageText = String(localized: PresentationLocale.resource("Изменения не сохранены", locale: locale))
+        alert.informativeText = String(localized: PresentationLocale.resource("Не удалось записать прогресс. Останьтесь в приложении, чтобы повторить сохранение или экспортировать данные.", locale: locale))
+        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Остаться", locale: locale)))
+        alert.addButton(withTitle: String(localized: PresentationLocale.resource("Выйти без сохранения", locale: locale)))
         return alert
     }
 }

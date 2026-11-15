@@ -632,7 +632,7 @@
       }
     },
     "%lld/30": {
-      "comment": "Sources/CodePath/ProfileViews.swift:48",
+      "comment": "Sources/CodePath/ProfileViews.swift:49",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -722,7 +722,7 @@
       }
     },
     "C++ · первый шаг": {
-      "comment": "Sources/CodePath/ProfileViews.swift:239",
+      "comment": "Sources/CodePath/ProfileViews.swift:240",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -920,7 +920,7 @@
       }
     },
     "codelib": {
-      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:154; Sources/CodePath/ReleaseViews.swift:25; Sources/CodePath/RootView.swift:38; Sources/CodePath/RootView.swift:69; Sources/CodePath/SettingsView.swift:227",
+      "comment": "Sources/CodePath/CodePathApp.swift:12; Sources/CodePath/ProfileViews.swift:155; Sources/CodePath/ReleaseViews.swift:25; Sources/CodePath/RootView.swift:38; Sources/CodePath/RootView.swift:69; Sources/CodePath/SettingsView.swift:227",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -992,7 +992,7 @@
       }
     },
     "std::cout << 42;": {
-      "comment": "Sources/CodePath/ProfileViews.swift:240",
+      "comment": "Sources/CodePath/ProfileViews.swift:241",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1118,7 +1118,7 @@
       }
     },
     "Аватар": {
-      "comment": "Sources/CodePath/ProfileViews.swift:56",
+      "comment": "Sources/CodePath/ProfileViews.swift:57",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1262,7 +1262,7 @@
       }
     },
     "ВАШ ПРОФИЛЬ": {
-      "comment": "Sources/CodePath/ProfileViews.swift:118",
+      "comment": "Sources/CodePath/ProfileViews.swift:119",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1946,7 +1946,7 @@
       }
     },
     "Далее": {
-      "comment": "Sources/CodePath/LessonView.swift:123; Sources/CodePath/ProfileViews.swift:173; Sources/CodePath/ProfileViews.swift:194",
+      "comment": "Sources/CodePath/LessonView.swift:123; Sources/CodePath/ProfileViews.swift:174; Sources/CodePath/ProfileViews.swift:195",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2018,7 +2018,7 @@
       }
     },
     "Диагностика системы может быть на другом языке. Данные никуда не отправляются.": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:170",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:171",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2072,7 +2072,7 @@
       }
     },
     "Добавим ваш профиль": {
-      "comment": "Sources/CodePath/ProfileViews.swift:165",
+      "comment": "Sources/CodePath/ProfileViews.swift:166",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2090,7 +2090,7 @@
       }
     },
     "Добро пожаловать в codelib": {
-      "comment": "Sources/CodePath/ProfileViews.swift:157",
+      "comment": "Sources/CodePath/ProfileViews.swift:158",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2216,7 +2216,7 @@
       }
     },
     "Загрузить фото…": {
-      "comment": "Sources/CodePath/ProfileViews.swift:79",
+      "comment": "Sources/CodePath/ProfileViews.swift:80",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2648,7 +2648,7 @@
       }
     },
     "Имя и аватар появятся на главной и в навигации.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:120",
+      "comment": "Sources/CodePath/ProfileViews.swift:121",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2666,7 +2666,7 @@
       }
     },
     "Имя только на вашем Mac. От 1 до 30 символов.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:52",
+      "comment": "Sources/CodePath/ProfileViews.swift:53",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2702,7 +2702,7 @@
       }
     },
     "Использовать фото": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:71",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:72",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2882,7 +2882,7 @@
       }
     },
     "Кадрирование аватара": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:58",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:59",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2918,7 +2918,7 @@
       }
     },
     "Как в macOS": {
-      "comment": "Sources/CodePath/ProfileViews.swift:181",
+      "comment": "Sources/CodePath/ProfileViews.swift:182",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2936,7 +2936,7 @@
       }
     },
     "Как к вам обращаться?": {
-      "comment": "Sources/CodePath/ProfileViews.swift:50",
+      "comment": "Sources/CodePath/ProfileViews.swift:51",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3152,7 +3152,7 @@
       }
     },
     "Комфортное оформление": {
-      "comment": "Sources/CodePath/ProfileViews.swift:179",
+      "comment": "Sources/CodePath/ProfileViews.swift:180",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3314,7 +3314,7 @@
       }
     },
     "Масштаб": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:64",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:65",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3386,7 +3386,7 @@
       }
     },
     "НИКНЕЙМ": {
-      "comment": "Sources/CodePath/ProfileViews.swift:46",
+      "comment": "Sources/CodePath/ProfileViews.swift:47",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3494,7 +3494,7 @@
       }
     },
     "Назад": {
-      "comment": "Sources/CodePath/LessonView.swift:116; Sources/CodePath/ProfileViews.swift:171; Sources/CodePath/ProfileViews.swift:192; Sources/CodePath/ProfileViews.swift:201",
+      "comment": "Sources/CodePath/LessonView.swift:116; Sources/CodePath/ProfileViews.swift:172; Sources/CodePath/ProfileViews.swift:193; Sources/CodePath/ProfileViews.swift:202",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3584,7 +3584,7 @@
       }
     },
     "Настройка хранится только на этом Mac": {
-      "comment": "Sources/CodePath/ProfileViews.swift:216",
+      "comment": "Sources/CodePath/ProfileViews.swift:217",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3656,7 +3656,7 @@
       }
     },
     "Начать настройку": {
-      "comment": "Sources/CodePath/ProfileViews.swift:161",
+      "comment": "Sources/CodePath/ProfileViews.swift:162",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3674,7 +3674,7 @@
       }
     },
     "Начать обучение": {
-      "comment": "Sources/CodePath/ProfileViews.swift:206",
+      "comment": "Sources/CodePath/ProfileViews.swift:207",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3908,7 +3908,7 @@
       }
     },
     "Не удалось подготовить аватар.": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:67; Sources/CodePath/ErrorPresentation.swift:72; Sources/CodePath/ProfileViews.swift:85",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:68; Sources/CodePath/ErrorPresentation.swift:72; Sources/CodePath/ProfileViews.swift:86",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3962,7 +3962,7 @@
       }
     },
     "Не удалось сохранить настройку. Повторите действие.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:213",
+      "comment": "Sources/CodePath/ProfileViews.swift:214",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3998,7 +3998,7 @@
       }
     },
     "Не удалось сохранить профиль.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:127",
+      "comment": "Sources/CodePath/ProfileViews.swift:128",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4574,7 +4574,7 @@
       }
     },
     "Отмена": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:69; Sources/CodePath/ProfileViews.swift:134",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:70; Sources/CodePath/ProfileViews.swift:135",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5006,7 +5006,7 @@
       }
     },
     "По вертикали": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:66",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:67",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5024,7 +5024,7 @@
       }
     },
     "По горизонтали": {
-      "comment": "Sources/CodePath/AvatarPhoto.swift:65",
+      "comment": "Sources/CodePath/AvatarPhoto.swift:66",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5114,7 +5114,7 @@
       }
     },
     "Подготовим ваш Mac к программированию": {
-      "comment": "Sources/CodePath/ProfileViews.swift:198",
+      "comment": "Sources/CodePath/ProfileViews.swift:199",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5204,7 +5204,7 @@
       }
     },
     "Познакомимся?": {
-      "comment": "Sources/CodePath/ProfileViews.swift:166",
+      "comment": "Sources/CodePath/ProfileViews.swift:167",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5564,7 +5564,7 @@
       }
     },
     "Прежние задания, ответы и черновики останутся на месте.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:168",
+      "comment": "Sources/CodePath/ProfileViews.swift:169",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6680,7 +6680,7 @@
       }
     },
     "Светлая": {
-      "comment": "Sources/CodePath/ProfileViews.swift:182; Sources/CodePath/ProfileViews.swift:186; Sources/CodePath/SettingsView.swift:138",
+      "comment": "Sources/CodePath/ProfileViews.swift:183; Sources/CodePath/ProfileViews.swift:187; Sources/CodePath/SettingsView.swift:138",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6716,7 +6716,7 @@
       }
     },
     "Сделайте его своим.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:119",
+      "comment": "Sources/CodePath/ProfileViews.swift:120",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6734,7 +6734,7 @@
       }
     },
     "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:189",
+      "comment": "Sources/CodePath/ProfileViews.swift:190",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6806,7 +6806,7 @@
       }
     },
     "Скопировать диагностику": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:174; Sources/CodePath/RootView.swift:122; Sources/CodePath/RootView.swift:41",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:175; Sources/CodePath/RootView.swift:122; Sources/CodePath/RootView.swift:41",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6986,7 +6986,7 @@
       }
     },
     "Сохранить": {
-      "comment": "Sources/CodePath/ProfileViews.swift:136",
+      "comment": "Sources/CodePath/ProfileViews.swift:137",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7220,7 +7220,7 @@
       }
     },
     "Тема": {
-      "comment": "Sources/CodePath/ProfileViews.swift:180; Sources/CodePath/SettingsView.swift:134",
+      "comment": "Sources/CodePath/ProfileViews.swift:181; Sources/CodePath/SettingsView.swift:134",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7292,7 +7292,7 @@
       }
     },
     "Технические сведения": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:168; Sources/CodePath/ExecutionOutputView.swift:49; Sources/CodePath/ExecutionOutputView.swift:61",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:169; Sources/CodePath/ExecutionOutputView.swift:49; Sources/CodePath/ExecutionOutputView.swift:61",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7328,7 +7328,7 @@
       }
     },
     "Тёмная": {
-      "comment": "Sources/CodePath/ProfileViews.swift:183; Sources/CodePath/ProfileViews.swift:187; Sources/CodePath/SettingsView.swift:139",
+      "comment": "Sources/CodePath/ProfileViews.swift:184; Sources/CodePath/ProfileViews.swift:188; Sources/CodePath/SettingsView.swift:139",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7364,7 +7364,7 @@
       }
     },
     "Убрать фото": {
-      "comment": "Sources/CodePath/ProfileViews.swift:82",
+      "comment": "Sources/CodePath/ProfileViews.swift:83",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7472,7 +7472,7 @@
       }
     },
     "Учимся программировать на C++ — офлайн и в своём темпе. Код можно запустить в изолированной среде; AI нет.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:159",
+      "comment": "Sources/CodePath/ProfileViews.swift:160",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7598,7 +7598,7 @@
       }
     },
     "Фото хранится вместе с прогрессом и входит в экспорт. Ничего не загружается в сеть.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:86",
+      "comment": "Sources/CodePath/ProfileViews.swift:87",
       "extractionState": "manual",
       "localizations": {
         "en": {

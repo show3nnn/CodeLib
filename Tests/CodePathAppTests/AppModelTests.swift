@@ -7,6 +7,20 @@ import ExecutionSupport
 
 @Suite(.serialized) @MainActor
 struct AppModelTests {
+    @Test func storedEnglishCannotEnablePartialPresentation() throws {
+        _ = try setup()
+        let model = AppModel()
+        model.update { $0.preferences.preferredLanguage = "en" }
+        #expect(model.presentationLocale.identifier == "ru")
+        #expect(model.presentationLanguage == "ru")
+        let restored = AppModel()
+        #expect(restored.document.preferences.preferredLanguage == "en")
+        #expect(restored.presentationLocale.identifier == "ru")
+        #expect(restored.presentationLanguage == "ru")
+        let award = try #require(AchievementCatalog.all.first)
+        #expect(award.title(locale: restored.presentationLanguage) == award.title(locale: "ru"))
+    }
+
     @Test func contentSelectionPersistsOnlyAfterFullPreparationAndWrite() throws {
         _ = try setup()
         let model = AppModel()
