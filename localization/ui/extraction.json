@@ -822,6 +822,9 @@
       "Sources/CodePath/SettingsView.swift:11",
       "Sources/CodePath/SettingsView.swift:133"
     ],
+    "Оформление можно изменить позже в настройках.": [
+      "Sources/CodePath/ProfileViews.swift:190"
+    ],
     "Ошибка выполнения · код %lld": [
       "Sources/CodePath/ExecutionOutputView.swift:107",
       "Sources/CodePath/ExecutionOutputView.swift:164"
@@ -1170,9 +1173,6 @@
     "Сделайте его своим.": [
       "Sources/CodePath/ProfileViews.swift:120"
     ],
-    "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": [
-      "Sources/CodePath/ProfileViews.swift:190"
-    ],
     "Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.": [
       "Sources/CodePath/ExecutionOutputView.swift:80"
     ],
@@ -1420,11 +1420,11 @@
     "Sources/CodePath/LineNumberRuler.swift": "7acb8930f48d35e8c953f6d00d2491dfee4f6d2e7c967ecc2827844b591a96c3",
     "Sources/CodePath/PluralPresentation.swift": "1b29379377bcb4a985acb6260a8de7a4cd510aa894eb3e486e17d195b311ac51",
     "Sources/CodePath/PresentationLocale.swift": "f1dff8ca9224e73483ad7115c9935b5cd3a7153339e2e11353e3567ec67b9da0",
-    "Sources/CodePath/ProfileViews.swift": "c4c95ec7468baaa8cd8568c9e3a06ab15cd98c6fc427cd209ab37b9870554751",
+    "Sources/CodePath/ProfileViews.swift": "657fa6a8c7320e894bda59e6f1dd85aba3bd6ecb2e64237b860cce9f1ed5f0a8",
     "Sources/CodePath/ReleaseViews.swift": "7acd0e3fa5649497f40775c3b64c0eaf8a29de13e76f04caf7cc1d8cc611ef2f",
     "Sources/CodePath/RootView.swift": "a3425d2a2f542f0d36aa3f3f9ddcbaea17602baf56cbb2504e69d0f6ea875d43",
     "Sources/CodePath/SettingsView.swift": "18a0edfac301c9947becb9ebb3b1f675f2e8af3f7439a3c7b06a509d63b6ba4a",
-    "Sources/CodePath/SmokeTest.swift": "d42850f50c90b21b976ca0182f4ddef45d8e87af80419a0959530cd55de86c71",
+    "Sources/CodePath/SmokeTest.swift": "c64038c775d27884f4d36ad78d6d5827078c559747e3c05ca596eb0c4ced2943",
     "Sources/CodePath/SyntaxColors.swift": "6f550340e4bce08f18df1840bec48dae7d4bd697f8ed2042dbbb3e2189bffe5a",
     "Sources/CodePath/WelcomeCodeView.swift": "bc83d4901e9ce9d41939fdf5aec76aea1b502495612f4adfeb0b7f4661ae4823"
   }

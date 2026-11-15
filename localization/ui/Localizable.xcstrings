@@ -4735,6 +4735,24 @@
         }
       }
     },
+    "Оформление можно изменить позже в настройках.": {
+      "comment": "Sources/CodePath/ProfileViews.swift:190",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can change the appearance later in Settings."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Оформление можно изменить позже в настройках."
+          }
+        }
+      }
+    },
     "Ошибка выполнения · код %lld": {
       "comment": "Sources/CodePath/ExecutionOutputView.swift:107; Sources/CodePath/ExecutionOutputView.swift:164",
       "extractionState": "manual",
@@ -6729,24 +6747,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Сделайте его своим."
-          }
-        }
-      }
-    },
-    "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": {
-      "comment": "Sources/CodePath/ProfileViews.swift:190",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The interface and C++ course are currently available in Russian. English will be offered once the full translation is ready, without mixing languages."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков."
           }
         }
       }

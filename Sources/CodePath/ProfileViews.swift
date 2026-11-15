@@ -187,7 +187,7 @@ struct OnboardingView: View {
                         themePreview("Светлая", dark: false)
                         themePreview("Тёмная", dark: true)
                     }
-                    Text("Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.")
+                    Text("Оформление можно изменить позже в настройках.")
                         .font(.callout).foregroundStyle(.secondary)
                     HStack {
                         Button("Назад") { advance(to: .profile) }

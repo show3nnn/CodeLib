@@ -340,7 +340,7 @@ TEXTS = {
     "Сбросить размер текста курса": "Reset course text size",
     "Светлая": "Light",
     "Сделайте его своим.": "Make it yours.",
-    "Сейчас доступны русский интерфейс и курс C++. English появится после полного перевода, без смешения языков.": "The interface and C++ course are currently available in Russian. English will be offered once the full translation is ready, without mixing languages.",
+    "Оформление можно изменить позже в настройках.": "You can change the appearance later in Settings.",
     "Секретное достижение": "Secret achievement",
     "Системная": "System",
     "Скопировать диагностику": "Copy Diagnostics",

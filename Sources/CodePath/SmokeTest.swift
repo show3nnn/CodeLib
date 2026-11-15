@@ -1,6 +1,7 @@
 #if DEBUG
 import AppKit
 import CoreGraphics
+import Darwin
 import LearningCore
 import SwiftUI
 import ExecutionSupport
@@ -488,6 +489,9 @@ enum SmokeTest {
             guard let path = ProcessInfo.processInfo.environment["CODEPATH_LOCALIZATION_SOURCE"] else {
                 throw ContentError.invalid("Developer localization source is missing")
             }
+            guard let isolatedData = ProcessInfo.processInfo.environment["CODEPATH_DATA_DIR"] else {
+                throw ContentError.invalid("Developer preview requires an isolated data directory")
+            }
             let russian = try Course.bundled()
             let russianCatalog = try CourseCatalog.bundled(availableCourseIDs: [russian.id])
             let exercise = russian.exercises[0]
@@ -558,6 +562,34 @@ enum SmokeTest {
                 .padding(24).environment(\.locale, model.presentationLocale))
             await settle()
             try snapshot(window: window, to: directory.appendingPathComponent("english-error.png"))
+            window.contentView = NSHostingView(rootView: RootView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-root.png"))
+            for pane in [SettingsView.Pane.appearance, .data] {
+                window.contentView = NSHostingView(rootView: SettingsView(model: model, pane: pane)
+                    .environment(\.locale, model.presentationLocale))
+                await settle()
+                try snapshot(window: window, to: directory.appendingPathComponent("english-settings-\(pane.rawValue).png"))
+            }
+            for step in [OnboardingState.Step.profile, .appearance, .environment] {
+                let fixture = URL(fileURLWithPath: isolatedData, isDirectory: true)
+                    .appendingPathComponent("onboarding-\(step.rawValue)", isDirectory: true)
+                setenv("CODEPATH_DATA_DIR", fixture.path, 1)
+                let onboardingModel = AppModel()
+                setenv("CODEPATH_DATA_DIR", isolatedData, 1)
+                var state = OnboardingState()
+                state.draft = LocalProfile(nickname: "Preview", avatar: .leaf)
+                state.step = step
+                check(onboardingModel.saveOnboarding(state), "Isolated onboarding fixture saves: \(step.rawValue)")
+                let onboardingBytes = try Data(contentsOf: onboardingModel.dataURL)
+                try onboardingModel.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
+                window.contentView = NSHostingView(rootView: OnboardingView(model: onboardingModel)
+                    .environment(\.locale, onboardingModel.presentationLocale))
+                await settle()
+                try snapshot(window: window, to: directory.appendingPathComponent("english-onboarding-\(step.rawValue).png"))
+                check(try Data(contentsOf: onboardingModel.dataURL) == onboardingBytes,
+                      "Onboarding preview does not write fixture: \(step.rawValue)")
+            }
             window.orderOut(nil)
             model.endEnglishSmokePreview()
             check(model.presentationLocale == PresentationLocale.locale && model.course?.lessons.first?.title == russian.lessons.first?.title,
