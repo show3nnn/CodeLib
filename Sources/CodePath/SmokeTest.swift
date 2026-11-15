@@ -504,6 +504,19 @@ enum SmokeTest {
             check(model.releaseHistory?.releases.first?.title == "Checking the C++ environment", "Preview projects English history")
             let theory = LocalizedStringResource("Теория", locale: model.presentationLocale)
             check(String(localized: theory) == "Theory", "Compiled app catalog resolves English UI")
+            guard let englishCourse = model.course,
+                  let choice = englishCourse.exercises.first(where: { $0.kind == .choice }),
+                  let canonicalAnswer = choice.answer else {
+                throw ContentError.invalid("English preview has no canonical choice")
+            }
+            check(choice.choiceLabel(for: canonicalAnswer) != canonicalAnswer, "Choice label is translated")
+            check(AnswerChecker.check(canonicalAnswer, for: choice) == true, "Canonical answer still checks correctly")
+            check(AnswerChecker.check(choice.choiceLabel(for: canonicalAnswer), for: choice) == false,
+                  "Translated label is not substituted for the canonical answer")
+            let failure = AppFailure(StorageError.locked, operation: .importProgress)
+            check(String(localized: failure.resource(locale: model.presentationLocale)) ==
+                  "Import canceled; current data has been preserved: Another process is writing progress. Try saving again.",
+                  "Nested error and context use the same English locale")
             check(model.state(for: exercise.id).draft == "" && model.state(for: exercise.id).answer == "literal %@",
                   "Empty draft and literal answer survive preview")
             check(!model.selectContentLanguage(.russian), "Preview cannot commit a language selection")
@@ -528,6 +541,23 @@ enum SmokeTest {
             window.contentView = NSHostingView(rootView: AchievementCollectionView(model: model).environment(\.locale, model.presentationLocale))
             await settle()
             try snapshot(window: window, to: directory.appendingPathComponent("english-achievements.png"))
+            window.contentView = NSHostingView(rootView: CatalogView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-catalog.png"))
+            window.contentView = NSHostingView(rootView: SyllabusView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-syllabus.png"))
+            window.contentView = NSHostingView(rootView: ProgressViewScreen(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-progress.png"))
+            window.contentView = NSHostingView(rootView: OnboardingView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-onboarding-welcome.png"))
+            window.contentView = NSHostingView(rootView: FailureText(failure: failure, fallback: "Не удалось загрузить ресурс",
+                                                                     locale: model.presentationLocale)
+                .padding(24).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-error.png"))
             window.orderOut(nil)
             model.endEnglishSmokePreview()
             check(model.presentationLocale == PresentationLocale.locale && model.course?.lessons.first?.title == russian.lessons.first?.title,

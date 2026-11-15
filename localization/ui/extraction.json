@@ -1424,7 +1424,7 @@
     "Sources/CodePath/ReleaseViews.swift": "7acd0e3fa5649497f40775c3b64c0eaf8a29de13e76f04caf7cc1d8cc611ef2f",
     "Sources/CodePath/RootView.swift": "a3425d2a2f542f0d36aa3f3f9ddcbaea17602baf56cbb2504e69d0f6ea875d43",
     "Sources/CodePath/SettingsView.swift": "18a0edfac301c9947becb9ebb3b1f675f2e8af3f7439a3c7b06a509d63b6ba4a",
-    "Sources/CodePath/SmokeTest.swift": "db5afd0fc60b5dc8174ece2fde6313e6e512a59857a5ea25d3ee3aff8d4b0839",
+    "Sources/CodePath/SmokeTest.swift": "d42850f50c90b21b976ca0182f4ddef45d8e87af80419a0959530cd55de86c71",
     "Sources/CodePath/SyntaxColors.swift": "6f550340e4bce08f18df1840bec48dae7d4bd697f8ed2042dbbb3e2189bffe5a",
     "Sources/CodePath/WelcomeCodeView.swift": "bc83d4901e9ce9d41939fdf5aec76aea1b502495612f4adfeb0b7f4661ae4823"
   }
