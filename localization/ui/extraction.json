@@ -368,7 +368,7 @@
       "Sources/CodePath/ExecutionOutputView.swift:214"
     ],
     "Достижения": [
-      "Sources/CodePath/AppModel.swift:96"
+      "Sources/CodePath/AppModel.swift:123"
     ],
     "Доступен сейчас": [
       "Sources/CodePath/DashboardViews.swift:229"
@@ -511,7 +511,7 @@
       "Sources/CodePath/ProfileViews.swift:50"
     ],
     "Каталог": [
-      "Sources/CodePath/AppModel.swift:92"
+      "Sources/CodePath/AppModel.swift:119"
     ],
     "Каталог достижений повреждён": [
       "Sources/CodePath/ErrorPresentation.swift:132"
@@ -580,10 +580,10 @@
       "Sources/CodePath/ReleaseViews.swift:12"
     ],
     "Мои курсы": [
-      "Sources/CodePath/AppModel.swift:91"
+      "Sources/CodePath/AppModel.swift:118"
     ],
     "Мой прогресс": [
-      "Sources/CodePath/AppModel.swift:95",
+      "Sources/CodePath/AppModel.swift:122",
       "Sources/CodePath/SettingsView.swift:120"
     ],
     "НИКНЕЙМ": [
@@ -750,7 +750,7 @@
       "Sources/CodePath/ExecutionOutputView.swift:208"
     ],
     "Обучение": [
-      "Sources/CodePath/AppModel.swift:94",
+      "Sources/CodePath/AppModel.swift:121",
       "Sources/CodePath/CodePathApp.swift:33"
     ],
     "Один понятный шаг. Ещё немного собственного кода.": [
@@ -1025,7 +1025,7 @@
       "Sources/CodePath/LessonView.swift:331"
     ],
     "Программа C++": [
-      "Sources/CodePath/AppModel.swift:93"
+      "Sources/CodePath/AppModel.swift:120"
     ],
     "Программа выполняется…": [
       "Sources/CodePath/ExecutionOutputView.swift:98"
@@ -1407,7 +1407,7 @@
   "formatVersion": 1,
   "sourceFiles": {
     "Sources/CodePath/AchievementViews.swift": "b1135256769ba4e5500a11df3a6ed628de446427d360ee5da46faf4dd55a7105",
-    "Sources/CodePath/AppModel.swift": "f682cb52879651103a08b82b9f2d3ca54ceb7e1b6377990b206dfd27e5cff148",
+    "Sources/CodePath/AppModel.swift": "75cefc0c590bbc689cdb9715cf278e208834993835c2baf558d3f76ea2300d97",
     "Sources/CodePath/AvatarPhoto.swift": "a9cfac8e0fd21bac9b0a8bef8c9bd5a5cd74a563230cc9b81c7e244fe9843484",
     "Sources/CodePath/CodeEditor.swift": "58d9cb6ad0a49e3ab5146e11f9f18415aa11997e7fad3abb9ac2f59662ebd9c5",
     "Sources/CodePath/CodeExecutionController.swift": "e8b77163e1519e585d231882b3ef0cb6a49e8e83a84f31c00be0878386ee8399",

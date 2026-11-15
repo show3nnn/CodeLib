@@ -2126,7 +2126,7 @@
       }
     },
     "Достижения": {
-      "comment": "Sources/CodePath/AppModel.swift:96",
+      "comment": "Sources/CodePath/AppModel.swift:123",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2954,7 +2954,7 @@
       }
     },
     "Каталог": {
-      "comment": "Sources/CodePath/AppModel.swift:92",
+      "comment": "Sources/CodePath/AppModel.swift:119",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3350,7 +3350,7 @@
       }
     },
     "Мои курсы": {
-      "comment": "Sources/CodePath/AppModel.swift:91",
+      "comment": "Sources/CodePath/AppModel.swift:118",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3368,7 +3368,7 @@
       }
     },
     "Мой прогресс": {
-      "comment": "Sources/CodePath/AppModel.swift:95; Sources/CodePath/SettingsView.swift:120",
+      "comment": "Sources/CodePath/AppModel.swift:122; Sources/CodePath/SettingsView.swift:120",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4322,7 +4322,7 @@
       }
     },
     "Обучение": {
-      "comment": "Sources/CodePath/AppModel.swift:94; Sources/CodePath/CodePathApp.swift:33",
+      "comment": "Sources/CodePath/AppModel.swift:121; Sources/CodePath/CodePathApp.swift:33",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5906,7 +5906,7 @@
       }
     },
     "Программа C++": {
-      "comment": "Sources/CodePath/AppModel.swift:93",
+      "comment": "Sources/CodePath/AppModel.swift:120",
       "extractionState": "manual",
       "localizations": {
         "en": {

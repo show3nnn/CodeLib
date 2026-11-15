@@ -5,12 +5,17 @@ import SwiftUI
 
 @MainActor @Observable
 final class AppModel {
-    let course: Course?
-    let catalog: CourseCatalog?
+    private let initialCourse: Course?
+    private let initialCatalog: CourseCatalog?
+    private var selectedContent: LocalizedContent?
+    var course: Course? { selectedContent?.course ?? initialCourse }
+    var catalog: CourseCatalog? { selectedContent?.catalog ?? initialCatalog }
     let contentError: AppFailure?
     let appRelease: AppRelease?
-    let releaseHistory: ReleaseHistory?
-    let releaseHistoryError: AppFailure?
+    private let initialReleaseHistory: ReleaseHistory?
+    private let initialReleaseHistoryError: AppFailure?
+    var releaseHistory: ReleaseHistory? { selectedContent?.history ?? initialReleaseHistory }
+    var releaseHistoryError: AppFailure? { selectedContent == nil ? initialReleaseHistoryError : nil }
     let dataURL: URL
     private var store: ProgressStore?
     var document = ProgressDocument()
@@ -83,6 +88,28 @@ final class AppModel {
         return !hasUnsavedChanges && saveError == nil
     }
 
+    /// Content selection is deliberately limited to Russian until the complete
+    /// UI, resources and presentation locale can switch together. No UI calls
+    /// this method yet.
+    @discardableResult
+    func selectContentLanguage(_ locale: CourseLocale) -> Bool {
+        guard locale == .russian else {
+            message = AppFailure(ContentError.translationUnavailable(locale.rawValue))
+            return false
+        }
+        guard let store, storageError == nil, !hasUnsavedChanges else { return false }
+        do {
+            let prepared = try LocalizedContent.bundled(locale: locale)
+            let committed = try prepared.commitContentSelection(to: store)
+            document = store.document
+            selectedContent = committed
+            return true
+        } catch {
+            message = AppFailure(error)
+            return false
+        }
+    }
+
     enum Page: String, CaseIterable, Identifiable {
         case home, catalog, syllabus, lesson, progress, achievements
         var id: String { rawValue }
@@ -112,17 +139,17 @@ final class AppModel {
     init() {
         appRelease = try? AppRelease(info: Bundle.main.infoDictionary ?? [:])
         do {
-            releaseHistory = try ReleaseHistory.bundled()
-            releaseHistoryError = nil
-        } catch { releaseHistory = nil; releaseHistoryError = AppFailure(error) }
+            initialReleaseHistory = try ReleaseHistory.bundled()
+            initialReleaseHistoryError = nil
+        } catch { initialReleaseHistory = nil; initialReleaseHistoryError = AppFailure(error) }
         do {
             let loaded = try Course.bundled()
             try AchievementCatalog.validate(course: loaded)
             let loadedCatalog = try CourseCatalog.bundled(availableCourseIDs: [loaded.id])
-            course = loaded
-            catalog = loadedCatalog
+            initialCourse = loaded
+            initialCatalog = loadedCatalog
             contentError = nil
-        } catch { course = nil; catalog = nil; contentError = AppFailure(error) }
+        } catch { initialCourse = nil; initialCatalog = nil; contentError = AppFailure(error) }
         if let path = ProcessInfo.processInfo.environment["CODEPATH_DATA_DIR"] {
             dataURL = URL(fileURLWithPath: path).appendingPathComponent("progress.json")
         } else {

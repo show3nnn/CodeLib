@@ -7,6 +7,65 @@ import ExecutionSupport
 
 @Suite(.serialized) @MainActor
 struct AppModelTests {
+    @Test func contentSelectionPersistsOnlyAfterFullPreparationAndWrite() throws {
+        _ = try setup()
+        let model = AppModel()
+        let original = try #require(model.course?.exercises.first)
+        let courseTitle = try #require(model.course?.title)
+        model.update {
+            var progress = ExerciseProgress()
+            progress.draft = ""
+            progress.answer = "сохранённый ответ"
+            $0.exercises[original.id] = progress
+            $0.lastExerciseID = original.id
+            $0.lessonPositions = ["future.lesson": "future.exercise"]
+            $0.profile = LocalProfile(nickname: "Ученик", avatar: .leaf)
+        }
+        let profile = model.document.profile
+        let before = try Data(contentsOf: model.dataURL)
+        #expect(!model.selectContentLanguage(.english))
+        #expect(model.message?.cause as? ContentError == .translationUnavailable("en"))
+        #expect(try Data(contentsOf: model.dataURL) == before)
+        #expect(model.course?.title == courseTitle)
+
+        model.message = nil
+        let fd = open(model.dataURL.appendingPathExtension("lock").path, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)
+        #expect(fd >= 0)
+        defer { close(fd) }
+        #expect(flock(fd, LOCK_EX | LOCK_NB) == 0)
+        #expect(!model.selectContentLanguage(.russian))
+        #expect(model.message?.cause as? StorageError == .locked)
+        #expect(model.document.preferences.preferredLanguage == nil)
+        #expect(try Data(contentsOf: model.dataURL) == before)
+        #expect(model.course?.title == courseTitle)
+        #expect(flock(fd, LOCK_UN) == 0)
+
+        model.message = nil
+        #expect(model.selectContentLanguage(.russian))
+        let reopened = AppModel()
+        #expect(reopened.document.preferences.preferredLanguage == "ru")
+        #expect(reopened.document.profile == profile)
+        #expect(reopened.document.exercises[original.id]?.draft == "")
+        #expect(reopened.document.exercises[original.id]?.answer == "сохранённый ответ")
+        #expect(reopened.document.lastExerciseID == original.id)
+        #expect(reopened.document.lessonPositions?["future.lesson"] == "future.exercise")
+        #expect(model.catalog != nil && model.releaseHistory != nil)
+
+        let external = try ProgressStore(url: model.dataURL)
+        try external.update { $0.exercises["external.unknown"] = ExerciseProgress() }
+        let changed = try Data(contentsOf: model.dataURL)
+        #expect(!model.selectContentLanguage(.russian))
+        #expect(model.message?.cause as? StorageError == .conflictingRevision)
+        #expect(try Data(contentsOf: model.dataURL) == changed)
+        #expect(model.document.exercises["external.unknown"] == nil)
+        #expect(model.course?.title == courseTitle)
+        model.updateState(original.id) { $0.draft = "несохранённый текст" }
+        #expect(model.hasUnsavedChanges)
+        #expect(!model.selectContentLanguage(.russian))
+        #expect(model.state(for: original.id).draft == "несохранённый текст")
+        #expect(try Data(contentsOf: model.dataURL) == changed)
+    }
+
     @Test func readinessRequiresRealSuccessfulMatchingOutput() {
         let valid = ExecutionResult(status: .success, stdout: "codelib-ready", exitCode: 0)
         #expect(CodeExecutionController.readinessOutcome(result: valid, cancelled: false) == .ready)
