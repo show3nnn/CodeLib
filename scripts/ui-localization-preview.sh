@@ -16,5 +16,5 @@ RUN="$(mktemp -d "$PREVIEW/run.XXXXXXXX")"
 mkdir -p "$RUN/data" "$RUN/screenshots"
 export CODEPATH_DATA_DIR="$RUN/data"
 export CODEPATH_LOCALIZATION_SOURCE="$PWD"
-"$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --localization-preview
+"$APP_OUTPUT/Contents/MacOS/CodePath" --ui-smoke-test "$RUN/screenshots" --localization-preview "$@"
 echo "Developer-only localization report and screenshots: $RUN/screenshots"

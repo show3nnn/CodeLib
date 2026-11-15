@@ -483,6 +483,7 @@ enum SmokeTest {
         var menuBeforePreview: [String] = []
         var menuDuringPreview: [String] = []
         var menuAfterPreview: [String] = []
+        var englishMenuItemsPresent = false
         func check(_ condition: Bool, _ name: String) {
             if condition { checks.append(name) } else { failures.append(name) }
         }
@@ -511,6 +512,12 @@ enum SmokeTest {
             try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
             await settle()
             menuDuringPreview = menuTitles(in: NSApp.mainMenu)
+            let englishMenu = ["About codelib", "Release history", "Continue learning", "Learning",
+                               "Previous task", "Next task", "Save changes"]
+            englishMenuItemsPresent = englishMenu.allSatisfy(menuDuringPreview.contains)
+            if ProcessInfo.processInfo.arguments.contains("--strict-menu-localization") {
+                check(englishMenuItemsPresent, "Expected English app menu titles are present")
+            }
             check(model.presentationLocale.language.languageCode?.identifier == "en", "Preview uses explicit English locale")
             check(model.course?.lessons.first?.title == "Programs and main", "Preview projects English course")
             check(model.catalog?.entries.first?.title != russianCatalog.entries.first?.title,
@@ -612,7 +619,7 @@ enum SmokeTest {
         do {
             let report: [String: Any] = ["checks": checks, "failures": failures, "developerOnly": true,
                                          "menuBeforePreview": menuBeforePreview, "menuDuringPreview": menuDuringPreview,
-                                         "menuAfterPreview": menuAfterPreview]
+                                         "menuAfterPreview": menuAfterPreview, "englishMenuItemsPresent": englishMenuItemsPresent]
             try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
                 .write(to: directory.appendingPathComponent("localization-preview-report.json"), options: .atomic)
         } catch { failures.append(String(describing: error)) }
