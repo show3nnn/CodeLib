@@ -16,6 +16,39 @@ struct CourseTranslationTests {
         return try encoder.encode(value)
     }
 
+    /// Remove only fields the text overlay is allowed to change. Any new
+    /// Codable field is protected by default rather than silently ignored.
+    private func protectedProjection(_ course: Course) throws -> [String: Any] {
+        var root = try #require(JSONSerialization.jsonObject(with: encoded(course)) as? [String: Any])
+        root.removeValue(forKey: "title")
+        root.removeValue(forKey: "summary")
+        var sections = try #require(root["sections"] as? [[String: Any]])
+        for sectionIndex in sections.indices {
+            sections[sectionIndex].removeValue(forKey: "title")
+            sections[sectionIndex].removeValue(forKey: "summary")
+            var lessons = try #require(sections[sectionIndex]["lessons"] as? [[String: Any]])
+            for lessonIndex in lessons.indices {
+                for key in ["title", "summary", "theory", "microscope", "recap"] {
+                    lessons[lessonIndex].removeValue(forKey: key)
+                }
+                var exercises = try #require(lessons[lessonIndex]["exercises"] as? [[String: Any]])
+                for exerciseIndex in exercises.indices {
+                    for key in ["title", "prompt", "hints", "explanation", "skills", "choiceLabels"] {
+                        exercises[exerciseIndex].removeValue(forKey: key)
+                    }
+                }
+                lessons[lessonIndex]["exercises"] = exercises
+            }
+            sections[sectionIndex]["lessons"] = lessons
+        }
+        root["sections"] = sections
+        return root
+    }
+
+    private func canonicalJSON(_ value: Any) throws -> Data {
+        try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+    }
+
     @Test func authoredDraftHasAccurateCoverageButCannotBecomeAnAppLanguage() throws {
         let source = try source()
         let translation = try draft()
@@ -49,6 +82,29 @@ struct CourseTranslationTests {
             #expect(original.answer == translated.answer && original.choices == translated.choices)
             #expect(try encoded(original.testCases) == encoded(translated.testCases))
         }
+    }
+
+    @Test func translationPreservesEveryNonTextFieldByDefault() throws {
+        let data = try source()
+        let base = try JSONDecoder().decode(Course.self, from: data)
+        let preview = try draft().developerPreview(from: data)
+        let original = try protectedProjection(base)
+        #expect(try canonicalJSON(original) == canonicalJSON(protectedProjection(preview)))
+
+        // Ensure the comparison is sensitive to new fields as well as existing
+        // nested metadata; it must not be a list of today's known protected keys.
+        var changed = original
+        changed["futureProtectedField"] = "changed"
+        #expect(try canonicalJSON(original) != canonicalJSON(changed))
+        var sections = try #require(changed["sections"] as? [[String: Any]])
+        var lessons = try #require(sections[0]["lessons"] as? [[String: Any]])
+        var exercises = try #require(lessons[0]["exercises"] as? [[String: Any]])
+        exercises[0]["starter"] = "changed executable source"
+        lessons[0]["exercises"] = exercises
+        sections[0]["lessons"] = lessons
+        changed = original
+        changed["sections"] = sections
+        #expect(try canonicalJSON(original) != canonicalJSON(changed))
     }
 
     @Test func entireCourseHasNoUntranslatedPresentationFields() throws {
