@@ -102,7 +102,7 @@ ENTITIES = {
     },
     "cpp.tickets": {
         "title": "Mini-project: ticket office", "summary": "Combine input, state and an exact report.",
-        "theory": "At the ticket office, prices are conveniently stored as whole coins when the task does not require fractional monetary amounts. Read the input values first, calculate the cost and remaining payment next, then format the report. Do not mix input prompts into the required output.\n\nThis mini-project guarantees a sufficient budget, so no branching is needed. To handle arbitrary user input, you would need validation and decisions, which are upcoming topics. Distinguish task guarantees from language guarantees.",
+        "theory": "At the ticket office, prices are conveniently stored as whole coins when the task does not require fractional monetary amounts. Read the input values first, calculate the cost and remaining amount next, then format the report. Do not mix input prompts into the required output.\n\nThis mini-project guarantees a sufficient budget, so no branching is needed. To handle arbitrary user input, you would need validation and decisions, which are upcoming topics. Distinguish task guarantees from language guarantees.",
         "microscope": "Input constraints are part of the task contract. For example, paid ≥ price * count lets you calculate nonnegative change without if. That does not make the program safe for every possible input. A real application validates input separately.",
         "recap": "Identify the units, constraints and output format. Save intermediate results using clear names.",
     },

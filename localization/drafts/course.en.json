@@ -2566,7 +2566,7 @@
     "cpp.tickets.packages.title": "Two passenger groups",
     "cpp.tickets.recap": "Identify the units, constraints and output format. Save intermediate results using clear names.",
     "cpp.tickets.summary": "Combine input, state and an exact report.",
-    "cpp.tickets.theory": "At the ticket office, prices are conveniently stored as whole coins when the task does not require fractional monetary amounts. Read the input values first, calculate the cost and remaining payment next, then format the report. Do not mix input prompts into the required output.\n\nThis mini-project guarantees a sufficient budget, so no branching is needed. To handle arbitrary user input, you would need validation and decisions, which are upcoming topics. Distinguish task guarantees from language guarantees.",
+    "cpp.tickets.theory": "At the ticket office, prices are conveniently stored as whole coins when the task does not require fractional monetary amounts. Read the input values first, calculate the cost and remaining amount next, then format the report. Do not mix input prompts into the required output.\n\nThis mini-project guarantees a sufficient budget, so no branching is needed. To handle arbitrary user input, you would need validation and decisions, which are upcoming topics. Distinguish task guarantees from language guarantees.",
     "cpp.tickets.title": "Mini-project: ticket office",
     "cpp.tickets.total.explanation": "An intermediate variable reduces the chance of using inconsistent values in different parts of the report.",
     "cpp.tickets.total.hint.1": "Cost is a product; change is a difference.",
