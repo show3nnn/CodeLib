@@ -19,7 +19,7 @@ ENTITIES = {
     "cpp.prefixlab.build": array_task("Accumulation log", "Print n+1 numbers p[0]…p[n] separated by single spaces; no final newline is required.",
         ["Print the zero prefix too.", "a[i] adds a new value p[i+1], without changing p[i]."], "The extra zero cell removes the special case for queries from the beginning."),
     "cpp.prefixlab.queries": array_task("Range-sum queries", "Then q (0–1000) and q pairs l r (0≤l≤r≤n). Print the sum of each [l,r) on its own line.",
-        ["Build prefixes once before all queries.", "The right index already addresses p: use p[r]-p[l]."], "Empty ranges automatically yield zero; total complexity is O(n+q)."),
+        ["Build prefixes once before all queries.", "Use the right index directly in p: calculate p[r]-p[l]."], "Empty ranges automatically yield zero; total complexity is O(n+q)."),
     "cpp.prefixlab.even": array_task("Even elements in a range", "Then q (0–1000), followed by q pairs l r (0≤l≤r≤n). Print the number of even elements in each [l,r), one answer per line. Include zero and negative even numbers.",
         ["Sum indicators, not the values themselves.", "x%2==0 also works for negative even numbers."], "A prefix can count any property that can be checked independently for each element."),
     "cpp.prefixlab.balance": array_task("An equilibrium position", "Print the smallest index i where the sums strictly to its left and strictly to its right are equal; print -1 if none exists. An empty array gives -1.",

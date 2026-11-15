@@ -1869,7 +1869,7 @@
     "cpp.prefixlab.microscope": "The identity p[i+1]-p[i]=a[i] explains subtraction: the shared prefix cancels. It does not assume positivity. Difference arrays use a different invariant: the accumulated adjustment at i equals the sum of all updates covering i. An empty [l,l) changes nothing.",
     "cpp.prefixlab.queries.explanation": "Empty ranges automatically yield zero; total complexity is O(n+q).",
     "cpp.prefixlab.queries.hint.1": "Build prefixes once before all queries.",
-    "cpp.prefixlab.queries.hint.2": "The right index already addresses p: use p[r]-p[l].",
+    "cpp.prefixlab.queries.hint.2": "Use the right index directly in p: calculate p[r]-p[l].",
     "cpp.prefixlab.queries.prompt": "First, n (0–1000) and n integer elements (−1000000–1000000). Then q (0–1000) and q pairs l r (0≤l≤r≤n). Print the sum of each [l,r) on its own line.",
     "cpp.prefixlab.queries.skill.0dd4bbf608e9b8252b5adeb26485a196e69edaf38774a0e8956b171604cde5bc": "difference array",
     "cpp.prefixlab.queries.skill.461f1b9638dfab15008a27f0196dd2035f5337b5baf0ff30cd9c222103ff8c95": "prefix sums",
