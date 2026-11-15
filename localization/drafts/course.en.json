@@ -1597,7 +1597,7 @@
     "cpp.methods.two.explanation": "One type defines the rules for many independent states.",
     "cpp.methods.two.hint.1": "Fields belong to objects, not a single global counter.",
     "cpp.methods.two.hint.2": "Call the method on the appropriate object name.",
-    "cpp.methods.two.prompt": "Use Counter with add and value. Input: a,b (0–100). Create two Counters, increment each its specified number of times, and print their values separated by a space.",
+    "cpp.methods.two.prompt": "Use Counter with add and value. Input: a,b (0–100). Create two Counters, increment the first a times and the second b times, and print their values separated by a space.",
     "cpp.methods.two.skill.0889113e04d3203f0c401c17c0fd8b352b740dc607433779d3edcaa13320b001": "class",
     "cpp.methods.two.skill.090b7633c180e8446beaa77ef2834cfdd94be87535c717c2c6fdf7eb9d682172": "methods",
     "cpp.methods.two.skill.f75c6596507878933aa2bc17dfd9a8689ad0da4f85427ba457666ae5917fa631": "const",
