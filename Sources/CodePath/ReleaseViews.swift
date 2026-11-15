@@ -74,10 +74,13 @@ struct ReleaseHistoryView: View {
                 }
                 Spacer()
                 Button("Закрыть") { dismiss() }
-                Button(acknowledgementFailed ? "Повторить сохранение" : "Отметить прочитанным") {
+                Button {
                     guard let release = model.appRelease else { return }
                     if model.markReleaseViewed(release.version) { dismiss() }
                     else { acknowledgementFailed = true }
+                } label: {
+                    if acknowledgementFailed { Text("Повторить сохранение") }
+                    else { Text("Отметить прочитанным") }
                 }
                 .disabled(model.appRelease == nil || model.releaseHistory == nil)
                 .buttonStyle(.borderedProminent)

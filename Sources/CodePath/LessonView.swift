@@ -44,7 +44,12 @@ struct LessonView: View {
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Button(showTheory ? "Скрыть теорию" : "Теория", systemImage: "book.closed") { showTheory.toggle() }
+                    Button { showTheory.toggle() } label: {
+                        Label {
+                            if showTheory { Text("Скрыть теорию") }
+                            else { Text("Теория") }
+                        } icon: { Image(systemName: "book.closed") }
+                    }
                         .buttonStyle(.bordered).tint(showTheory ? .green : .secondary)
                         .accessibilityIdentifier("lesson.theory")
                 }.padding(.horizontal, 24).padding(.top, 20).padding(.bottom, 16)
@@ -117,7 +122,12 @@ struct LessonView: View {
                         .buttonStyle(.bordered)
                         .disabled(model.course?.adjacent(to: exercise.id, offset: -1) == nil)
                     Spacer()
-                    Label(model.hasUnsavedChanges ? "Не сохранено" : "Сохранено локально", systemImage: model.hasUnsavedChanges ? "exclamationmark.triangle" : "internaldrive")
+                    Label {
+                        if model.hasUnsavedChanges { Text("Не сохранено") }
+                        else { Text("Сохранено локально") }
+                    } icon: {
+                        Image(systemName: model.hasUnsavedChanges ? "exclamationmark.triangle" : "internaldrive")
+                    }
                         .font(.caption).foregroundStyle(.secondary)
                     Spacer()
                     Button("Далее", systemImage: "chevron.right") { model.move(1) }
@@ -234,8 +244,11 @@ struct ExerciseView: View {
                         Text(exercise.hints[1])
                     }
                     if state.hintLevel < 2 {
-                        Button(state.hintLevel == 0 ? "Нужен намёк" : "Раскрыть подсказку") {
+                        Button {
                             model.updateState(exercise.id) { $0.hintLevel += 1 }
+                        } label: {
+                            if state.hintLevel == 0 { Text("Нужен намёк") }
+                            else { Text("Раскрыть подсказку") }
                         }
                     }
                     if state.hintLevel < 3 {
@@ -392,8 +405,12 @@ struct ExerciseView: View {
                 }
             }
             if let correct = state.lastCorrect {
-                Label(correct ? "Верно. \(exercise.explanation)" : "Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.",
-                      systemImage: correct ? "checkmark.circle" : "arrow.counterclockwise")
+                Label {
+                    if correct { Text("Верно. \(exercise.explanation)") }
+                    else { Text("Пока не совпало. Проверьте условие, формат и значения; можно раскрыть намёк.") }
+                } icon: {
+                    Image(systemName: correct ? "checkmark.circle" : "arrow.counterclockwise")
+                }
                     .foregroundStyle(correct ? Color.green : Color.orange)
                     .accessibilityAddTraits(.updatesFrequently)
             }
