@@ -7230,6 +7230,18 @@
                 {
                   "input": "7 7",
                   "output": "7 7"
+                },
+                {
+                  "input": "-5 12",
+                  "output": "12 -5"
+                },
+                {
+                  "input": "-100 100",
+                  "output": "100 -100"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0 0"
                 }
               ]
             },
@@ -7260,6 +7272,22 @@
                 },
                 {
                   "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "1 5",
+                  "output": "5"
+                },
+                {
+                  "input": "4 -1 -2 -3 -4",
+                  "output": "-10"
+                },
+                {
+                  "input": "5 100 -100 0 50 -50",
+                  "output": "0"
+                },
+                {
+                  "input": "3 0 0 0",
                   "output": "0"
                 }
               ]
@@ -7319,6 +7347,18 @@
                 {
                   "input": "0",
                   "output": ""
+                },
+                {
+                  "input": "1 5",
+                  "output": "6"
+                },
+                {
+                  "input": "4 -2 -1 0 1",
+                  "output": "-1 0 1 2"
+                },
+                {
+                  "input": "3 100 100 -100",
+                  "output": "101 101 -99"
                 }
               ]
             }
@@ -7365,6 +7405,22 @@
                 {
                   "input": "-4 2",
                   "output": "-2"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "-100 -100",
+                  "output": "-200"
+                },
+                {
+                  "input": "100 100",
+                  "output": "200"
+                },
+                {
+                  "input": "0 -50",
+                  "output": "-50"
                 }
               ]
             },
@@ -7396,6 +7452,22 @@
                 {
                   "input": "3 8 1",
                   "output": "3 9"
+                },
+                {
+                  "input": "-5 5 0",
+                  "output": "-4 5"
+                },
+                {
+                  "input": "-5 5 1",
+                  "output": "-5 6"
+                },
+                {
+                  "input": "100 -100 0",
+                  "output": "101 -100"
+                },
+                {
+                  "input": "0 0 1",
+                  "output": "0 1"
                 }
               ]
             },
@@ -7453,6 +7525,22 @@
                 {
                   "input": "1 -5",
                   "output": "-5"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "1 0",
+                  "output": "0"
+                },
+                {
+                  "input": "1 100",
+                  "output": "100"
+                },
+                {
+                  "input": "0 -100",
+                  "output": "0"
                 }
               ]
             }
@@ -7499,6 +7587,22 @@
                 {
                   "input": "-1",
                   "output": "0"
+                },
+                {
+                  "input": "-100",
+                  "output": "-99"
+                },
+                {
+                  "input": "99",
+                  "output": "100"
+                },
+                {
+                  "input": "0",
+                  "output": "1"
+                },
+                {
+                  "input": "100",
+                  "output": "101"
                 }
               ]
             },
@@ -7530,6 +7634,22 @@
                 {
                   "input": "0",
                   "output": "0"
+                },
+                {
+                  "input": "-5",
+                  "output": "-10"
+                },
+                {
+                  "input": "100",
+                  "output": "200"
+                },
+                {
+                  "input": "-100",
+                  "output": "-200"
+                },
+                {
+                  "input": "1",
+                  "output": "2"
                 }
               ]
             },
@@ -7629,6 +7749,18 @@
                 {
                   "input": "0 0 0",
                   "output": "0"
+                },
+                {
+                  "input": "-1 -2 -3",
+                  "output": "-6"
+                },
+                {
+                  "input": "100 100 100",
+                  "output": "300"
+                },
+                {
+                  "input": "-100 0 100",
+                  "output": "0"
                 }
               ]
             },
@@ -7660,6 +7792,18 @@
                 {
                   "input": "-2 -2 -2",
                   "output": "0 0 0"
+                },
+                {
+                  "input": "0 0 0",
+                  "output": "2 2 2"
+                },
+                {
+                  "input": "100 100 100",
+                  "output": "102 102 102"
+                },
+                {
+                  "input": "-100 0 100",
+                  "output": "-98 2 102"
                 }
               ]
             },
@@ -7717,6 +7861,22 @@
                 {
                   "input": "-1 -2 -3 -4",
                   "output": "-10"
+                },
+                {
+                  "input": "0 0 0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "100 100 100 100",
+                  "output": "400"
+                },
+                {
+                  "input": "-100 100 -100 100",
+                  "output": "0"
+                },
+                {
+                  "input": "5 -5 5 -5",
+                  "output": "0"
                 }
               ]
             }
@@ -7770,6 +7930,18 @@
                 {
                   "input": "-1",
                   "output": "0"
+                },
+                {
+                  "input": "-100",
+                  "output": "-99"
+                },
+                {
+                  "input": "100",
+                  "output": "101"
+                },
+                {
+                  "input": "0",
+                  "output": "1"
                 }
               ]
             },
@@ -7801,6 +7973,18 @@
                 {
                   "input": "0",
                   "output": "0"
+                },
+                {
+                  "input": "-5",
+                  "output": "-10"
+                },
+                {
+                  "input": "100",
+                  "output": "200"
+                },
+                {
+                  "input": "-100",
+                  "output": "-200"
                 }
               ]
             },
@@ -7858,6 +8042,18 @@
                 {
                   "input": "0",
                   "output": "0 1"
+                },
+                {
+                  "input": "-100",
+                  "output": "-100 1"
+                },
+                {
+                  "input": "100",
+                  "output": "100 1"
+                },
+                {
+                  "input": "5",
+                  "output": "5 1"
                 }
               ]
             }
@@ -7904,6 +8100,18 @@
                 {
                   "input": "-5",
                   "output": "0"
+                },
+                {
+                  "input": "-100",
+                  "output": "-95"
+                },
+                {
+                  "input": "100",
+                  "output": "105"
+                },
+                {
+                  "input": "0",
+                  "output": "5"
                 }
               ]
             },
@@ -7935,6 +8143,18 @@
                 {
                   "input": "-2",
                   "output": "1 -2"
+                },
+                {
+                  "input": "-100",
+                  "output": "1 -100"
+                },
+                {
+                  "input": "0",
+                  "output": "1 0"
+                },
+                {
+                  "input": "100",
+                  "output": "1 100"
                 }
               ]
             },
@@ -7992,6 +8212,18 @@
                 {
                   "input": "0",
                   "output": "0 1"
+                },
+                {
+                  "input": "-100",
+                  "output": "-100 1"
+                },
+                {
+                  "input": "0",
+                  "output": "0 1"
+                },
+                {
+                  "input": "100",
+                  "output": "100 1"
                 }
               ]
             }
@@ -8038,6 +8270,18 @@
                 {
                   "input": "1 -2 8",
                   "output": "-2 2"
+                },
+                {
+                  "input": "1 5 0",
+                  "output": "5 2"
+                },
+                {
+                  "input": "3 -1 -2 -3 4",
+                  "output": "-1 4"
+                },
+                {
+                  "input": "2 100 -100 -50",
+                  "output": "100 3"
                 }
               ]
             },
@@ -8068,6 +8312,18 @@
                 },
                 {
                   "input": "0",
+                  "output": "0 1"
+                },
+                {
+                  "input": "1",
+                  "output": "0 1"
+                },
+                {
+                  "input": "100",
+                  "output": "0 1"
+                },
+                {
+                  "input": "5",
                   "output": "0 1"
                 }
               ]
@@ -8126,6 +8382,18 @@
                 {
                   "input": "0",
                   "output": "0 0"
+                },
+                {
+                  "input": "1",
+                  "output": "1 0"
+                },
+                {
+                  "input": "100",
+                  "output": "100 0"
+                },
+                {
+                  "input": "50",
+                  "output": "50 0"
                 }
               ]
             }
@@ -8179,6 +8447,18 @@
                 {
                   "input": "0 0",
                   "output": "0 0"
+                },
+                {
+                  "input": "-100 100",
+                  "output": "100 -100"
+                },
+                {
+                  "input": "5 5",
+                  "output": "5 5"
+                },
+                {
+                  "input": "0 -1",
+                  "output": "-1 0"
                 }
               ]
             },
@@ -8210,6 +8490,18 @@
                 {
                   "input": "-1 0",
                   "output": "-1 0"
+                },
+                {
+                  "input": "100 -100",
+                  "output": "100 101"
+                },
+                {
+                  "input": "-100 100",
+                  "output": "-100 -99"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0 1"
                 }
               ]
             },
@@ -8267,6 +8559,22 @@
                 {
                   "input": "0 0",
                   "output": "0"
+                },
+                {
+                  "input": "-100 100",
+                  "output": "200"
+                },
+                {
+                  "input": "100 -100",
+                  "output": "200"
+                },
+                {
+                  "input": "0 -100",
+                  "output": "100"
+                },
+                {
+                  "input": "-5 -5",
+                  "output": "10"
                 }
               ]
             }
@@ -8313,6 +8621,18 @@
                 {
                   "input": "0",
                   "output": "0"
+                },
+                {
+                  "input": "1",
+                  "output": "1"
+                },
+                {
+                  "input": "100",
+                  "output": "100"
+                },
+                {
+                  "input": "50",
+                  "output": "50"
                 }
               ]
             },
@@ -8344,6 +8664,18 @@
                 {
                   "input": "-2 2",
                   "output": "0"
+                },
+                {
+                  "input": "-100 100",
+                  "output": "0"
+                },
+                {
+                  "input": "100 100",
+                  "output": "200"
+                },
+                {
+                  "input": "-100 -100",
+                  "output": "-200"
                 }
               ]
             },
@@ -8401,6 +8733,18 @@
                 {
                   "input": "0 0",
                   "output": "0 0"
+                },
+                {
+                  "input": "0 100",
+                  "output": "0 100"
+                },
+                {
+                  "input": "100 0",
+                  "output": "100 0"
+                },
+                {
+                  "input": "50 50",
+                  "output": "50 50"
                 }
               ]
             }
@@ -8447,6 +8791,18 @@
                 {
                   "input": "-5",
                   "output": "-5"
+                },
+                {
+                  "input": "-100",
+                  "output": "-100"
+                },
+                {
+                  "input": "100",
+                  "output": "100"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
                 }
               ]
             },
@@ -8482,6 +8838,26 @@
                 {
                   "input": "0 0",
                   "output": "0"
+                },
+                {
+                  "input": "100 0",
+                  "output": "100"
+                },
+                {
+                  "input": "100 100",
+                  "output": "100"
+                },
+                {
+                  "input": "99 1",
+                  "output": "100"
+                },
+                {
+                  "input": "0 100",
+                  "output": "100"
+                },
+                {
+                  "input": "50 50",
+                  "output": "100"
                 }
               ]
             },
@@ -8539,6 +8915,22 @@
                 {
                   "input": "0 9",
                   "output": "0"
+                },
+                {
+                  "input": "100 100",
+                  "output": "10000"
+                },
+                {
+                  "input": "1 0",
+                  "output": "0"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "10 10",
+                  "output": "100"
                 }
               ]
             }
@@ -8585,6 +8977,22 @@
                 {
                   "input": "1 Box 0",
                   "output": "Box"
+                },
+                {
+                  "input": "1 Box 5",
+                  "output": "Box"
+                },
+                {
+                  "input": "2 A 5 B 5",
+                  "output": "A"
+                },
+                {
+                  "input": "3 A 0 B 0 C 1",
+                  "output": "C"
+                },
+                {
+                  "input": "3 A 100 B 99 C 100",
+                  "output": "A"
                 }
               ]
             },
@@ -8619,6 +9027,18 @@
                 },
                 {
                   "input": "0 0",
+                  "output": "1 0"
+                },
+                {
+                  "input": "5 5",
+                  "output": "1 0"
+                },
+                {
+                  "input": "5 6",
+                  "output": "0 5"
+                },
+                {
+                  "input": "100 100",
                   "output": "1 0"
                 }
               ]
@@ -8681,6 +9101,22 @@
                 {
                   "input": "1 100 100",
                   "output": "10000"
+                },
+                {
+                  "input": "2 1 100 100 1",
+                  "output": "200"
+                },
+                {
+                  "input": "3 2 50 2 25 2 25",
+                  "output": "200"
+                },
+                {
+                  "input": "2 0 100 100 0",
+                  "output": "0"
+                },
+                {
+                  "input": "1 1 1",
+                  "output": "1"
                 }
               ]
             }
@@ -8734,6 +9170,18 @@
                 {
                   "input": "-3",
                   "output": "9"
+                },
+                {
+                  "input": "-100",
+                  "output": "10000"
+                },
+                {
+                  "input": "100",
+                  "output": "10000"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
                 }
               ]
             },
@@ -8765,6 +9213,18 @@
                 {
                   "input": "-1",
                   "output": "0"
+                },
+                {
+                  "input": "-100",
+                  "output": "-99"
+                },
+                {
+                  "input": "100",
+                  "output": "101"
+                },
+                {
+                  "input": "0",
+                  "output": "1"
                 }
               ]
             },
@@ -8822,6 +9282,18 @@
                 {
                   "input": "0",
                   "output": "2"
+                },
+                {
+                  "input": "-100",
+                  "output": "-98"
+                },
+                {
+                  "input": "100",
+                  "output": "102"
+                },
+                {
+                  "input": "-2",
+                  "output": "0"
                 }
               ]
             }
@@ -8868,6 +9340,22 @@
                 {
                   "input": "0 99999",
                   "output": "0"
+                },
+                {
+                  "input": "1 100000",
+                  "output": "100000"
+                },
+                {
+                  "input": "99999 100000",
+                  "output": "9999900000"
+                },
+                {
+                  "input": "100000 0",
+                  "output": "0"
+                },
+                {
+                  "input": "12345 6789",
+                  "output": "83810205"
                 }
               ]
             },
@@ -8902,6 +9390,22 @@
                 },
                 {
                   "input": "101",
+                  "output": "Outside"
+                },
+                {
+                  "input": "-101",
+                  "output": "Outside"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "100000",
+                  "output": "Outside"
+                },
+                {
+                  "input": "-100000",
                   "output": "Outside"
                 }
               ]
@@ -8961,6 +9465,22 @@
                 {
                   "input": "2 3",
                   "output": "6000000"
+                },
+                {
+                  "input": "0 100",
+                  "output": "0"
+                },
+                {
+                  "input": "100 0",
+                  "output": "0"
+                },
+                {
+                  "input": "1 1",
+                  "output": "1000000"
+                },
+                {
+                  "input": "99 99",
+                  "output": "9801000000"
                 }
               ]
             }
@@ -9011,6 +9531,22 @@
                 {
                   "input": "9 3",
                   "output": "3"
+                },
+                {
+                  "input": "0 5",
+                  "output": "0"
+                },
+                {
+                  "input": "-100 -10",
+                  "output": "10"
+                },
+                {
+                  "input": "100 10",
+                  "output": "10"
+                },
+                {
+                  "input": "-1 10",
+                  "output": "0"
                 }
               ]
             },
@@ -9049,6 +9585,18 @@
                 },
                 {
                   "input": "-1",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "1",
+                  "output": "7"
+                },
+                {
+                  "input": "8",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "-5",
                   "output": "Invalid"
                 }
               ]
@@ -9111,6 +9659,26 @@
                 {
                   "input": "100 0",
                   "output": "100"
+                },
+                {
+                  "input": "-100 0",
+                  "output": "-100"
+                },
+                {
+                  "input": "100 1",
+                  "output": "Limit"
+                },
+                {
+                  "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "-1000 1000",
+                  "output": "0"
+                },
+                {
+                  "input": "50 50",
+                  "output": "100"
                 }
               ]
             }
@@ -9164,6 +9732,22 @@
                 {
                   "input": "0",
                   "output": "0\n"
+                },
+                {
+                  "input": "1 Solo",
+                  "output": "1\nSolo 1\n"
+                },
+                {
+                  "input": "5 B A B A B",
+                  "output": "2\nA 2\nB 3\n"
+                },
+                {
+                  "input": "3 Dock Dock Dock",
+                  "output": "1\nDock 3\n"
+                },
+                {
+                  "input": "2 Z A",
+                  "output": "2\nA 1\nZ 1\n"
                 }
               ]
             },
@@ -9195,6 +9779,22 @@
                 {
                   "input": "3 Air Dock Air Air",
                   "output": "2 2"
+                },
+                {
+                  "input": "3 Air Dock Air Dock",
+                  "output": "1 2"
+                },
+                {
+                  "input": "0 Missing",
+                  "output": "0 0"
+                },
+                {
+                  "input": "4 A B A B C",
+                  "output": "0 2"
+                },
+                {
+                  "input": "1 Solo Solo",
+                  "output": "1 1"
                 }
               ]
             },
@@ -9252,6 +9852,22 @@
                 {
                   "input": "0",
                   "output": "0"
+                },
+                {
+                  "input": "1 Box 100",
+                  "output": "100"
+                },
+                {
+                  "input": "4 A 1 B 2 A 3 B 4",
+                  "output": "10"
+                },
+                {
+                  "input": "2 X 0 Y 100",
+                  "output": "100"
+                },
+                {
+                  "input": "3 Z 1 Z 1 Z 1",
+                  "output": "3"
                 }
               ]
             }
@@ -9298,6 +9914,22 @@
                 {
                   "input": "0",
                   "output": "0"
+                },
+                {
+                  "input": "1 5",
+                  "output": "1"
+                },
+                {
+                  "input": "5 0 1 2 3 4",
+                  "output": "5"
+                },
+                {
+                  "input": "4 9 9 9 9",
+                  "output": "1"
+                },
+                {
+                  "input": "6 1 2 3 1 2 3",
+                  "output": "3"
                 }
               ]
             },
@@ -9328,6 +9960,22 @@
                 },
                 {
                   "input": "0 7",
+                  "output": ""
+                },
+                {
+                  "input": "3 1 2 3 2",
+                  "output": "1\n3\n"
+                },
+                {
+                  "input": "5 5 4 3 2 1 5",
+                  "output": "1\n2\n3\n4\n"
+                },
+                {
+                  "input": "1 7 0",
+                  "output": "7\n"
+                },
+                {
+                  "input": "3 1 1 1 1",
                   "output": ""
                 }
               ]
@@ -9386,6 +10034,22 @@
                 {
                   "input": "0",
                   "output": ""
+                },
+                {
+                  "input": "1 5",
+                  "output": "5"
+                },
+                {
+                  "input": "4 3 3 2 2",
+                  "output": "3 2"
+                },
+                {
+                  "input": "5 0 1 0 1 0",
+                  "output": "0 1"
+                },
+                {
+                  "input": "3 9 8 9",
+                  "output": "9 8"
                 }
               ]
             }
@@ -9595,6 +10259,22 @@
                 {
                   "input": "12x",
                   "output": "24"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "100",
+                  "output": "200"
+                },
+                {
+                  "input": "101",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "0x10",
+                  "output": "0"
                 }
               ]
             },
@@ -9629,6 +10309,18 @@
                 },
                 {
                   "input": "3",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "1",
+                  "output": "7"
+                },
+                {
+                  "input": "9",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "5",
                   "output": "Invalid"
                 }
               ]
@@ -9760,6 +10452,22 @@
                 {
                   "input": "BOGUS",
                   "output": "Invalid\n"
+                },
+                {
+                  "input": "ADD 5 TOTAL ADD -10 TOTAL STOP",
+                  "output": "5\n-5\n"
+                },
+                {
+                  "input": "ADD 100 ADD 100 TOTAL STOP",
+                  "output": "200\n"
+                },
+                {
+                  "input": "TOTAL TOTAL STOP",
+                  "output": "0\n0\n"
+                },
+                {
+                  "input": "ADD -100 TOTAL STOP",
+                  "output": "-100\n"
                 }
               ]
             },
@@ -9790,6 +10498,22 @@
                 },
                 {
                   "input": "ADD 1 UNDO UNDO COUNT STOP",
+                  "output": "0\n"
+                },
+                {
+                  "input": "COUNT ADD 5 COUNT UNDO COUNT STOP",
+                  "output": "0\n1\n0\n"
+                },
+                {
+                  "input": "UNDO UNDO STOP",
+                  "output": ""
+                },
+                {
+                  "input": "ADD 1 ADD 2 ADD 3 UNDO UNDO COUNT STOP",
+                  "output": "1\n"
+                },
+                {
+                  "input": "COUNT STOP",
                   "output": "0\n"
                 }
               ]
@@ -9848,6 +10572,22 @@
                 {
                   "input": "UNDO TOTAL STOP",
                   "output": "0\n"
+                },
+                {
+                  "input": "ADD 5 ADD 10 TOTAL UNDO TOTAL UNDO UNDO TOTAL STOP",
+                  "output": "15\n5\n0\n"
+                },
+                {
+                  "input": "UNDO UNDO TOTAL STOP",
+                  "output": "0\n"
+                },
+                {
+                  "input": "ADD -5 ADD 5 TOTAL STOP",
+                  "output": "0\n"
+                },
+                {
+                  "input": "ADD 100 TOTAL UNDO TOTAL STOP",
+                  "output": "100\n0\n"
                 }
               ]
             }
@@ -9894,6 +10634,22 @@
                 {
                   "input": "1 -7",
                   "output": "-7"
+                },
+                {
+                  "input": "3 2 2 2",
+                  "output": "2"
+                },
+                {
+                  "input": "5 -1 -1 -2 -2 -2",
+                  "output": "-2"
+                },
+                {
+                  "input": "4 5 5 4 4",
+                  "output": "4"
+                },
+                {
+                  "input": "1 0",
+                  "output": "0"
                 }
               ]
             },
@@ -9924,6 +10680,22 @@
                 },
                 {
                   "input": "1 9",
+                  "output": "0"
+                },
+                {
+                  "input": "3 5 5 5",
+                  "output": "0"
+                },
+                {
+                  "input": "4 -100 100 0 50",
+                  "output": "200"
+                },
+                {
+                  "input": "2 -1 -2",
+                  "output": "1"
+                },
+                {
+                  "input": "5 0 0 0 0 0",
                   "output": "0"
                 }
               ]
@@ -9982,6 +10754,22 @@
                 {
                   "input": "1 -5",
                   "output": "Count: 1\nMedian: -5\nMean: -5.00"
+                },
+                {
+                  "input": "3 -5 0 5",
+                  "output": "Count: 3\nMedian: 0\nMean: 0.00"
+                },
+                {
+                  "input": "5 1 1 1 10 10",
+                  "output": "Count: 5\nMedian: 1\nMean: 4.60"
+                },
+                {
+                  "input": "1 0",
+                  "output": "Count: 1\nMedian: 0\nMean: 0.00"
+                },
+                {
+                  "input": "3 100 100 100",
+                  "output": "Count: 3\nMedian: 100\nMean: 100.00"
                 }
               ]
             }
@@ -10211,6 +10999,18 @@
                 {
                   "input": "0",
                   "output": "5"
+                },
+                {
+                  "input": "1",
+                  "output": "7"
+                },
+                {
+                  "input": "100",
+                  "output": "205"
+                },
+                {
+                  "input": "50",
+                  "output": "105"
                 }
               ]
             },
@@ -10242,6 +11042,18 @@
                 {
                   "input": "-2",
                   "output": "-4"
+                },
+                {
+                  "input": "-100",
+                  "output": "-200"
+                },
+                {
+                  "input": "0",
+                  "output": "0"
+                },
+                {
+                  "input": "100",
+                  "output": "200"
                 }
               ]
             },
@@ -10299,6 +11111,18 @@
                 {
                   "input": "-1",
                   "output": "Rejected"
+                },
+                {
+                  "input": "100",
+                  "output": "Accepted"
+                },
+                {
+                  "input": "-100",
+                  "output": "Rejected"
+                },
+                {
+                  "input": "1",
+                  "output": "Accepted"
                 }
               ]
             }
@@ -10376,6 +11200,22 @@
                 {
                   "input": "2 0 -1",
                   "output": "0"
+                },
+                {
+                  "input": "4 -5 -5 -5 -5",
+                  "output": "-5"
+                },
+                {
+                  "input": "5 100 -100 50 -50 0",
+                  "output": "100"
+                },
+                {
+                  "input": "2 -100 -99",
+                  "output": "-99"
+                },
+                {
+                  "input": "3 7 7 7",
+                  "output": "7"
                 }
               ]
             },
@@ -10433,6 +11273,22 @@
                 {
                   "input": "0",
                   "output": "OK 0"
+                },
+                {
+                  "input": "1 -100",
+                  "output": "OK -100"
+                },
+                {
+                  "input": "3 100 100 100",
+                  "output": "OK 300"
+                },
+                {
+                  "input": "2 -50 50",
+                  "output": "OK 0"
+                },
+                {
+                  "input": "5 1 2 3 4 5",
+                  "output": "OK 15"
                 }
               ]
             }
@@ -10479,6 +11335,22 @@
                 {
                   "input": "0 Missing",
                   "output": "0 0"
+                },
+                {
+                  "input": "1 Box 0 Box",
+                  "output": "0 1"
+                },
+                {
+                  "input": "3 A 5 A 7 B 1 A",
+                  "output": "12 2"
+                },
+                {
+                  "input": "3 X 1 Y 2 Z 3 Y",
+                  "output": "2 3"
+                },
+                {
+                  "input": "2 A 100 A 100 A",
+                  "output": "200 1"
                 }
               ]
             },
@@ -10514,6 +11386,18 @@
                 {
                   "input": "0 0 0",
                   "output": "1 1 0"
+                },
+                {
+                  "input": "5 0 5",
+                  "output": "1 1 0"
+                },
+                {
+                  "input": "100 100 100",
+                  "output": "1 0 0"
+                },
+                {
+                  "input": "3 4 3",
+                  "output": "0 1 0"
                 }
               ]
             },
@@ -10579,6 +11463,10 @@
                 {
                   "input": "STOP",
                   "output": ""
+                },
+                {
+                  "input": "ADD Food 1 GET Food TAKE Food 2 GET Food STOP",
+                  "output": "1\nMissing\n1\n"
                 }
               ]
             }
@@ -10636,6 +11524,14 @@
                 {
                   "input": "3 -2 -3 5",
                   "output": "0 -2 -5 0"
+                },
+                {
+                  "input": "1 100",
+                  "output": "0 100"
+                },
+                {
+                  "input": "1 -100",
+                  "output": "0 -100"
                 }
               ]
             },
@@ -10671,6 +11567,14 @@
                 {
                   "input": "1 -8 0",
                   "output": ""
+                },
+                {
+                  "input": "2 1 2 2 0 1 1 2",
+                  "output": "1\n2\n"
+                },
+                {
+                  "input": "3 1 -1 1 2 0 3 2 3",
+                  "output": "1\n1\n"
                 }
               ]
             },
@@ -10706,6 +11610,14 @@
                 {
                   "input": "2 2 4 1 0 2",
                   "output": "2\n"
+                },
+                {
+                  "input": "1 2 1 0 1",
+                  "output": "1\n"
+                },
+                {
+                  "input": "2 -1 -2 2 0 2 1 2",
+                  "output": "1\n1\n"
                 }
               ]
             },
@@ -10784,6 +11696,14 @@
                 {
                   "input": "2 0 0 2 0 2 3 0 2 -3",
                   "output": "0 0"
+                },
+                {
+                  "input": "1 5 1 0 1 -5",
+                  "output": "0"
+                },
+                {
+                  "input": "0 1 0 0 0",
+                  "output": "Empty"
                 }
               ]
             },
@@ -10864,6 +11784,14 @@
                 {
                   "input": "3 1 2 3 3",
                   "output": "6"
+                },
+                {
+                  "input": "4 1 2 3 4 2",
+                  "output": "7"
+                },
+                {
+                  "input": "2 -5 -1 1",
+                  "output": "-1"
                 }
               ]
             },
@@ -10903,6 +11831,14 @@
                 {
                   "input": "3 0 0 0 1 0",
                   "output": "3"
+                },
+                {
+                  "input": "5 1 2 3 4 5 2 9",
+                  "output": "1"
+                },
+                {
+                  "input": "3 1 1 1 4 2",
+                  "output": "0"
                 }
               ]
             },
@@ -10941,6 +11877,14 @@
                 },
                 {
                   "input": "0 0",
+                  "output": "0"
+                },
+                {
+                  "input": "3 1 1 1 2",
+                  "output": "2"
+                },
+                {
+                  "input": "3 5 5 5 4",
                   "output": "0"
                 }
               ]
@@ -10981,6 +11925,14 @@
                 {
                   "input": "0 1",
                   "output": "0"
+                },
+                {
+                  "input": "3 1 1 1 2",
+                  "output": "2"
+                },
+                {
+                  "input": "2 5 5 10",
+                  "output": "2"
                 }
               ]
             },
@@ -11020,6 +11972,14 @@
                 {
                   "input": "2 8 9 1",
                   "output": "0"
+                },
+                {
+                  "input": "2 1 2 2",
+                  "output": "2"
+                },
+                {
+                  "input": "2 0 0 1",
+                  "output": "3"
                 }
               ]
             },
@@ -11143,6 +12103,14 @@
                 {
                   "input": "1 1 1 2",
                   "output": "Empty"
+                },
+                {
+                  "input": "2 1 2 2 1 2",
+                  "output": "1 2"
+                },
+                {
+                  "input": "3 1 2 3 3 2 3 4",
+                  "output": "2 3"
                 }
               ]
             },
@@ -11182,6 +12150,14 @@
                 {
                   "input": "2 4 9 0",
                   "output": "4 9"
+                },
+                {
+                  "input": "2 1 3 2 2 4",
+                  "output": "1 2 3 4"
+                },
+                {
+                  "input": "3 1 2 2 2 2 2",
+                  "output": "1 2 2 2 2"
                 }
               ]
             },
@@ -11220,6 +12196,14 @@
                 },
                 {
                   "input": "3 -3 -2 5 -4",
+                  "output": "1"
+                },
+                {
+                  "input": "3 1 2 3 3",
+                  "output": "1"
+                },
+                {
+                  "input": "2 -1 1 0",
                   "output": "1"
                 }
               ]
@@ -11260,6 +12244,14 @@
                 {
                   "input": "4 -1 0 2 3",
                   "output": "4"
+                },
+                {
+                  "input": "3 1 2 3",
+                  "output": "3"
+                },
+                {
+                  "input": "4 0 0 1 1",
+                  "output": "2"
                 }
               ]
             },
@@ -11341,6 +12333,14 @@
                 {
                   "input": "3 5 5 5 0",
                   "output": "0"
+                },
+                {
+                  "input": "4 1 3 5 7 0",
+                  "output": "0"
+                },
+                {
+                  "input": "3 2 4 6 7",
+                  "output": "3"
                 }
               ]
             },
@@ -11380,6 +12380,14 @@
                 {
                   "input": "2 3 4 9",
                   "output": "1"
+                },
+                {
+                  "input": "3 2 4 6 6",
+                  "output": "2"
+                },
+                {
+                  "input": "3 2 4 6 1",
+                  "output": "-1"
                 }
               ]
             },
@@ -11419,6 +12427,14 @@
                 {
                   "input": "3 7 7 7 7",
                   "output": "3"
+                },
+                {
+                  "input": "4 1 2 2 3 2",
+                  "output": "2"
+                },
+                {
+                  "input": "3 5 5 5 5",
+                  "output": "3"
                 }
               ]
             },
@@ -11454,6 +12470,14 @@
                 {
                   "input": "1 4 0",
                   "output": ""
+                },
+                {
+                  "input": "3 1 2 3 2 1 2 3 3",
+                  "output": "2\n1\n"
+                },
+                {
+                  "input": "2 1 2 2 3 1 1 2",
+                  "output": "0\n2\n"
                 }
               ]
             },

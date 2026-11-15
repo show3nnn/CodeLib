@@ -31,6 +31,19 @@ struct GradingTests {
         #expect(fixtures.map(\.expectedOutput) == exercise.testCases.map(\.output))
     }
 
+    @Test func gradableFixturesCoverInputVariation() throws {
+        let course = try Course.bundled()
+        for exercise in course.exercises where exercise.kind == .code {
+            guard exercise.gradingFixtures != nil else { continue }
+            let hasVariableInput = exercise.testCases.contains { !$0.input.isEmpty }
+            if hasVariableInput {
+                #expect(exercise.testCases.count >= 5, "\(exercise.id) has too few input fixtures")
+            } else {
+                #expect(exercise.testCases.count == 1, "\(exercise.id) is fixed-output and should use one exact protocol case")
+            }
+        }
+    }
+
     @Test func nonCodeAndFileTasksAreNotGradable() throws {
         let course = try Course.bundled()
         for exercise in course.exercises where exercise.kind != .code {
