@@ -32,7 +32,7 @@ struct AboutView: View {
                 .multilineTextAlignment(.center).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             Button("История обновлений", systemImage: "clock.arrow.circlepath") { openWindow(id: "release-history") }
                 .buttonStyle(.bordered).controlSize(.large)
-            Text("C++17 запускается в одноразовой изолированной среде. Кодовые задания проверяются на примерах из условия; AI нет.")
+            Text("C++17 запускается в одноразовой изолированной среде. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI нет.")
                 .font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
         }.padding(36).frame(minWidth: 460, minHeight: 430).background(WorkspaceBackdrop())
     }

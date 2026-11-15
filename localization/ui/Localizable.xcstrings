@@ -829,38 +829,38 @@
         }
       }
     },
-    "C++17 запускается в одноразовой изолированной среде. Кодовые задания проверяются на примерах из условия; AI нет.": {
+    "C++17 запускается в одноразовой изолированной среде. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI нет.": {
       "comment": "Sources/CodePath/ReleaseViews.swift:35",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 runs in a disposable isolated environment. Code tasks are checked against the examples in the task; there is no AI."
+            "value": "C++17 runs in a disposable isolated environment. Code tasks with automatic checking are checked against the examples in the task; other code tasks are self-reviewed. There is no AI."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 запускается в одноразовой изолированной среде. Кодовые задания проверяются на примерах из условия; AI нет."
+            "value": "C++17 запускается в одноразовой изолированной среде. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI нет."
           }
         }
       }
     },
-    "C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Кодовые задания проверяются на примерах из условия; AI-помощника нет.": {
+    "C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI-помощника нет.": {
       "comment": "Sources/CodePath/SettingsView.swift:233",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 runs offline in an isolated Linux environment without access to Mac files. Code tasks are checked against the examples in the task; there is no AI assistant."
+            "value": "C++17 runs offline in an isolated Linux environment without access to Mac files. Code tasks with automatic checking are checked against the examples in the task; other code tasks are self-reviewed. There is no AI assistant."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Кодовые задания проверяются на примерах из условия; AI-помощника нет."
+            "value": "C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI-помощника нет."
           }
         }
       }

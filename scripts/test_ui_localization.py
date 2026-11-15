@@ -78,6 +78,16 @@ class UICatalogTests(unittest.TestCase):
         }.items():
             self.assertEqual(ui_en.TEXTS[key], translation)
 
+    def test_code_checking_descriptions_distinguish_self_review(self):
+        root = Path(__file__).resolve().parents[1]
+        manifest = json.loads((root / "localization/ui/extraction.json").read_text())
+        for key in (
+            "C++17 запускается в одноразовой изолированной среде. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI нет.",
+            "C++17 запускается офлайн в изолированной Linux-среде без доступа к файлам Mac. Кодовые задания с автопроверкой проверяются на примерах из условия; остальные кодовые задания — самостоятельно. AI-помощника нет.",
+        ):
+            self.assertIn(key, manifest["entries"])
+            self.assertIn("other code tasks are self-reviewed", ui_en.TEXTS[key])
+
 
 if __name__ == "__main__":
     unittest.main()
