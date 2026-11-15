@@ -25,28 +25,28 @@ struct CodePathApp: App {
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button { openWindow(id: "about") } label: {
-                    Text(PresentationLocale.resource("О codelib", locale: model.presentationLocale))
+                    nativeTitle("О codelib", locale: model.presentationLocale)
                 }
                 Button { openWindow(id: "release-history") } label: {
-                    Text(PresentationLocale.resource("История обновлений", locale: model.presentationLocale))
+                    nativeTitle("История обновлений", locale: model.presentationLocale)
                 }
             }
             CommandGroup(after: .newItem) {
                 Button { model.resume() } label: {
-                    Text(PresentationLocale.resource("Продолжить обучение", locale: model.presentationLocale))
+                    nativeTitle("Продолжить обучение", locale: model.presentationLocale)
                 }.keyboardShortcut("r", modifiers: [.command, .shift])
             }
-            CommandMenu(PresentationLocale.resource("Обучение", locale: model.presentationLocale)) {
+            CommandMenu(nativeTitle("Обучение", locale: model.presentationLocale)) {
                 Button { model.move(-1) } label: {
-                    Text(PresentationLocale.resource("Предыдущее задание", locale: model.presentationLocale))
+                    nativeTitle("Предыдущее задание", locale: model.presentationLocale)
                 }.keyboardShortcut("[", modifiers: .command)
                     .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: -1) == nil)
                 Button { model.move(1) } label: {
-                    Text(PresentationLocale.resource("Следующее задание", locale: model.presentationLocale))
+                    nativeTitle("Следующее задание", locale: model.presentationLocale)
                 }.keyboardShortcut("]", modifiers: .command)
                     .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: 1) == nil)
                 Button { model.flush() } label: {
-                    Text(PresentationLocale.resource("Сохранить изменения", locale: model.presentationLocale))
+                    nativeTitle("Сохранить изменения", locale: model.presentationLocale)
                 }.keyboardShortcut("s", modifiers: .command)
             }
         }
@@ -54,13 +54,18 @@ struct CodePathApp: App {
         Settings {
             SettingsView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }
-        Window(PresentationLocale.resource("О codelib", locale: model.presentationLocale), id: "about") {
+        Window(nativeTitle("О codelib", locale: model.presentationLocale), id: "about") {
             AboutView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }.windowResizability(.contentSize).environment(\.locale, model.presentationLocale)
-        Window(PresentationLocale.resource("История обновлений codelib", locale: model.presentationLocale), id: "release-history") {
+        Window(nativeTitle("История обновлений codelib", locale: model.presentationLocale), id: "release-history") {
             ReleaseHistoryView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }.defaultSize(width: 680, height: 720).environment(\.locale, model.presentationLocale)
     }
+}
+
+/// Resolve only at the native scene/command presentation boundary.
+private func nativeTitle(_ resource: LocalizedStringResource, locale: Locale) -> Text {
+    Text(verbatim: String(localized: PresentationLocale.resource(resource, locale: locale)))
 }
 
 @MainActor

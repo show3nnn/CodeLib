@@ -503,7 +503,11 @@ enum SmokeTest {
             check(model.saveOnboarding(setup, finish: true), "Isolated profile is saved")
             model.updateState(exercise.id) { $0.draft = ""; $0.answer = "literal %@"; $0.hintLevel = 1 }
             let before = try Data(contentsOf: model.dataURL)
+            await settle()
             menuBeforePreview = menuTitles(in: NSApp.mainMenu)
+            let russianMenu = ["О codelib", "История обновлений", "Продолжить обучение", "Обучение",
+                               "Предыдущее задание", "Следующее задание", "Сохранить изменения"]
+            check(russianMenu.allSatisfy(menuBeforePreview.contains), "App menu initially uses Russian")
             try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
             await settle()
             menuDuringPreview = menuTitles(in: NSApp.mainMenu)
@@ -599,6 +603,7 @@ enum SmokeTest {
             model.endEnglishSmokePreview()
             await settle()
             menuAfterPreview = menuTitles(in: NSApp.mainMenu)
+            check(russianMenu.allSatisfy(menuAfterPreview.contains), "App menu is Russian after preview")
             window.orderOut(nil)
             check(model.presentationLocale == PresentationLocale.locale && model.course?.lessons.first?.title == russian.lessons.first?.title,
                   "Closing preview restores Russian content")
