@@ -8,13 +8,28 @@ final class AppModel {
     private let initialCourse: Course?
     private let initialCatalog: CourseCatalog?
     private var selectedContent: LocalizedContent?
-    var course: Course? { selectedContent?.course ?? initialCourse }
-    var catalog: CourseCatalog? { selectedContent?.catalog ?? initialCatalog }
+    var course: Course? {
+        #if DEBUG
+        if let developerPreview { return developerPreview.course }
+        #endif
+        return selectedContent?.course ?? initialCourse
+    }
+    var catalog: CourseCatalog? {
+        #if DEBUG
+        if let developerPreview { return developerPreview.catalog }
+        #endif
+        return selectedContent?.catalog ?? initialCatalog
+    }
     let contentError: AppFailure?
     let appRelease: AppRelease?
     private let initialReleaseHistory: ReleaseHistory?
     private let initialReleaseHistoryError: AppFailure?
-    var releaseHistory: ReleaseHistory? { selectedContent?.history ?? initialReleaseHistory }
+    var releaseHistory: ReleaseHistory? {
+        #if DEBUG
+        if let developerPreview { return developerPreview.history }
+        #endif
+        return selectedContent?.history ?? initialReleaseHistory
+    }
     var releaseHistoryError: AppFailure? { selectedContent == nil ? initialReleaseHistoryError : nil }
     let dataURL: URL
     private var store: ProgressStore?
@@ -93,6 +108,9 @@ final class AppModel {
     /// this method yet.
     @discardableResult
     func selectContentLanguage(_ locale: CourseLocale) -> Bool {
+        #if DEBUG
+        guard developerPreview == nil else { return false }
+        #endif
         guard locale == .russian else {
             message = AppFailure(ContentError.translationUnavailable(locale.rawValue))
             return false
@@ -177,8 +195,48 @@ final class AppModel {
     var exercise: Exercise? { course?.exercises.first { $0.id == selectedExerciseID } }
     var lesson: Lesson? { course?.lesson(containing: selectedExerciseID) }
     /// Remains fixed until the complete presentation can switch as one unit.
-    var presentationLocale: Locale { PresentationLocale.locale }
+    var presentationLocale: Locale {
+        #if DEBUG
+        if developerPreview != nil { return Locale(identifier: "en") }
+        #endif
+        return PresentationLocale.locale
+    }
     var presentationLanguage: String { presentationLocale.language.languageCode?.identifier ?? "ru" }
+
+    #if DEBUG
+    private struct DeveloperPreview {
+        let course: Course
+        let catalog: CourseCatalog
+        let history: ReleaseHistory
+    }
+    private var developerPreview: DeveloperPreview?
+
+    /// Smoke-only projection: never writes a language preference or promotes draft status.
+    func previewEnglishForSmoke(sourceRoot: URL) throws {
+        func data(_ path: String) throws -> Data { try Data(contentsOf: sourceRoot.appendingPathComponent(path)) }
+        let courseData = try data("Sources/LearningCore/Resources/course.json")
+        let catalogData = try data("Sources/LearningCore/Resources/catalog.json")
+        let historyData = try data("Sources/LearningCore/Resources/releases.json")
+        let decoder = JSONDecoder()
+        let courseDraft = try decoder.decode(CourseTranslation.self, from: data("localization/drafts/course.en.json"))
+        let catalogDraft = try decoder.decode(ResourceTranslation.self, from: data("localization/drafts/catalog.en.json"))
+        let historyDraft = try decoder.decode(ResourceTranslation.self, from: data("localization/drafts/releases.en.json"))
+        guard courseDraft.locale == .english, catalogDraft.locale == .english, historyDraft.locale == .english else {
+            throw ContentError.invalidTranslationSource
+        }
+        let coverage = try courseDraft.coverage(for: courseData)
+        guard coverage.isComplete else {
+            throw ContentError.translationNotReady(missing: coverage.missing.count, unknown: coverage.unknown.count)
+        }
+        let course = try courseDraft.developerPreview(from: courseData)
+        try AchievementCatalog.validate(course: course)
+        let catalog = try catalogDraft.developerCatalogPreview(from: catalogData, availableCourseIDs: [course.id])
+        let history = try historyDraft.developerHistoryPreview(from: historyData)
+        developerPreview = DeveloperPreview(course: course, catalog: catalog, history: history)
+    }
+
+    func endEnglishSmokePreview() { developerPreview = nil }
+    #endif
     var colorScheme: ColorScheme? {
         switch document.preferences.theme { case "light": .light; case "dark": .dark; default: nil }
     }

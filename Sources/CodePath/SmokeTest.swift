@@ -9,6 +9,10 @@ import ExecutionSupport
 @MainActor
 enum SmokeTest {
     static func run(model: AppModel, directory: URL, reopen: Bool) async {
+        if ProcessInfo.processInfo.arguments.contains("--localization-preview") {
+            await localizationPreview(model: model, directory: directory)
+            return
+        }
         var checks: [String] = []
         var failures: [String] = []
         func check(_ condition: Bool, _ name: String) {
@@ -468,6 +472,74 @@ enum SmokeTest {
         } catch { failures.append(error.localizedDescription) }
         print("UI smoke: \(checks.count) checks; failures: \(failures)")
         // This mode is a test process, not a normal application exit.
+        exit(failures.isEmpty ? 0 : 1)
+    }
+
+    /// Developer-only, isolated draft preview; not a language switch or acceptance test.
+    private static func localizationPreview(model: AppModel, directory: URL) async {
+        var checks: [String] = []
+        var failures: [String] = []
+        func check(_ condition: Bool, _ name: String) {
+            if condition { checks.append(name) } else { failures.append(name) }
+        }
+        func settle() async { try? await Task.sleep(for: .milliseconds(250)) }
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            guard let path = ProcessInfo.processInfo.environment["CODEPATH_LOCALIZATION_SOURCE"] else {
+                throw ContentError.invalid("Developer localization source is missing")
+            }
+            let russian = try Course.bundled()
+            let russianCatalog = try CourseCatalog.bundled(availableCourseIDs: [russian.id])
+            let exercise = russian.exercises[0]
+            var setup = OnboardingState()
+            setup.draft = LocalProfile(nickname: "Пилот 👩🏽‍💻", avatar: .leaf)
+            check(model.saveOnboarding(setup, finish: true), "Isolated profile is saved")
+            model.updateState(exercise.id) { $0.draft = ""; $0.answer = "literal %@"; $0.hintLevel = 1 }
+            let before = try Data(contentsOf: model.dataURL)
+            try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
+            check(model.presentationLocale.language.languageCode?.identifier == "en", "Preview uses explicit English locale")
+            check(model.course?.lessons.first?.title == "Programs and main", "Preview projects English course")
+            check(model.catalog?.entries.first?.title != russianCatalog.entries.first?.title,
+                  "Preview projects English catalog")
+            check(model.releaseHistory?.releases.first?.title == "Checking the C++ environment", "Preview projects English history")
+            let theory = LocalizedStringResource("Теория", locale: model.presentationLocale)
+            check(String(localized: theory) == "Theory", "Compiled app catalog resolves English UI")
+            check(model.state(for: exercise.id).draft == "" && model.state(for: exercise.id).answer == "literal %@",
+                  "Empty draft and literal answer survive preview")
+            check(!model.selectContentLanguage(.russian), "Preview cannot commit a language selection")
+            check(try Data(contentsOf: model.dataURL) == before, "Preview does not write progress")
+
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1000, height: 760),
+                                  styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+            window.contentView = NSHostingView(rootView: HomeView(model: model).environment(\.locale, model.presentationLocale))
+            window.orderFront(nil)
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-home.png"))
+            window.contentView = NSHostingView(rootView: LessonView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            check(findEditor(in: window.contentView)?.string == "", "English lesson renders the deliberately empty draft")
+            try snapshot(window: window, to: directory.appendingPathComponent("english-lesson.png"))
+            window.contentView = NSHostingView(rootView: SettingsView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-settings.png"))
+            window.contentView = NSHostingView(rootView: ReleaseHistoryView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-history.png"))
+            window.contentView = NSHostingView(rootView: AchievementCollectionView(model: model).environment(\.locale, model.presentationLocale))
+            await settle()
+            try snapshot(window: window, to: directory.appendingPathComponent("english-achievements.png"))
+            window.orderOut(nil)
+            model.endEnglishSmokePreview()
+            check(model.presentationLocale == PresentationLocale.locale && model.course?.lessons.first?.title == russian.lessons.first?.title,
+                  "Closing preview restores Russian content")
+            check(try Data(contentsOf: model.dataURL) == before, "RU/EN preview round trip leaves progress unchanged")
+        } catch { failures.append(String(describing: error)) }
+        do {
+            let report: [String: Any] = ["checks": checks, "failures": failures, "developerOnly": true]
+            try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+                .write(to: directory.appendingPathComponent("localization-preview-report.json"), options: .atomic)
+        } catch { failures.append(String(describing: error)) }
+        print("Localization preview: \(checks.count) checks; failures: \(failures)")
         exit(failures.isEmpty ? 0 : 1)
     }
 
