@@ -194,7 +194,7 @@ TEXTS = {
     "На горизонте": "On the horizon",
     "На диске недостаточно места. Освободите место и повторите действие.": "There is not enough disk space. Free up space and try again.",
     "Награда выдаётся один раз и сохраняется в локальном профиле.": "Each achievement is earned once and saved in your local profile.",
-    "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.": "Achievements for real practice. Self-review marks do not count as running or checking C++.",
+    "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода.": "Achievements for real practice. A self-review mark does not by itself mean the code was run or checked.",
     "Назад": "Back",
     "Найдётся во время практики.": "Discover it through practice.",
     "Намёк": "Nudge",

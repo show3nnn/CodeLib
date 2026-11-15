@@ -35,7 +35,7 @@ struct AchievementCollectionView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                PageHeader(eyebrow: "Коллекция", title: "Не только точки с запятой", subtitle: "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.", locale: model.presentationLocale)
+                PageHeader(eyebrow: "Коллекция", title: "Не только точки с запятой", subtitle: "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода.", locale: model.presentationLocale)
                 let unlocked = AchievementCatalog.all.filter { model.document.achievements?.awards[$0.id] != nil }.count
                 Card {
                     HStack(spacing: 24) {

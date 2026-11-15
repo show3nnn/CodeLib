@@ -601,7 +601,7 @@
     "Награда выдаётся один раз и сохраняется в локальном профиле.": [
       "Sources/CodePath/AchievementViews.swift:122"
     ],
-    "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.": [
+    "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода.": [
       "Sources/CodePath/AchievementViews.swift:38"
     ],
     "Назад": [
@@ -1406,7 +1406,7 @@
   },
   "formatVersion": 1,
   "sourceFiles": {
-    "Sources/CodePath/AchievementViews.swift": "a8392bc399400887df662888325a2502d62465ce67e0f823f71238485c4e6736",
+    "Sources/CodePath/AchievementViews.swift": "327462455267f7d3e1c222cec4206030ad1b4ba86fdfd97492508212722a2e83",
     "Sources/CodePath/AppModel.swift": "a6718de10c4ed262ca9c35242e34ff9139cc57243d09deca79f07f0ab29cf537",
     "Sources/CodePath/AvatarPhoto.swift": "4062b8de59455312b56fbf02057dc5f0b416c8558745e829e2b71e61b158e2d0",
     "Sources/CodePath/CodeEditor.swift": "58d9cb6ad0a49e3ab5146e11f9f18415aa11997e7fad3abb9ac2f59662ebd9c5",

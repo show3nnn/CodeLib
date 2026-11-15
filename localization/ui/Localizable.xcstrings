@@ -3475,20 +3475,20 @@
         }
       }
     },
-    "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++.": {
+    "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода.": {
       "comment": "Sources/CodePath/AchievementViews.swift:38",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Achievements for real practice. Self-review marks do not count as running or checking C++."
+            "value": "Achievements for real practice. A self-review mark does not by itself mean the code was run or checked."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Награды за настоящую практику. Самостоятельные отметки не выдаются за запуск или проверку C++."
+            "value": "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода."
           }
         }
       }

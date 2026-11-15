@@ -88,6 +88,14 @@ class UICatalogTests(unittest.TestCase):
             self.assertIn(key, manifest["entries"])
             self.assertIn("other code tasks are self-reviewed", ui_en.TEXTS[key])
 
+    def test_achievement_copy_distinguishes_self_review_from_execution(self):
+        root = Path(__file__).resolve().parents[1]
+        manifest = json.loads((root / "localization/ui/extraction.json").read_text())
+        key = "Награды за настоящую практику. Самостоятельная отметка сама по себе не означает запуск или проверку кода."
+        self.assertIn(key, manifest["entries"])
+        self.assertEqual(ui_en.TEXTS[key],
+                         "Achievements for real practice. A self-review mark does not by itself mean the code was run or checked.")
+
 
 if __name__ == "__main__":
     unittest.main()
