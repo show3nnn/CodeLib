@@ -87,7 +87,7 @@ struct ExecutionOutputView: View {
 
     @ViewBuilder private var status: some View {
         HStack(spacing: 8) {
-            if execution.isBusy { ProgressView().controlSize(.small) }
+            if execution.isProgramBusy { ProgressView().controlSize(.small) }
             Group {
                 switch execution.state {
                 case .idle: Text("Готово к запуску")
@@ -114,7 +114,7 @@ struct ExecutionOutputView: View {
                     } else { Text("Запуск не выполнен") }
                 }
             }.font(.callout.weight(.medium))
-            if execution.isGrading, execution.isBusy, execution.gradingCaseTotal > 0 {
+            if execution.isGrading, execution.isProgramBusy, execution.gradingCaseTotal > 0 {
                 Text("· пример \(min(execution.gradingCaseIndex + 1, execution.gradingCaseTotal)) из \(execution.gradingCaseTotal)")
                     .font(.callout).foregroundStyle(.secondary)
             }
@@ -126,6 +126,8 @@ struct ExecutionOutputView: View {
         let total = execution.gradingCaseTotal
         if execution.gradingResults.isEmpty {
             Text("Проверка не выполнена")
+        } else if execution.gradingCancelled {
+            Text("Проверка остановлена · пройдено \(passed) из \(total)")
         } else if passed == total, total > 0 {
             Text("Все примеры пройдены · \(passed) из \(total)")
         } else if execution.gradingResults.count < total {

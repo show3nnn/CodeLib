@@ -89,6 +89,30 @@ struct AppModelTests {
         #expect(CodeExecutionController.readinessOutcome(result: .init(status: .success, stdout: "wrong", exitCode: 0), cancelled: false) == .failed)
         #expect(CodeExecutionController.readinessOutcome(result: .init(status: .compileError, exitCode: 1), cancelled: false) == .failed)
     }
+    @Test func gradingCompletionRequiresFullUncancelledRun() {
+        let fixtures = [GradingFixture(index: 0, input: "", expectedOutput: "1"),
+                        GradingFixture(index: 1, input: "", expectedOutput: "2")]
+        func result(_ index: Int, _ status: ExecutionStatus) -> GradingCaseResult {
+            GradingCaseResult(index: index, input: "", expectedOutput: "", actualOutput: "",
+                              stderr: "", status: status, exitCode: nil, mismatchedFiles: [], matches: false)
+        }
+        let full: [GradingCaseResult] = [result(0, .success), result(1, .success)]
+        #expect(CodeExecutionController.gradingCompleted(results: full, fixtures: fixtures, cancelled: false))
+        // A cancellation racing the last result must never reach progress.
+        #expect(!CodeExecutionController.gradingCompleted(results: full, fixtures: fixtures, cancelled: true))
+        #expect(!CodeExecutionController.gradingCompleted(
+            results: [result(0, .success), result(1, .cancelled)], fixtures: fixtures, cancelled: false))
+        #expect(!CodeExecutionController.gradingCompleted(
+            results: [result(0, .success)], fixtures: fixtures, cancelled: false))
+    }
+    @Test func cancelWithoutTaskLeavesReadinessUntouched() throws {
+        _ = try setup()
+        let model = AppModel()
+        model.execution.cancel()
+        #expect(model.execution.readiness == .unchecked)
+        #expect(!model.execution.isBusy)
+        #expect(model.execution.failure == nil)
+    }
     @Test func onboardingEnvironmentStepPersistsAndCanBeSkipped() throws {
         _ = try setup()
         let model = AppModel()

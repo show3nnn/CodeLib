@@ -430,6 +430,9 @@ final class AppModel {
         guard let store else { return }
         do {
             try store.importDocument(from: source)
+            // The replaced document must never receive a result from an older
+            // job, even when the exercise ID happens to stay the same.
+            execution.cancel()
             document = store.document
             pendingAwards.removeAll()
             achievementNotifications.removeAll()
@@ -445,6 +448,7 @@ final class AppModel {
         guard let store else { return }
         do {
             try store.reset()
+            execution.cancel()
             document = store.document
             pendingAwards.removeAll()
             achievementNotifications.removeAll()
@@ -458,6 +462,7 @@ final class AppModel {
     func restoreBackup() {
         do {
             try ProgressStore.restoreBackup(at: dataURL)
+            execution.cancel()
             loadProgress()
         } catch { storageError = AppFailure(error, operation: .restore) }
     }

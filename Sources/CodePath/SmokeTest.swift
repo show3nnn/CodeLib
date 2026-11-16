@@ -61,6 +61,30 @@ enum SmokeTest {
                 try await waitForExecution()
                 check(model.execution.readiness == .cancelled, "Cancelled readiness does not report success")
                 check(try Data(contentsOf: model.dataURL) == before, "Cancelled readiness leaves progress unchanged")
+                check(model.execution.checkReadiness(), "Cancelled readiness can be retried")
+                try await waitForExecution()
+                check(model.execution.readiness == .ready, "Retry after cancellation reaches a real ready environment")
+                check(model.execution.checkReadiness(), "Readiness can start again for navigation cancel")
+                model.page = .catalog
+                try await waitForExecution()
+                check(model.execution.readiness == .cancelled, "Leaving the lesson page cancels the running check")
+                // Every panel state renders in a real window; forced states use explicit values.
+                for (state, busy, stopping, name) in [(CodeExecutionController.Readiness.unchecked, false, false, "unchecked"),
+                                      (.checking, true, false, "checking"), (.checking, true, true, "stopping"),
+                                      (.ready, false, false, "ready"), (.failed, false, false, "failed"), (.cancelled, false, false, "cancelled")] {
+                    let panel = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 620, height: 420),
+                                         styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+                    panel.isReleasedWhenClosed = false
+                    panel.contentView = NSHostingView(rootView: ExecutionReadinessPanel(
+                        readiness: state, isBusy: busy, isStopping: stopping, onCheck: {}, onStop: {})
+                        .padding(24).frame(maxWidth: 560).background(WorkspaceBackdrop())
+                        .environment(\.locale, PresentationLocale.locale).preferredColorScheme(.light))
+                    panel.orderFront(nil)
+                    await settle()
+                    try snapshot(window: panel, to: directory.appendingPathComponent("readiness-panel-\(name).png"))
+                    check(panel.contentView != nil, "Readiness panel \(name) renders in a real window")
+                    panel.close()
+                }
                 model.runCode(stdin: "-7 -8\n")
                 check(model.execution.isBusy, "Run uses the real app execution controller")
                 check(!model.execution.run(exerciseID: first.id, source: code, stdin: "0 0"), "Second VM request is refused while the slot is occupied")
@@ -85,15 +109,24 @@ enum SmokeTest {
                 guard let gradeTask = course.exercises.first(where: {
                     ($0.gradingFixtures?.count ?? 0) >= 2 && $0.testCases.allSatisfy { !$0.output.isEmpty }
                 }) else { throw ContentError.invalid("No multi-fixture task for grading smoke") }
+                func gradingSummary() -> String {
+                    let results = model.execution.gradingResults
+                        .map { "\($0.index):\($0.status.rawValue)" }.joined(separator: ",")
+                    return " [failure=\(model.execution.failure.map(String.init(describing:)) ?? "none"); results=\(results)]"
+                }
+                func checkGrading(_ condition: Bool, _ name: String) {
+                    check(condition, condition ? name : name + gradingSummary())
+                }
                 model.open(gradeTask)
                 model.updateState(gradeTask.id) { $0.draft = gradeTask.solution }
                 let beforeGrade = try Data(contentsOf: model.dataURL)
                 model.gradeCode()
                 check(model.execution.isGrading && model.execution.isBusy, "Grading uses the real execution slot")
                 check(!model.execution.run(exerciseID: gradeTask.id, source: gradeTask.solution, stdin: ""), "Run is refused while grading occupies the slot")
+                check(!model.execution.checkReadiness(), "Readiness check is refused while grading occupies the slot")
                 try await waitForExecution()
-                check(model.execution.gradingResults.count == gradeTask.testCases.count, "Every verified fixture is executed")
-                check(model.execution.gradingPassed, "Reference solution passes all fixtures")
+                checkGrading(model.execution.gradingResults.count == gradeTask.testCases.count, "Every verified fixture is executed")
+                checkGrading(model.execution.gradingPassed, "Reference solution passes all fixtures")
                 check(model.state(for: gradeTask.id).completion == .automatic
                       && model.state(for: gradeTask.id).lastCorrect == true
                       && model.state(for: gradeTask.id).attempts == 1, "Complete grading pass persists automatic completion")
@@ -110,13 +143,25 @@ enum SmokeTest {
                 } else { failures.append("Programmatic draft change has a real editor") }
                 model.gradeCode()
                 try await waitForExecution()
-                check(model.execution.gradingResults.count == gradeTask.testCases.count
+                checkGrading(model.execution.gradingResults.count == gradeTask.testCases.count
                       && model.execution.gradingResults.allSatisfy({ !$0.matches }), "Wrong program fails every fixture")
                 check(model.state(for: gradeTask.id).attempts == 2
                       && model.state(for: gradeTask.id).lastCorrect == false
                       && model.state(for: gradeTask.id).completion == .automatic, "Failure records an attempt without revoking earned completion")
                 await settle()
                 try snapshot(window: console, to: directory.appendingPathComponent("grading-editor-failure.png"))
+                // Readiness must not rewrite the editor's finished grading state.
+                check(model.execution.checkReadiness(), "Readiness can start after a finished grading")
+                check(model.execution.state == .finished && model.execution.isGrading
+                      && model.execution.gradingResults.count == gradeTask.testCases.count,
+                      "Readiness keeps the editor's finished grading state and results")
+                check(!model.execution.isProgramBusy && model.execution.isBusy,
+                      "Readiness occupies the slot without a program job")
+                model.execution.cancel()
+                try await waitForExecution()
+                check(model.execution.readiness == .cancelled, "Cancelled readiness after grading reports cancellation")
+                check(model.execution.state == .finished && model.execution.isGrading,
+                      "Editor's grading state survives readiness cancellation")
                 guard let fileTask = course.exercises.first(where: {
                     ($0.gradingFixtures?.count ?? 0) >= 5
                         && $0.testCases.contains { ($0.expectedFiles ?? [:]).isEmpty == false }
@@ -125,13 +170,13 @@ enum SmokeTest {
                 model.updateState(fileTask.id) { $0.draft = fileTask.solution }
                 model.gradeCode()
                 try await waitForExecution()
-                check(model.execution.gradingResults.count == fileTask.testCases.count
+                checkGrading(model.execution.gradingResults.count == fileTask.testCases.count
                       && model.execution.gradingPassed, "File fixtures travel into the VM and verify inside it")
                 check(model.state(for: fileTask.id).completion == .automatic, "File grading persists automatic completion")
                 model.updateState(fileTask.id) { $0.draft = "int main(){}" }
                 model.gradeCode()
                 try await waitForExecution()
-                check(!model.execution.gradingPassed
+                checkGrading(!model.execution.gradingPassed
                       && model.execution.gradingResults.contains {
                           $0.status == .fileMismatch && !$0.mismatchedFiles.isEmpty
                       }, "Wrong program fails file fixtures with named mismatches")
@@ -184,8 +229,12 @@ enum SmokeTest {
                 check(document.exercises[first.id]?.completion == .unfinished, "Run/compile error/cancel never grade the exercise")
                 model.open(first)
                 model.runCode(stdin: "")
+                let windowList = NSApp.windows.compactMap {
+                    ($0.isVisible && $0.contentView != nil) ? "\($0.className)/\($0.identifier?.rawValue ?? "-")" : nil
+                }.joined(separator: "; ")
                 if let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) { window.close() }
                 try await waitForExecution()
+                if model.execution.result?.status != .cancelled { failures.append("visible windows: \(windowList)") }
                 check(model.execution.result?.status == .cancelled, "Closing the hosting window cancels the real job")
             } else if ProcessInfo.processInfo.arguments.contains("--settings-only") {
                 var setup = OnboardingState()

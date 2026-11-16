@@ -27,6 +27,11 @@ final class CodeExecutionController {
     enum Readiness: Equatable {
         case unchecked, checking, ready, failed, cancelled
     }
+    /// Only a full, uncancelled run of every fixture can complete grading and
+    /// reach progress; a cancellation racing the last result must not count.
+    static func gradingCompleted(results: [GradingCaseResult], fixtures: [GradingFixture], cancelled: Bool) -> Bool {
+        !cancelled && results.count == fixtures.count && results.allSatisfy { $0.status != .cancelled }
+    }
     static func readinessOutcome(result: ExecutionResult?, cancelled: Bool) -> Readiness {
         if cancelled || result?.status == .cancelled { return .cancelled }
         guard let result, result.status == .success, result.exitCode == 0,
@@ -38,6 +43,7 @@ final class CodeExecutionController {
     }
     private(set) var state: State = .idle
     private(set) var readiness: Readiness = .unchecked
+    private(set) var isStopping = false
     private(set) var result: ExecutionResult?
     private(set) var failure: ExecutionFailure?
     private(set) var backendFailure: ExecutionBackendFailure?
@@ -48,12 +54,18 @@ final class CodeExecutionController {
     private(set) var gradingCaseIndex = 0
     private(set) var gradingCaseTotal = 0
     private(set) var gradingResults: [GradingCaseResult] = []
+    /// Set when a grading job ends cancelled even with a full result array, so the
+    /// editor never presents a cancelled run as fully passed.
+    private(set) var gradingCancelled = false
     var inputs: [String: String] = [:]
     private var task: Task<Void, Never>?
     private var cancellation: ExecutionCancellation?
     private var jobID: UUID?
     private var onGradingFinished: ((_ exerciseID: String, _ passed: Bool) -> Void)?
     var isBusy: Bool { task != nil }
+    /// Occupied by a run or grading job, not by the environment readiness check,
+    /// whose phases must not leak into the editor's status.
+    var isProgramBusy: Bool { task != nil && !readinessJob }
 
     var gradingPassed: Bool {
         isGrading && gradingCaseTotal > 0 && gradingResults.count == gradingCaseTotal
@@ -76,6 +88,10 @@ final class CodeExecutionController {
         #endif
     }
 
+    /// The readiness check occupies the same slot but must not rewrite the
+    /// editor's run state: the previous result and its phase stay untouched.
+    private var readinessJob = false
+
     /// The same single slot and verified helper are used as for user programs.
     /// A successful compiler invocation alone is not sufficient: check its output too.
     @discardableResult
@@ -92,7 +108,7 @@ final class CodeExecutionController {
         self.cancellation = cancellation
         jobID = request.id
         readiness = .checking
-        state = .verifying
+        readinessJob = true
         task = Task { [weak self] in
             let outcome = await Task.detached(priority: .userInitiated) {
                 Result { try ExecutionProcess.run(request: request, assets: assets, cancellation: cancellation, onPhase: { _ in }) }
@@ -216,7 +232,9 @@ final class CodeExecutionController {
             case .success(let results):
                 self.gradingResults = results
                 self.gradingCaseIndex = results.count
-                let completed = results.count == fixtures.count && results.allSatisfy { $0.status != .cancelled }
+                self.gradingCancelled = cancellation.isCancelled
+                // A cancellation racing the last result must never reach progress.
+                let completed = Self.gradingCompleted(results: results, fixtures: fixtures, cancelled: cancellation.isCancelled)
                 self.finish()
                 if completed { self.onGradingFinished?(exerciseID, results.allSatisfy(\.matches)) }
                 self.onGradingFinished = nil
@@ -232,7 +250,10 @@ final class CodeExecutionController {
 
     func cancel() {
         guard task != nil else { return }
-        state = .stopping
+        isStopping = true
+        // The readiness panel owns its stopping display; the editor keeps the
+        // state of its own run or grading job untouched.
+        if !readinessJob { state = .stopping }
         cancellation?.cancel()
     }
 
@@ -247,10 +268,13 @@ final class CodeExecutionController {
         gradingCaseIndex = 0
         gradingCaseTotal = 0
         gradingResults = []
+        gradingCancelled = false
     }
 
     private func finish() {
-        state = .finished
+        if !readinessJob { state = .finished }
+        readinessJob = false
+        isStopping = false
         task = nil
         cancellation = nil
         jobID = nil

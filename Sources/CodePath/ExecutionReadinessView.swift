@@ -6,16 +6,41 @@ struct ExecutionReadinessView: View {
     @Bindable var execution: CodeExecutionController
 
     var body: some View {
+        ExecutionReadinessPanel(
+            readiness: execution.readiness,
+            isBusy: execution.isBusy,
+            isStopping: execution.isStopping,
+            onCheck: { execution.checkReadiness() },
+            onStop: { execution.cancel() }
+        )
+    }
+}
+
+/// Explicit values so smoke and previews can render every state without a VM,
+/// the same pattern as WelcomeCodePanel.
+struct ExecutionReadinessPanel: View {
+    let readiness: CodeExecutionController.Readiness
+    let isBusy: Bool
+    var isStopping = false
+    let onCheck: () -> Void
+    let onStop: () -> Void
+
+    var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Label("Среда C++", systemImage: "lock.shield").font(.headline)
             Text("Компилятор уже входит в приложение. Проверка запускает небольшую программу в одноразовой изолированной среде; Xcode и Command Line Tools не нужны.")
                 .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-            switch execution.readiness {
+            switch readiness {
             case .unchecked:
                 Text("Среда ещё не проверена. Можно продолжить обучение и проверить её позже в настройках.")
                     .foregroundStyle(.secondary)
             case .checking:
-                ProgressView("Проверяем компиляцию и запуск…")
+                if isStopping {
+                    // Same wording as the editor's stop phase; no new catalog key.
+                    Label("Останавливаем среду и все процессы…", systemImage: "stop.circle")
+                } else {
+                    ProgressView("Проверяем компиляцию и запуск…")
+                }
             case .ready:
                 Label("Последняя проверка успешна: тестовая программа выполнена.", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
@@ -26,11 +51,11 @@ struct ExecutionReadinessView: View {
                 Text("Проверка отменена. Её можно повторить позже.").foregroundStyle(.secondary)
             }
             HStack {
-                Button("Проверить среду", systemImage: "play.circle") { execution.checkReadiness() }
-                    .disabled(execution.isBusy)
+                Button("Проверить среду", systemImage: "play.circle") { onCheck() }
+                    .disabled(isBusy)
                     .accessibilityIdentifier("execution.readiness.check")
-                if execution.readiness == .checking {
-                    Button("Остановить проверку") { execution.cancel() }
+                if readiness == .checking && !isStopping {
+                    Button("Остановить проверку") { onStop() }
                 }
             }
             Text("Проверка не изменяет учебный прогресс. Если её пропустить, задания и редактор останутся доступны.")
