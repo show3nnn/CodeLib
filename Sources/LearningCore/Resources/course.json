@@ -10063,7 +10063,7 @@
           "prerequisites": [
             "cpp.sets"
           ],
-          "theory": "std::ifstream input(\"data.txt\") из <fstream> открывает файл для чтения относительно рабочей директории процесса. if(!input) проверяет, удалось ли открыть поток. Чтение input>>value похоже на cin, а while(input>>value) читает числа до неуспеха. Такой цикл не различает конец файла и ошибочный токен сам по себе; последующую проверку изучим далее.\n\nstd::ofstream output(\"journal.txt\") по умолчанию создаёт или обрезает файл. Для добавления используют std::ios::app. Перед записью проверьте открытие, после записи — состояние; при необходимости output.close() и ещё одна проверка обнаруживают отложенные ошибки. Поток закрывает ресурс через RAII.\n\ncodelib может запустить код в одноразовой среде, но пока не передаёт туда начальные файлы из примеров и не проверяет созданные файлы. Для полноценной проверки файловых задач используйте внешнюю среду разработки; в codelib можно посмотреть начальные и ожидаемые файлы и отметить решение самостоятельно.",
+          "theory": "std::ifstream input(\"data.txt\") из <fstream> открывает файл для чтения относительно рабочей директории процесса. if(!input) проверяет, удалось ли открыть поток. Чтение input>>value похоже на cin, а while(input>>value) читает числа до неуспеха. Такой цикл не различает конец файла и ошибочный токен сам по себе; последующую проверку изучим далее.\n\nstd::ofstream output(\"journal.txt\") по умолчанию создаёт или обрезает файл. Для добавления используют std::ios::app. Перед записью проверьте открытие, после записи — состояние; при необходимости output.close() и ещё одна проверка обнаруживают отложенные ошибки. Поток закрывает ресурс через RAII.\n\ncodelib передаёт начальные файлы из примера в одноразовую среду и после запуска сравнивает созданные файлы с ожидаемыми; файлы в вашей системе при этом не используются.",
           "example": "#include <iostream>\n#include <fstream>\n\nint main() {\n    std::ifstream input(\"data.txt\");\n    if (!input) { std::cout << \"Missing\"; return 0; }\n    int value = 0;\n    if (input >> value) { std::cout << value; }\n}\n",
           "microscope": "Рабочая директория не обязана совпадать с папкой исходного файла или исполняемой программы. Файл может не открыться из-за пути, прав или отсутствия — не сводите любую ошибку к одной причине. Проверки относятся к реальному потоку, а не к предположению, что запись на диск всегда успешна.",
           "recap": "Проверьте открытие, чтение/запись и путь. Не используйте while(!eof()) как условие чтения очередного значения.",
@@ -10094,6 +10094,34 @@
                   "output": "7",
                   "files": {
                     "data.txt": "7\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "-42",
+                  "files": {
+                    "data.txt": "-42\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "100",
+                  "files": {
+                    "data.txt": "100\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "-100",
+                  "files": {
+                    "data.txt": "-100\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "0",
+                  "files": {
+                    "data.txt": "0\n"
                   }
                 },
                 {
@@ -10138,6 +10166,30 @@
                   },
                   "expectedFiles": {
                     "journal.txt": "Value: -2\n"
+                  }
+                },
+                {
+                  "input": "0",
+                  "output": "Saved",
+                  "expectedFiles": {
+                    "journal.txt": "Value: 0\n"
+                  }
+                },
+                {
+                  "input": "100",
+                  "output": "Saved",
+                  "expectedFiles": {
+                    "journal.txt": "Value: 100\n"
+                  }
+                },
+                {
+                  "input": "-100",
+                  "output": "Saved",
+                  "files": {
+                    "journal.txt": "0\n"
+                  },
+                  "expectedFiles": {
+                    "journal.txt": "Value: -100\n"
                   }
                 }
               ]
@@ -10204,6 +10256,36 @@
                   "output": "Saved",
                   "expectedFiles": {
                     "events.txt": "Dock\n"
+                  }
+                },
+                {
+                  "input": "Air",
+                  "output": "Saved",
+                  "files": {
+                    "events.txt": "Ready\nDock\n"
+                  },
+                  "expectedFiles": {
+                    "events.txt": "Ready\nDock\nAir\n"
+                  }
+                },
+                {
+                  "input": "Solo",
+                  "output": "Saved",
+                  "files": {
+                    "events.txt": ""
+                  },
+                  "expectedFiles": {
+                    "events.txt": "Solo\n"
+                  }
+                },
+                {
+                  "input": "Box",
+                  "output": "Saved",
+                  "files": {
+                    "events.txt": "A\nB\n"
+                  },
+                  "expectedFiles": {
+                    "events.txt": "A\nB\nBox\n"
                   }
                 }
               ]
@@ -10825,6 +10907,37 @@
                   "expectedFiles": {
                     "journal.txt": "7\n"
                   }
+                },
+                {
+                  "input": "100",
+                  "output": "Saved",
+                  "files": {
+                    "journal.txt": "old\n"
+                  },
+                  "expectedFiles": {
+                    "journal.txt": "100\n"
+                  }
+                },
+                {
+                  "input": "abc",
+                  "output": "Invalid",
+                  "files": {
+                    "journal.txt": "keep\n"
+                  },
+                  "expectedFiles": {
+                    "journal.txt": "keep\n"
+                  }
+                },
+                {
+                  "input": "-5",
+                  "output": "Invalid"
+                },
+                {
+                  "input": "0",
+                  "output": "Saved",
+                  "expectedFiles": {
+                    "journal.txt": "0\n"
+                  }
                 }
               ]
             },
@@ -10872,6 +10985,27 @@
                   "output": "Invalid",
                   "files": {
                     "journal.txt": "broken"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "0",
+                  "files": {
+                    "journal.txt": "0\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "Invalid",
+                  "files": {
+                    "journal.txt": "-3\n"
+                  }
+                },
+                {
+                  "input": "",
+                  "output": "7",
+                  "files": {
+                    "journal.txt": "7"
                   }
                 }
               ]
@@ -10945,6 +11079,30 @@
                   "output": "Saved",
                   "expectedFiles": {
                     "batch.txt": ""
+                  }
+                },
+                {
+                  "input": "1 5",
+                  "output": "Saved",
+                  "expectedFiles": {
+                    "batch.txt": "5\n"
+                  }
+                },
+                {
+                  "input": "2 1 200",
+                  "output": "Invalid",
+                  "files": {
+                    "batch.txt": "old"
+                  },
+                  "expectedFiles": {
+                    "batch.txt": "old"
+                  }
+                },
+                {
+                  "input": "1 -100",
+                  "output": "Saved",
+                  "expectedFiles": {
+                    "batch.txt": "-100\n"
                   }
                 }
               ]

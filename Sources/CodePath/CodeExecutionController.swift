@@ -15,6 +15,7 @@ struct GradingCaseResult: Identifiable, Sendable, Equatable {
     let stderr: String
     let status: ExecutionStatus
     let exitCode: Int?
+    let mismatchedFiles: [String]
     let matches: Bool
     var id: Int { index }
 
@@ -146,7 +147,10 @@ final class CodeExecutionController {
     func grade(exerciseID: String, source: String, fixtures: [GradingFixture],
                onFinished: @escaping (String, Bool) -> Void) -> Bool {
         guard task == nil, !fixtures.isEmpty else { return false }
-        guard fixtures.allSatisfy({ ExecutionRequest(source: source, stdin: $0.input).validateSafely() }) else {
+        guard fixtures.allSatisfy({
+            ExecutionRequest(source: source, stdin: $0.input,
+                             files: $0.files, expectedFiles: $0.expectedFiles).validateSafely()
+        }) else {
             reset(exerciseID: exerciseID, source: source, input: "", grading: true)
             failure = .invalidRequest
             state = .finished
@@ -176,16 +180,20 @@ final class CodeExecutionController {
                     if cancellation.isCancelled {
                         return .success(collected)
                     }
-                    let request = ExecutionRequest(source: source, stdin: fixture.input)
+                    let request = ExecutionRequest(
+                        source: source, stdin: fixture.input,
+                        files: fixture.files, expectedFiles: fixture.expectedFiles)
                     do {
                         let result = try ExecutionProcess.run(
                             request: request, assets: assets, cancellation: cancellation,
                             onPhase: Self.phaseForwarder(job: job, controller: self))
+                        let mismatched = (result.fileDetail ?? "")
+                            .split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
                         let item = GradingCaseResult(
                             index: fixture.index, input: fixture.input,
                             expectedOutput: fixture.expectedOutput, actualOutput: result.stdout,
                             stderr: result.stderr, status: result.status,
-                            exitCode: result.exitCode,
+                            exitCode: result.exitCode, mismatchedFiles: mismatched,
                             matches: result.status == .success
                                 && OutputComparison.matches(result.stdout, expected: fixture.expectedOutput))
                         collected.append(item)

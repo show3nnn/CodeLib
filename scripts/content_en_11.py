@@ -1,7 +1,7 @@
 """Complete text-field draft: ownership and RAII. Developer-only."""
 from translation_authoring import lesson, task
 
-SOURCE_SHA256 = "8e8ec7cfe96dc8336d1c86037dc1f5affc9936f9cb883676cceb494d32a76d3b"
+SOURCE_SHA256 = "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9"
 SECTION_ID = "cpp.section.ownership"
 ENTITIES = {
     SECTION_ID: dict(title="11. Ownership and RAII", summary="Understand dynamic memory, but prefer automatic resource management."),

@@ -37,16 +37,28 @@ bash scripts/ui-smoke.sh --execution-only # реальные app controller, о�
 
 `image.py` не распаковывает чужие symlinks/tar на host: формирует deterministic newc initrd из данных, отклоняет traversal и удаляет suid/sgid. Выходные файлы записываются атомарно. Linux-бинарники не исполняются на macOS. Обе сборки (SwiftPM/Xcode) используют `package_execution.sh`: guest resources (~147 MiB) входят в `.app`, **не в Git**. В готовом app не нужны сеть, CLT или Xcode. Системные установки, глобальный xcode-select и пользовательские настройки не меняются.
 
+### Файловые fixtures · протокол v2 (0.6.0)
+
+Кодовые задания с файлами (`cpp.files.*`, `cpp.journalproject.*`) автопроверяются в той же изолированной VM. Протокол v2 (`CODELIB_READY_2`/`CODELIB_RESULT_2`, шесть полей) передаёт в доверенный `/init` input-файлы и ожидаемые файлы как base64-пары с валидацией на хосте и в госте (plain component 1–64 байта `[A-Za-z0-9._-]`, не `main.cpp`/`stdin`/`program`; файл ≤64 KiB, группа ≤64 KiB, ≤8 файлов):
+
+- Input-файлы раскладываются в `/work` и доступны учебной программе на запись/дополнение (65534:65534, 644). Ожидаемые файлы живут в `/run/expected` (700, root, 600 root) — программа не может их прочитать.
+- Имена expected-файлов записываются в `/run/expected-names` при приёме; сравнение идёт по этому списку, поэтому скрытые имена глоб `*` не пропускает.
+- Сравнение `cmp -s` выполняет доверенный init после завершения программы и только при отсутствии живых пользовательских процессов: supervisor после `wait4` убивает группу процесса, init сканирует `/proc` по uid 65534 (зомби игнорируются) и при живом потомке — с одной короткой паузой повтора — возвращает backendError. Отсоединённый потомок с `setsid()` не может ни исказить сравнение, ни заставить вердикт засчитать несделанную работу.
+- Symlink и non-regular файл в `/work` для сравниваемого имени дают fileMismatch, поэтому программа не может направить сравнение на `/run/expected/<name>` или другой root-файл.
+- Наружу передаются только статус `fileMismatch` (требует exit 0 и фазу running на хосте), exit code, ограниченный stdout/stderr (≤64 KiB каждый) и имена несовпавших файлов (≤8, ≤2048 байт, повторно валидируются helper'ом). Содержимое файлов наружу не идёт; лишние созданные файлы вердикт не портят.
+- Старый образ без файловой поддержки отвечает `CODELIB_READY_1` и fail-closed («Guest image predates file support»). initrd пересобран и перепинован явно: **119_333_957 / 54b619ba…**.
+
+Независимый аудит второй моделью нашёл и закрыл три проблемы первой версии (symlink-обход сравнения, пропуск скрытых expected-файлов, отсоединённые потомки во время сравнения) и три желательных усиления; имя-валидация гостя после command substitution и независимые гостевые лимиты размера приняты как документы: единственный писатель serial-канала — доверенный helper хоста, программа не имеет ни дескриптора, ни доступа к консоли. Негативные VM-проверки: symlink на expected и на совпадающий root-файл, скрытые expected-файлы (отдельно и с обычным), отсоединённый потомок (не может дать ложный pass), корректный потомок (вердикт сохраняется), traversal/reserved/oversized/9 файлов fail-closed. Прогон: **63/63** в `execution-probe.sh`, execution-only app smoke **46/46**.
+
 ### Проверки этапа 4 и границы готовности
 
 **45/45 integration checks** упакованного helper прошли: compile/run/limits probes, обычные exit152/153 вместо сигнала, ровно64KiB output, malformed/oversized/version IPC, отсутствие/изменение образов/symlink, SIGKILL helper с завершением Apple VM-worker и смерть родителя. **25/25 app smoke**: реальный controller/один слот, stdin→stdout, диагностика/навигация NSTextView без undo-правок, Stop/navigation/window close и неизменность progress.json. Отдельный Swift-тест проверяет неподписанный helper/неверный app bundle. Это не независимый security audit и не доказательство отсутствия гипервизорных уязвимостей.
 
 Осталось:
 
-1. **Этап 5:** runtime grader/fixtures/≥5 сценариев для подходящих задач. Сейчас Run не меняет completion/awards/studyDays и не пишет прогресс. UI явно предупреждает, что success означает только exit0 и относится к снимку исходника/ввода. Файловые fixtures не передаются. Не менять смысл старой `.automatic` проверки молча.
-2. **Этап 6:** readiness/onboarding. При missing/modified assets или неверной подписи запуск уже блокируется с сообщением; предварительного onboarding-экрана проверки среды нет.
-3. Реальный SIGXCPU из wait4 возвращается как cpuLimit; обычные exit152/exit153 остаются runtimeError. SIGKILL — runtimeError с кодом137, без выдуманного определения OOM/CPU: для точного определения источника SIGKILL нужен дополнительный accounting. APK и доверенный supervisor пока подготавливаются в RAM при каждом boot; уменьшение образа и независимые performance/RAM measurements остаются оптимизациями.
-4. Personal ad-hoc build — не распространение/notarization. Перед передачей бинарных образов другим людям обеспечить точные corresponding sources/лицензии GPL/LGPL и notices: `packaging/ExecutionThirdParty.txt`. Здесь third-party binaries не публикуются в Git.
+1. Внешняя приёмка исполнения/грейдинга: XCUITest и полный визуальный/доступностный проход не эквивалентны внутреннему smoke и остаются открытыми.
+2. Реальный SIGXCPU из wait4 возвращается как cpuLimit; обычные exit152/exit153 остаются runtimeError. SIGKILL — runtimeError с кодом137, без выдуманного определения OOM/CPU: для точного определения источника SIGKILL нужен дополнительный accounting. APK и доверенный supervisor пока подготавливаются в RAM при каждом boot; уменьшение образа и независимые performance/RAM measurements остаются оптимизациями.
+3. Personal ad-hoc build — не распространение/notarization. Перед передачей бинарных образов другим людям обеспечить точные corresponding sources/лицензии GPL/LGPL и notices: `packaging/ExecutionThirdParty.txt`. Здесь third-party binaries не публикуются в Git.
 
 ### Официальные основания выбора
 

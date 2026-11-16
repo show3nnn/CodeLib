@@ -35,6 +35,60 @@ struct ExecutionSupportTests {
         }
     }
 
+    @Test func fileFixturesValidateNamesSizesAndCounts() throws {
+        try ExecutionRequest(source: "", stdin: "", files: ["journal.txt": "0\n"],
+                             expectedFiles: ["journal.txt": "1\n"]).validate()
+        // Names stay plain path components and never collide with trusted files.
+        for name in ["", ".", "..", "main.cpp", "stdin", "program", "a/b", "../x", "/abs",
+                     "name with space", "emoji😀", String(repeating: "n", count: 65)] {
+            #expect(throws: ExecutionFailure.invalidRequest) {
+                try ExecutionRequest(source: "", stdin: "", files: [name: "1"]).validate()
+            }
+        }
+        #expect(ExecutionFiles.isValidName(String(repeating: "n", count: 64)))
+        #expect(ExecutionFiles.isValidName("A-Za-z0-9._-"))
+        // Per-file, total and count limits fail closed.
+        #expect(throws: ExecutionFailure.invalidRequest) {
+            try ExecutionRequest(source: "", stdin: "", files: ["a.txt": String(repeating: "x", count: 65_537)]).validate()
+        }
+        #expect(throws: ExecutionFailure.invalidRequest) {
+            try ExecutionRequest(source: "", stdin: "", files: ["a.txt": String(repeating: "x", count: 32_768),
+                                                               "b.txt": String(repeating: "x", count: 32_769)]).validate()
+        }
+        var many: [String: String] = [:]
+        for index in 0..<9 { many["file\(index).txt"] = "1" }
+        #expect(throws: ExecutionFailure.invalidRequest) {
+            try ExecutionRequest(source: "", stdin: "", files: many).validate()
+        }
+        #expect(throws: ExecutionFailure.invalidRequest) {
+            try ExecutionRequest(source: "", stdin: "", expectedFiles: ["../escape": "1"]).validate()
+        }
+    }
+
+    @Test func fileMismatchResultIsBoundedAndPhaseChecked() throws {
+        let id = UUID()
+        var decoder = ExecutionEventDecoder(id: id)
+        for phase in [ExecutionPhase.booting, .compiling, .running] {
+            _ = try decoder.feed(JSONEncoder().encode(ExecutionEvent(id: id, phase: phase)) + Data([10]))
+        }
+        let good = ExecutionEvent(id: id, result: ExecutionResult(
+            status: .fileMismatch, stdout: "Saved", exitCode: 0, detail: "d", fileDetail: "journal.txt"))
+        _ = try decoder.feed(JSONEncoder().encode(good) + Data([10]))
+        let result = try decoder.finish()
+        #expect(result.status == .fileMismatch && result.fileDetail == "journal.txt")
+        try result.validate()
+        // fileMismatch without phase context, without exit code or without names fails closed.
+        for broken in [ExecutionEvent(id: id, result: ExecutionResult(status: .fileMismatch, exitCode: 0, detail: "d")),
+                       ExecutionEvent(id: id, result: ExecutionResult(status: .fileMismatch, exitCode: 1, detail: "d", fileDetail: "a")),
+                       ExecutionEvent(id: id, result: ExecutionResult(status: .fileMismatch, exitCode: 0, detail: "d", fileDetail: String(repeating: "x", count: 2049)))] {
+            var check = ExecutionEventDecoder(id: id)
+            #expect(throws: ExecutionFailure.invalidResponse) {
+                _ = try check.feed(JSONEncoder().encode(ExecutionEvent(id: id, phase: .running)) + Data([10]))
+                _ = try check.feed(JSONEncoder().encode(broken) + Data([10]))
+            }
+        }
+    }
+
     @Test func fragmentedProtocolAndFailClosedResponses() throws {
         let id = UUID()
         let events = [ExecutionEvent(id: id, phase: .booting), ExecutionEvent(id: id, phase: .compiling),

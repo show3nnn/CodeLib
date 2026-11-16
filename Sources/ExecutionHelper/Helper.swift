@@ -13,6 +13,8 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     static let sourceLimit = 65_536
     static let inputLimit = 65_536
     static let consoleLimit = 262_144
+    static let fileCountLimit = 8
+    static let fileDetailLimit = 2048
     private let input = Pipe()
     private let output = Pipe()
     private var machine: VZVirtualMachine!
@@ -125,11 +127,22 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
     }
 
     private func handle(_ line: String) {
-        if line == "CODELIB_READY_1" && !sent {
+        if line == "CODELIB_READY_2" && !sent {
             sent = true
-            // Both lines are base64, never interpolated into a host/guest shell command.
-            let text = request.standard + "\n" + Data(request.source.utf8).base64EncodedString()
+            // Both protocol v2 lines and every fixture value are base64, never
+            // interpolated into a host/guest shell command. The trusted guest init
+            // reads: standard, source, stdin, file count, then name/content pairs
+            // and the same framing for expected files.
+            var text = request.standard + "\n" + Data(request.source.utf8).base64EncodedString()
                 + "\n" + Data(request.stdin.utf8).base64EncodedString() + "\n"
+            for files in [request.files, request.expectedFiles] {
+                let entries = (files ?? [:]).sorted { $0.key < $1.key }
+                text += "\(entries.count)\n"
+                for (name, content) in entries {
+                    text += Data(name.utf8).base64EncodedString() + "\n"
+                        + Data(content.utf8).base64EncodedString() + "\n"
+                }
+            }
             let data = Data(text.utf8)
             // A serial write can block if a guest stops reading. Keep it off the VM queue.
             let handle = input.fileHandleForWriting
@@ -139,19 +152,42 @@ final class ExecutionProbe: NSObject, VZVirtualMachineDelegate {
             if let phase = ExecutionPhase(rawValue: value), phase != .booting {
                 send(ExecutionEvent(id: request.id, phase: phase))
             }
-        } else if line.hasPrefix("CODELIB_RESULT_1|") {
+        } else if line.hasPrefix("CODELIB_RESULT_2|") {
             let fields = line.split(separator: "|", omittingEmptySubsequences: false)
-            guard fields.count == 5, let status = ExecutionStatus(rawValue: String(fields[1])),
+            guard fields.count == 6, let status = ExecutionStatus(rawValue: String(fields[1])),
                   sent || fields[1] == "backendError",
                   let code = Int(fields[2]), (-255...255).contains(code),
                   let out = Data(base64Encoded: String(fields[3])),
                   let err = Data(base64Encoded: String(fields[4])),
-                  out.count <= Self.sourceLimit, err.count <= Self.sourceLimit else {
+                  let names = Data(base64Encoded: String(fields[5])),
+                  out.count <= Self.sourceLimit, err.count <= Self.sourceLimit,
+                  names.count <= Self.fileDetailLimit else {
+                finish(Response(status: .backendError, detail: "Invalid bounded guest response"))
+                return
+            }
+            var detail = "Ephemeral Linux VM"
+            var fileDetail: String?
+            if status == .fileMismatch {
+                let mismatched = String(decoding: names, as: UTF8.self)
+                    .split(separator: "\n").map(String.init)
+                guard !mismatched.isEmpty, mismatched.count <= Self.fileCountLimit,
+                      mismatched.allSatisfy(ExecutionFiles.isValidName) else {
+                    finish(Response(status: .backendError, detail: "Invalid bounded guest response"))
+                    return
+                }
+                fileDetail = mismatched.joined(separator: "\n")
+                detail += "; mismatched: " + mismatched.joined(separator: ", ")
+            } else if !names.isEmpty {
                 finish(Response(status: .backendError, detail: "Invalid bounded guest response"))
                 return
             }
             finish(Response(status: status, stdout: String(decoding: out, as: UTF8.self),
-                            stderr: String(decoding: err, as: UTF8.self), exitCode: code, detail: "Ephemeral Linux VM"))
+                            stderr: String(decoding: err, as: UTF8.self), exitCode: code,
+                            detail: detail, fileDetail: fileDetail))
+        } else if line == "CODELIB_READY_1" && !sent {
+            // The pinned guest image and this helper ship together; an older image
+            // cannot receive file fixtures and must fail closed.
+            finish(Response(status: .backendError, detail: "Guest image predates file support"))
         }
         // Kernel/APK boot messages are data, not protocol responses or instructions.
     }

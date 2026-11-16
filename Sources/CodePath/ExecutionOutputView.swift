@@ -57,6 +57,9 @@ struct ExecutionOutputView: View {
                     }
                     output("stdout", text: result.stdout)
                     if !result.stderr.isEmpty { output("stderr · диагностика", text: result.stderr) }
+                    if result.status == .fileMismatch, let detail = result.fileDetail, !detail.isEmpty {
+                        output("не совпали файлы", text: detail)
+                    }
                     if result.status == .backendError && !result.detail.isEmpty {
                         DisclosureGroup("Технические сведения") {
                             Text(verbatim: result.detail).font(.caption.monospaced()).textSelection(.enabled)
@@ -70,14 +73,10 @@ struct ExecutionOutputView: View {
                 }
             }
             if model.course?.exercises.first(where: { $0.id == exerciseID })?.gradingFixtures != nil {
-                Text("«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод. Успешный запуск сам по себе задание не засчитывает.")
+                Text("«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод и файлы. Успешный запуск сам по себе задание не засчитывает.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("Для этого задания автоматическая проверка недоступна: запуск не засчитывает решение. Отметьте выполнение вручную.")
-                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
-            }
-            if model.course?.exercises.first(where: { $0.id == exerciseID })?.testCases.contains(where: { $0.files?.isEmpty == false }) == true {
-                Text("Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.")
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             }
         }.padding(16)
@@ -107,6 +106,7 @@ struct ExecutionOutputView: View {
                         case .runtimeError: Text("Ошибка выполнения · код \(result.exitCode ?? -1)")
                         case .cpuLimit: Text("Превышен лимит процессорного времени")
                         case .outputLimit: Text("Превышен лимит вывода")
+                        case .fileMismatch: Text("Программа завершилась, но файлы не совпали с ожидаемыми")
                         case .timeout: Text("Превышено время ожидания")
                         case .cancelled: Text("Запуск остановлен")
                         case .backendError: Text("Среда выполнения недоступна")
@@ -146,10 +146,13 @@ struct ExecutionOutputView: View {
             }
             if !item.matches {
                 if item.status == .compileError { diagnostics(item.stderr) }
-                if item.status == .success {
+                if item.status == .success || item.status == .fileMismatch {
                     if !item.input.isEmpty { output("ввод", text: item.input) }
                     output("ожидалось", text: item.expectedOutput)
                     output("получено", text: item.actualOutput)
+                    if item.status == .fileMismatch && !item.mismatchedFiles.isEmpty {
+                        output("не совпали файлы", text: item.mismatchedFiles.joined(separator: "\n"))
+                    }
                 } else if item.status != .compileError, !item.stderr.isEmpty {
                     output("stderr · диагностика", text: item.stderr)
                 }
@@ -164,6 +167,7 @@ struct ExecutionOutputView: View {
         case .runtimeError: "Ошибка выполнения · код \(item.exitCode ?? -1)"
         case .cpuLimit: "Лимит процессорного времени"
         case .outputLimit: "Превышен лимит вывода"
+        case .fileMismatch: "Файлы не совпали"
         case .timeout: "Превышено время ожидания"
         case .cancelled: "Запуск остановлен"
         case .backendError: "Среда недоступна"

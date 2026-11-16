@@ -16,7 +16,7 @@ public struct ExecutionAssets: Sendable {
     // Changes require a deliberate rebuild, review and negative-test run.
     public static let images: [(name: String, bytes: Int, hash: String)] = [
         ("Image", 34_734_080, "2f3e223b93e5c827185a81f3d5abd3aff66bc0fcec3c8ad53deff4f6bcb9cb34"),
-        ("initrd.gz", 119_332_866, "9ef147111a3aa25c4533ed721b75f176f2fbb2c0b412aa8827111326502780ad")
+        ("initrd.gz", 119_333_957, "54b619ba87c149478f0f04f6140b1def5da2beb814249d4d679567999e08a9d8")
     ]
 
     public func validate() throws {

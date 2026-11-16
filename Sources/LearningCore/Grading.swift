@@ -22,29 +22,35 @@ public enum OutputComparison {
     }
 }
 
-/// One verified stdin/stdout fixture selected for in-app grading.
+/// One verified fixture selected for in-app grading. `files` are created by the
+/// trusted init before the run; `expectedFiles` are compared inside the guest.
 public struct GradingFixture: Sendable, Equatable, Identifiable {
     public let index: Int
     public let input: String
     public let expectedOutput: String
+    public let files: [String: String]?
+    public let expectedFiles: [String: String]?
     public var id: Int { index }
-    public init(index: Int, input: String, expectedOutput: String) {
+    public init(index: Int, input: String, expectedOutput: String,
+                files: [String: String]? = nil, expectedFiles: [String: String]? = nil) {
         self.index = index
         self.input = input
         self.expectedOutput = expectedOutput
+        self.files = files
+        self.expectedFiles = expectedFiles
     }
 }
 
 public extension Exercise {
-    /// File fixtures cannot be transferred into the isolated VM yet, so such tasks
-    /// stay self-reviewed rather than pretending a partial run is a full check.
+    /// Every code exercise with verified test cases is gradable: stdin fixtures,
+    /// input files and expected file contents all travel through the same trusted
+    /// helper into a fresh disposable VM. Nothing here compares source text with a
+    /// reference solution.
     var gradingFixtures: [GradingFixture]? {
         guard kind == .code, !testCases.isEmpty else { return nil }
-        guard testCases.allSatisfy({
-            ($0.files ?? [:]).isEmpty && ($0.expectedFiles ?? [:]).isEmpty
-        }) else { return nil }
         return testCases.enumerated().map {
-            GradingFixture(index: $0.offset + 1, input: $0.element.input, expectedOutput: $0.element.output)
+            GradingFixture(index: $0.offset + 1, input: $0.element.input, expectedOutput: $0.element.output,
+                           files: $0.element.files, expectedFiles: $0.element.expectedFiles)
         }
     }
 }

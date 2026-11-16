@@ -39,7 +39,9 @@ public struct ExecutionEventDecoder {
                 phases.append(phase)
             }
             if let result = event.result {
-                if result.status == .success && lastPhase != .running { throw ExecutionFailure.invalidResponse }
+                if (result.status == .success || result.status == .fileMismatch) && lastPhase != .running {
+                    throw ExecutionFailure.invalidResponse
+                }
                 if result.status == .compileError && lastPhase != .compiling { throw ExecutionFailure.invalidResponse }
                 self.result = result
             }

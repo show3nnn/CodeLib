@@ -117,6 +117,24 @@ enum SmokeTest {
                       && model.state(for: gradeTask.id).completion == .automatic, "Failure records an attempt without revoking earned completion")
                 await settle()
                 try snapshot(window: console, to: directory.appendingPathComponent("grading-editor-failure.png"))
+                guard let fileTask = course.exercises.first(where: {
+                    ($0.gradingFixtures?.count ?? 0) >= 5
+                        && $0.testCases.contains { ($0.expectedFiles ?? [:]).isEmpty == false }
+                }) else { throw ContentError.invalid("No file-fixture task for grading smoke") }
+                model.open(fileTask)
+                model.updateState(fileTask.id) { $0.draft = fileTask.solution }
+                model.gradeCode()
+                try await waitForExecution()
+                check(model.execution.gradingResults.count == fileTask.testCases.count
+                      && model.execution.gradingPassed, "File fixtures travel into the VM and verify inside it")
+                check(model.state(for: fileTask.id).completion == .automatic, "File grading persists automatic completion")
+                model.updateState(fileTask.id) { $0.draft = "int main(){}" }
+                model.gradeCode()
+                try await waitForExecution()
+                check(!model.execution.gradingPassed
+                      && model.execution.gradingResults.contains {
+                          $0.status == .fileMismatch && !$0.mismatchedFiles.isEmpty
+                      }, "Wrong program fails file fixtures with named mismatches")
                 console.orderOut(nil)
                 model.open(first)
                 if let window = NSApp.windows.first(where: { $0.isVisible && $0.contentView != nil }) {

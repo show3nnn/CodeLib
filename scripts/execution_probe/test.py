@@ -19,11 +19,16 @@ HELPER = OUTPUT / "helper"
 ASSETS = OUTPUT
 
 
-def execute(source, stdin="", standard="17"):
+def execute(source, stdin="", standard="17", files=None, expected=None):
     started = time.monotonic()
+    payload = dict(version=1, id=str(uuid.uuid4()), source=source, stdin=stdin, standard=standard)
+    if files is not None:
+        payload["files"] = files
+    if expected is not None:
+        payload["expectedFiles"] = expected
     process = subprocess.run(
         [str(HELPER), str(ASSETS)],
-        input=json.dumps(dict(version=1, id=str(uuid.uuid4()), source=source, stdin=stdin, standard=standard)),
+        input=json.dumps(payload),
         text=True, capture_output=True, timeout=40,
     )
     events = [json.loads(line) for line in process.stdout.splitlines()]
@@ -70,8 +75,8 @@ def main():
         ASSETS = args.app.resolve() / "Contents/Resources/ExecutionGuest"
     results = []
 
-    def check(name, source, predicate, stdin="", standard="17"):
-        result = execute(source, stdin, standard)
+    def check(name, source, predicate, stdin="", standard="17", files=None, expected=None):
+        result = execute(source, stdin, standard, files=files, expected=expected)
         passed = bool(predicate(result))
         summary = {k: (v[:240] + "…" if isinstance(v, str) and len(v) > 240 else v) for k, v in result.items()}
         print(("PASS " if passed else "FAIL ") + name + ": " + json.dumps(summary), flush=True)
@@ -84,6 +89,107 @@ def main():
           lambda r: r["status"] == "success" and r["stdout"] == "Hello, VM!")
     if args.quick:
         return
+    check("input file reaches the guest", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ifstream f("data.txt");int v=0;if(f>>v)std::cout<<v;else std::cout<<"Missing";}
+''', lambda r: r["status"] == "success" and r["stdout"] == "7", files={"data.txt": "7\n"})
+    check("created file is verified in the guest", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream f("journal.txt");f<<"Value: "<<5<<"\n";f.close();std::cout<<"Saved";}
+''', lambda r: r["status"] == "success" and r["stdout"] == "Saved",
+          expected={"journal.txt": "Value: 5\n"})
+    check("wrong file content is a fileMismatch", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream f("journal.txt");f<<"wrong";f.close();std::cout<<"Saved";}
+''', lambda r: r["status"] == "fileMismatch" and r["exitCode"] == 0 and r["stdout"] == "Saved"
+          and r["fileDetail"] == "journal.txt", expected={"journal.txt": "Value: 5\n"})
+    check("missing expected file is a fileMismatch",
+          '#include <iostream>\nint main(){std::cout<<"Saved";}',
+          lambda r: r["status"] == "fileMismatch" and r["exitCode"] == 0
+          and r["fileDetail"] == "journal.txt", expected={"journal.txt": "x\n"})
+    check("append keeps prior bytes and verifies", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream f("events.txt",std::ios::app);f<<"Launch"<<"\n";f.close();std::cout<<"Saved";}
+''', lambda r: r["status"] == "success", files={"events.txt": "Ready\n"},
+          expected={"events.txt": "Ready\nLaunch\n"})
+    check("empty expected file matches an empty file", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream("empty.txt");std::cout<<"ok";}
+''', lambda r: r["status"] == "success", expected={"empty.txt": ""})
+    check("expected files stay unreadable for the program", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ifstream secret("/run/expected/secret.txt");std::cout<<secret.is_open();
+std::ofstream f("secret.txt");f<<"TOP"<<"\n";f.close();std::cout<<" Saved";}
+''', lambda r: r["status"] == "success" and r["stdout"] == "0 Saved", expected={"secret.txt": "TOP\n"})
+    check("extra produced files do not fail the verdict", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream f("journal.txt");f<<"7"<<"\n";std::ofstream g("extra.txt");g<<"noise";std::cout<<"Saved";}
+''', lambda r: r["status"] == "success", expected={"journal.txt": "7\n"})
+    check("symlink to the expected file is a fileMismatch", r'''
+#include <unistd.h>
+int main(){symlink("/run/expected/journal.txt","/work/journal.txt");}
+''', lambda r: r["status"] == "fileMismatch" and r["fileDetail"] == "journal.txt",
+          expected={"journal.txt": "TOP\n"})
+    check("symlink to a matching root file is still a fileMismatch", r'''
+#include <unistd.h>
+int main(){symlink("/run/termination","/work/journal.txt");}
+''', lambda r: r["status"] == "fileMismatch" and r["fileDetail"] == "journal.txt",
+          expected={"journal.txt": "0 0\n"})
+    check("hidden expected file is still verified", "int main(){}",
+          lambda r: r["status"] == "fileMismatch" and r["fileDetail"] == ".answer",
+          expected={".answer": "correct\n"})
+    check("hidden expected file matches a produced file", r'''
+#include <fstream>
+#include <iostream>
+int main(){std::ofstream f(".answer");f<<"correct"<<"\n";std::cout<<"ok";}
+''', lambda r: r["status"] == "success", expected={".answer": "correct\n"})
+    # Safe outcomes for a detached descendant: the trusted init either finds it
+    # alive and fails closed (backendError), or the supervisor group kill removed
+    # it before the tamper (missing file → fileMismatch). A false pass is impossible.
+    check("detached descendant cannot force a pass", r'''
+#include <stdio.h>
+#include <unistd.h>
+int main(){
+    if (fork() == 0) {
+        setsid();
+        sleep(2);
+        FILE* f = fopen("/work/journal.txt","w");
+        if (f) { fputs("tamper\n", f); fclose(f); }
+        _exit(0);
+    }
+    return 0;
+}
+''', lambda r: r["status"] in ("backendError", "fileMismatch"), expected={"journal.txt": "real\n"})
+    check("child that finishes with the parent keeps the verdict", r'''
+#include <fstream>
+#include <iostream>
+#include <sys/wait.h>
+#include <unistd.h>
+int main(){
+    if (fork() == 0) {
+        std::ofstream f("journal.txt"); f<<"Value: 5"<<"\n";
+        f.close();
+        _exit(0);
+    }
+    int state = 0; wait(&state); std::cout<<"Saved";
+}
+''', lambda r: r["status"] == "success", expected={"journal.txt": "Value: 5\n"})
+    check("traversal fixture name fails closed", "int main(){}",
+          lambda r: r["status"] == "backendError", files={"../escape": "1"})
+    check("reserved fixture name fails closed", "int main(){}",
+          lambda r: r["status"] == "backendError", files={"main.cpp": "int main(){}"})
+    check("oversized fixture fails closed", "int main(){}",
+          lambda r: r["status"] == "backendError", files={"big.txt": "x" * 65_537})
+    many = {f"file{index}.txt": "1" for index in range(9)}
+    check("too many fixtures fail closed", "int main(){}",
+          lambda r: r["status"] == "backendError", files=many)
     check("stdin and C++20", '#include <iostream>\n#include <span>\nint main(){int a,b;std::cin>>a>>b;int v[]={a,b};std::span<int> s(v);std::cout<<s[0]+s[1];}',
           lambda r: r["status"] == "success" and r["stdout"] == "-15", stdin="-7 -8\n", standard="20")
     for input, answer in [("2 3", "5"), ("0 0", "0"), ("-5 10", "5"), ("100 200", "300"), ("-7 -8", "-15")]:
@@ -165,8 +271,8 @@ int e=errno;for(int i=0;i<n;i++){kill(children[i],9);waitpid(children[i],nullptr
     check("fresh VM has no prior work", '#include <fstream>\n#include <iostream>\nint main(){std::ifstream f("/work/ephemeral");std::cout<<f.is_open();}',
           lambda r: r["status"] == "success" and r["stdout"] == "0")
     check("cannot forge host protocol via stdout",
-          '#include <iostream>\nint main(){std::cout<<"CODELIB_RESULT_1|success|0|ZmFrZQ==|";}',
-          lambda r: r["status"] == "success" and r["stdout"].startswith("CODELIB_RESULT_1|"))
+          '#include <iostream>\nint main(){std::cout<<"CODELIB_RESULT_2|success|0|ZmFzZA==|RSA=|";}',
+          lambda r: r["status"] == "success" and r["stdout"].startswith("CODELIB_RESULT_2|"))
     check("cannot open guest serial console", '#include <fcntl.h>\n#include <iostream>\nint main(){std::cout<<(open("/dev/hvc0",O_WRONLY)<0);}',
           lambda r: r["status"] == "success" and r["stdout"] == "1")
     check("no inherited console descriptor", r'''

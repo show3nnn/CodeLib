@@ -2,7 +2,7 @@
   "courseID": "cpp-foundations",
   "formatVersion": 1,
   "locale": "en",
-  "sourceSHA256": "8e8ec7cfe96dc8336d1c86037dc1f5affc9936f9cb883676cceb494d32a76d3b",
+  "sourceSHA256": "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9",
   "status": "draft",
   "texts": {
     "cpp-foundations.summary": "A hands-on C++17 course: from your first program to containers, memory, objects and console projects. Reference solutions are also checked in C++20.",
@@ -875,7 +875,7 @@
     "cpp.files.read.title": "The first number from a file",
     "cpp.files.recap": "Check opening, reading or writing, and the path. Do not use while(!eof()) as the condition for reading the next value.",
     "cpp.files.summary": "Handle a missing file and check writes.",
-    "cpp.files.theory": "std::ifstream input(\"data.txt\") from <fstream> opens a file for reading relative to the process's working directory. if(!input) checks whether opening succeeded. Reading input>>value resembles cin, while while(input>>value) reads numbers until a failure. That loop alone does not distinguish end of file from a malformed token; further checks come later.\n\nstd::ofstream output(\"journal.txt\") creates or truncates a file by default. Use std::ios::app to append. Check opening before writing and the state afterwards; when needed, output.close() followed by another check detects deferred errors. The stream closes its resource through RAII.\n\ncodelib can run code in a disposable environment, but it does not yet pass the example's initial files into that environment or check files the program creates. Use an external development environment to fully check file tasks; in codelib you can view the initial and expected files and mark the solution yourself.",
+    "cpp.files.theory": "std::ifstream input(\"data.txt\") from <fstream> opens a file for reading relative to the process's working directory. if(!input) checks whether opening succeeded. Reading input>>value resembles cin, while while(input>>value) reads numbers until a failure. That loop alone does not distinguish end of file from a malformed token; further checks come later.\n\nstd::ofstream output(\"journal.txt\") creates or truncates a file by default. Use std::ios::app to append. Check opening before writing and the state afterwards; when needed, output.close() followed by another check detects deferred errors. The stream closes its resource through RAII.\n\ncodelib passes the example's initial files into a disposable environment and after the run compares the created files with the expected ones; files on your system are never used.",
     "cpp.files.title": "File streams",
     "cpp.files.write.explanation": "The result includes both standard output and the exact contents of the created file.",
     "cpp.files.write.hint.1": "Ordinary ofstream replaces previous contents.",

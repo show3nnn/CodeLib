@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -65,6 +66,11 @@ int main(int argc, char **argv) {
     while (wait4(child, &status, 0, &usage) < 0) {
         if (errno != EINTR) return 2;
     }
+    /* The child called setsid(), so its PID is its process group ID. Remaining
+     * group members (compiler workers or program descendants) must not outlive
+     * the run; a detached grandchild that escaped the group is rejected by the
+     * trusted init before any verdict is computed. */
+    (void)kill(-child, SIGKILL);
     int setup_errno = 0;
     ssize_t count = read(errors[0], &setup_errno, sizeof setup_errno);
     close(errors[0]);

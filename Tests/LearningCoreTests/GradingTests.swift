@@ -31,11 +31,28 @@ struct GradingTests {
         #expect(fixtures.map(\.expectedOutput) == exercise.testCases.map(\.output))
     }
 
+    @Test func fileFixturesTravelThroughGradingFixtures() throws {
+        let course = try Course.bundled()
+        let fileTask = try #require(course.exercises.first {
+            $0.kind == .code && $0.testCases.contains { ($0.files ?? [:]).isEmpty == false }
+        })
+        let fixtures = try #require(fileTask.gradingFixtures)
+        #expect(fixtures.count == fileTask.testCases.count)
+        for (fixture, testCase) in zip(fixtures, fileTask.testCases) {
+            #expect(fixture.files == testCase.files)
+            #expect(fixture.expectedFiles == testCase.expectedFiles)
+        }
+    }
+
     @Test func gradableFixturesCoverInputVariation() throws {
         let course = try Course.bundled()
         for exercise in course.exercises where exercise.kind == .code {
             guard exercise.gradingFixtures != nil else { continue }
-            let hasVariableInput = exercise.testCases.contains { !$0.input.isEmpty }
+            // Variation comes from stdin, provided input files or expected files.
+            let hasVariableInput = exercise.testCases.contains {
+                !$0.input.isEmpty || ($0.files ?? [:]).isEmpty == false
+                    || ($0.expectedFiles ?? [:]).isEmpty == false
+            }
             if hasVariableInput {
                 #expect(exercise.testCases.count >= 5, "\(exercise.id) has too few input fixtures")
             } else {
@@ -44,7 +61,7 @@ struct GradingTests {
         }
     }
 
-    @Test func nonCodeAndFileTasksAreNotGradable() throws {
+    @Test func nonCodeTasksStaySelfReviewedWhileFileTasksAreGradable() throws {
         let course = try Course.bundled()
         for exercise in course.exercises where exercise.kind != .code {
             #expect(exercise.gradingFixtures == nil)
@@ -52,7 +69,7 @@ struct GradingTests {
         let fileTask = try #require(course.exercises.first {
             $0.kind == .code && $0.testCases.contains { ($0.files ?? [:]).isEmpty == false }
         })
-        #expect(fileTask.gradingFixtures == nil)
+        #expect(fileTask.gradingFixtures != nil)
     }
 
     @Test func synthesizedFixtureSelectionRejectsMissingOrUnsupportedCases() throws {
@@ -70,11 +87,13 @@ struct GradingTests {
         #expect(plain.gradingFixtures?.map(\.index) == [1, 2])
         #expect(plain.gradingFixtures?.map(\.input) == ["2 3", ""])
         #expect(try decode("[]").gradingFixtures == nil)
-        #expect(try decode("""
+        let withFiles = try decode("""
         [{"input":"","output":"x","files":{"input.txt":"1"}}]
-        """).gradingFixtures == nil)
-        #expect(try decode("""
+        """)
+        #expect(withFiles.gradingFixtures?.first?.files == ["input.txt": "1"])
+        let withExpected = try decode("""
         [{"input":"","output":"x","expectedFiles":{"out.txt":"1"}}]
-        """).gradingFixtures == nil)
+        """)
+        #expect(withExpected.gradingFixtures?.first?.expectedFiles == ["out.txt": "1"])
     }
 }

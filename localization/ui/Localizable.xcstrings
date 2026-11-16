@@ -650,7 +650,7 @@
       }
     },
     "%lld:%lld": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:177",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:181",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -668,7 +668,7 @@
       }
     },
     "(пусто)": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:192",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:196",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1010,7 +1010,7 @@
       }
     },
     "stderr · диагностика": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:154; Sources/CodePath/ExecutionOutputView.swift:59",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:157; Sources/CodePath/ExecutionOutputView.swift:59",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1063,20 +1063,20 @@
         }
       }
     },
-    "«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод. Успешный запуск сам по себе задание не засчитывает.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:73",
+    "«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод и файлы. Успешный запуск сам по себе задание не засчитывает.": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:76",
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "“Check solution” runs the examples in the task in the isolated environment and compares output. A successful run alone does not complete the task."
+            "value": "“Check solution” runs the examples in the task in the isolated environment and compares output and files. A successful run alone does not complete the task."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод. Успешный запуск сам по себе задание не засчитывает."
+            "value": "«Проверить решение» запускает примеры из условия в изолированной среде и сравнивает вывод и файлы. Успешный запуск сам по себе задание не засчитывает."
           }
         }
       }
@@ -1226,7 +1226,7 @@
       }
     },
     "В этой сборке нет полной среды C++. Используйте упакованное приложение codelib.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:207",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:211",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1874,7 +1874,7 @@
       }
     },
     "Вывод совпал": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:162",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:165",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -1928,7 +1928,7 @@
       }
     },
     "Готово к запуску": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:94",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:93",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2036,7 +2036,7 @@
       }
     },
     "Для этого задания автоматическая проверка недоступна: запуск не засчитывает решение. Отметьте выполнение вручную.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:76",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:79",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2054,7 +2054,7 @@
       }
     },
     "Для этой среды нужны Apple silicon и доступная аппаратная виртуализация.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:210",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:214",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2108,7 +2108,7 @@
       }
     },
     "Дождитесь завершения предыдущего запуска.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:214",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:218",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2162,7 +2162,7 @@
       }
     },
     "Другой вывод": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:162",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:165",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2396,7 +2396,7 @@
       }
     },
     "Запуск остановлен": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:111; Sources/CodePath/ExecutionOutputView.swift:168",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:111; Sources/CodePath/ExecutionOutputView.swift:172",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -2414,7 +2414,7 @@
       }
     },
     "Запускаем изолированную среду…": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:96",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:95",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3062,7 +3062,7 @@
       }
     },
     "Код или ввод превышает 64 КиБ, либо запрос имеет неподдерживаемый формат.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:206",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:210",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3116,7 +3116,7 @@
       }
     },
     "Компилируем C++…": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:97",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:96",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3242,7 +3242,7 @@
       }
     },
     "Лимит процессорного времени": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:165",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:168",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -3890,7 +3890,7 @@
       }
     },
     "Не удалось запустить изолированную среду.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:213",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:217",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4304,7 +4304,7 @@
       }
     },
     "Образы среды повреждены или изменены. Запуск заблокирован; пересоберите или восстановите приложение.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:208",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:212",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4394,7 +4394,7 @@
       }
     },
     "Останавливаем среду и все процессы…": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:99",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:98",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4754,7 +4754,7 @@
       }
     },
     "Ошибка выполнения · код %lld": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:107; Sources/CodePath/ExecutionOutputView.swift:164",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:106; Sources/CodePath/ExecutionOutputView.swift:167",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -4772,7 +4772,7 @@
       }
     },
     "Ошибка компиляции": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:106; Sources/CodePath/ExecutionOutputView.swift:163",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:105; Sources/CodePath/ExecutionOutputView.swift:166",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5006,7 +5006,7 @@
       }
     },
     "Перейти к месту диагностики в редакторе": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:183",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:187",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5150,7 +5150,7 @@
       }
     },
     "Подпись приложения или helper не прошла проверку. Запуск заблокирован.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:209",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:213",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5492,7 +5492,7 @@
       }
     },
     "Превышен лимит вывода": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:109; Sources/CodePath/ExecutionOutputView.swift:166",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:108; Sources/CodePath/ExecutionOutputView.swift:169",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5510,7 +5510,7 @@
       }
     },
     "Превышен лимит процессорного времени": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:108",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:107",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5528,7 +5528,7 @@
       }
     },
     "Превышено время ожидания": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:110; Sources/CodePath/ExecutionOutputView.swift:167",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:110; Sources/CodePath/ExecutionOutputView.swift:171",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5888,7 +5888,7 @@
       }
     },
     "Проверяем подпись и образы среды…": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:95",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:94",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5942,7 +5942,7 @@
       }
     },
     "Программа выполняется…": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:98",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:97",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5960,7 +5960,7 @@
       }
     },
     "Программа завершилась · код 0": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:105",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:104",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -5973,6 +5973,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Программа завершилась · код 0"
+          }
+        }
+      }
+    },
+    "Программа завершилась, но файлы не совпали с ожидаемыми": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:109",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The program finished, but the files did not match the expected ones"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Программа завершилась, но файлы не совпали с ожидаемыми"
           }
         }
       }
@@ -6716,7 +6734,7 @@
       }
     },
     "Связь со средой прервана. Запуск не считается успешным; можно повторить.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:212",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:216",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -6747,24 +6765,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Сделайте его своим."
-          }
-        }
-      }
-    },
-    "Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:80",
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only stdin is passed for now. File examples are not loaded; Mac files are inaccessible."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сейчас передаётся только stdin. Файловые примеры не загружаются; файлы Mac недоступны."
           }
         }
       }
@@ -7076,7 +7076,7 @@
       }
     },
     "Среда не ответила вовремя и была принудительно остановлена.": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:211",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:215",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7094,7 +7094,7 @@
       }
     },
     "Среда недоступна": {
-      "comment": "Sources/CodePath/ExecutionOutputView.swift:169",
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:173",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7292,7 +7292,7 @@
       }
     },
     "Технические сведения": {
-      "comment": "Sources/CodePath/ErrorPresentation.swift:169; Sources/CodePath/ExecutionOutputView.swift:49; Sources/CodePath/ExecutionOutputView.swift:61",
+      "comment": "Sources/CodePath/ErrorPresentation.swift:169; Sources/CodePath/ExecutionOutputView.swift:49; Sources/CodePath/ExecutionOutputView.swift:64",
       "extractionState": "manual",
       "localizations": {
         "en": {
@@ -7593,6 +7593,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Файл уже существует. Выберите другое имя или расположение."
+          }
+        }
+      }
+    },
+    "Файлы не совпали": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:170",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files did not match"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Файлы не совпали"
           }
         }
       }
@@ -7935,6 +7953,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "задания завершено"
+          }
+        }
+      }
+    },
+    "не совпали файлы": {
+      "comment": "Sources/CodePath/ExecutionOutputView.swift:154; Sources/CodePath/ExecutionOutputView.swift:61",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mismatched files"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "не совпали файлы"
           }
         }
       }

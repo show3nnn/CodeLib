@@ -1,7 +1,7 @@
 """Complete developer-only English drafts for catalog and release history. Not reviewed."""
 CATALOG_SHA256 = "bd375a5474c459144861a65ea0c3221711d199e3b403660c3048048be3bead8c"
-# Source change reviewed: correct the 0.4.0 grading shortcut in both languages.
-RELEASES_SHA256 = "54917fc7381f33c24d88569f92550272842786f5487d8f4c2d919948c15abf77"
+# Source change reviewed: 0.6.0 adds file-task automatic checking inside the VM.
+RELEASES_SHA256 = "a6adbda6d47c6ec0f663a5ddc63f5d268baf41da9ab835d44be5b0fc4af16a41"
 FUTURE = "A future course. Learning materials are not available yet."
 CATALOG = {
     "cpp-foundations": dict(title="C++ — from zero to a confident first year", summary="Practice, language understanding and console projects."),
@@ -19,6 +19,15 @@ def note(title, summary, features, improvements=None, fixes=None):
 
 
 RELEASES = {
+    "0.6.0": note("Automatic checking of file tasks",
+        "“Check solution” now works for file tasks as well: the example's initial files are passed into a disposable isolated environment, and the files the program creates are compared with the expected ones inside it. Files on your Mac are never used.",
+        {
+            "file-grading": ("Files are checked in the isolated environment", "Code tasks with files are automatically checked on every example: initial files appear in the environment, the program can read, append to and overwrite them, and the created files are compared with the expected ones. If the contents differ, the mismatched files are named; previous drafts and inputs remain untouched."),
+        },
+        {
+            "Автопроверка охватывает все подходящие кодовые задания: 199 заданий и 1091 пример, включая задания без входа с одним точным примером протокола. Результаты сохраняются как прежде: только полный проход всех примеров засчитывает решение автоматически.":
+            "Automatic checking now covers every suitable code task: 199 tasks and 1091 examples, including tasks without input that keep one exact protocol example. Results are saved as before: only a complete pass of every example completes the solution automatically.",
+        }),
     "0.5.0": note("Checking the C++ environment",
         "During setup you can check the bundled C++ environment and repeat the check later in Settings. The app compiles and runs a small program in a disposable isolated environment.",
         {

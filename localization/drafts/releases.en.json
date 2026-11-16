@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "locale": "en",
   "resource": "releases",
-  "sourceSHA256": "54917fc7381f33c24d88569f92550272842786f5487d8f4c2d919948c15abf77",
+  "sourceSHA256": "a6adbda6d47c6ec0f663a5ddc63f5d268baf41da9ab835d44be5b0fc4af16a41",
   "status": "draft",
   "texts": {
     "release.0.1.0.feature.course.detail": "16 sections, 60 lessons and 272 tasks, including assessments and console projects.",
@@ -197,6 +197,11 @@
     "release.0.5.0.feature.environment-check.detail": "The compiler is included in the app: Xcode and Command Line Tools are not required. Success is shown only after the test program runs. You can stop or skip the check and continue learning.",
     "release.0.5.0.feature.environment-check.title": "Check without installing",
     "release.0.5.0.summary": "During setup you can check the bundled C++ environment and repeat the check later in Settings. The app compiles and runs a small program in a disposable isolated environment.",
-    "release.0.5.0.title": "Checking the C++ environment"
+    "release.0.5.0.title": "Checking the C++ environment",
+    "release.0.6.0.feature.file-grading.detail": "Code tasks with files are automatically checked on every example: initial files appear in the environment, the program can read, append to and overwrite them, and the created files are compared with the expected ones. If the contents differ, the mismatched files are named; previous drafts and inputs remain untouched.",
+    "release.0.6.0.feature.file-grading.title": "Files are checked in the isolated environment",
+    "release.0.6.0.improvement.65773fa80e03eccb622aa622e94830b2e50bc39d08dc50479af01ad11c0ba75a": "Automatic checking now covers every suitable code task: 199 tasks and 1091 examples, including tasks without input that keep one exact protocol example. Results are saved as before: only a complete pass of every example completes the solution automatically.",
+    "release.0.6.0.summary": "“Check solution” now works for file tasks as well: the example's initial files are passed into a disposable isolated environment, and the files the program creates are compared with the expected ones inside it. Files on your Mac are never used.",
+    "release.0.6.0.title": "Automatic checking of file tasks"
   }
 }
