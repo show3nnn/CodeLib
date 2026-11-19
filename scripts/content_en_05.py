@@ -1,7 +1,7 @@
 """Complete text-field draft: repetition and streaming algorithms. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9"
+SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
 SECTION_ID = "cpp.section.loops"
 ENTITIES = {
     SECTION_ID: dict(title="5. Repetition and algorithms", summary="From counters to processing telemetry without storing the whole sequence."),

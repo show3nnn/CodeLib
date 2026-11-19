@@ -64,9 +64,9 @@ struct StudyNavigationTests {
         let block = try #require(course.sections.last)
         #expect(block.id == "cpp.section.algorithm-lab")
         #expect(block.lessons.map(\.id) == ["cpp.prefixlab", "cpp.windowlab", "cpp.pointerslab", "cpp.binarylab"])
-        #expect(block.lessons.allSatisfy { $0.exercises.count == 6 })
+        #expect(block.lessons.map(\.exercises.count) == [6, 6, 6, 7])
         #expect(block.lessons.flatMap(\.exercises).filter { $0.kind == .code }.count == 20)
-        #expect(course.sections.count == 17 && course.lessons.count == 64 && course.exercises.count == 296)
+        #expect(course.sections.count == 17 && course.lessons.count == 71 && course.exercises.count == 348)
         try course.validate()
     }
 }

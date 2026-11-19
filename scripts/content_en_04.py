@@ -1,14 +1,17 @@
 """Complete text-field draft: decisions and logic. Not a shipped app language."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9"
+SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
 SECTION_ID = "cpp.section.decisions"
 ENTITIES = {
     SECTION_ID: dict(title="4. Decisions and logic", summary="Make decisions and handle boundary values."),
     "cpp.if": lesson("Branching with if / else", "Perform different actions depending on a condition.",
         "if (condition) { ... } executes its block when the condition is true. else { ... } provides an alternative. The operators >, <, >=, <=, == and != compare values and return bool. Equality uses two signs, ==; a single = assigns a value.\n\nAlways put branches in braces: this makes statements easier to add and prevents confusion. Do not put ; immediately after if (...): that creates an empty statement instead of the intended block. You may omit else when no alternative is needed. Read the task carefully to decide which branch includes equality.",
-        "A numeric value can be converted to bool in a condition: zero means false, and a nonzero value means true. Consequently, if (x = 5) may compile and behave differently from your intention. Use == for comparison and enable compiler warnings; do not memorize the incorrect rule that assignment in if is always a syntax error.",
+        "A numeric value can be converted to bool in a condition: zero means false, and a nonzero value means true. Consequently, if (x = 5) may compile and behave differently from your intention. Use == for comparison and enable compiler warnings; do not memorize the incorrect rule that assignment in if is always a syntax error.\n\nA nested if without its own braces requires care: an else belongs to the nearest preceding if that does not yet have an else branch of its own. Therefore if (a) if (b) { ... } else { ... } attaches the else to the inner check b, not to a. Braces make the branch binding explicit and prevent a mistaken reading.",
         "Test the value exactly on the boundary separately. = stores; == compares."),
+    "cpp.if.dangling": task("Whose else is it?", "Without braces the following is written: if (a) if (b) { ... } else { ... }. Which if does the else belong to?",
+        ["The else looks for the nearest if without an else branch of its own.", "Braces around the outer if make the binding explicit."], "The rule that an else belongs to the nearest suitable if is a standard oral question; braces spare you from reading the code by guesswork.",
+        {"К внешнему if (a)": "The outer if (a)", "К внутреннему if (b)": "The inner if (b)", "Такая запись всегда ошибка компиляции": "This is always a compilation error"}),
     "cpp.if.gate": task("Charge-controlled airlock", "Input: integer charge e from 0 to 100. Print Ready if e ≥ 20; otherwise print Charge.",
         ["A charge of exactly 20 is sufficient.", "Use >=, not >."], "The boundary test 20 distinguishes the correct condition from an overly strict one."),
     "cpp.if.equal": output("The admission boundary", ["Strict > excludes equality.", "With height=10, the condition is false."], "The else branch is selected."),
@@ -62,4 +65,4 @@ ENTITIES = {
     "cpp.dispatcher.fare": task("A smarter ticket office", "Input: balance (0–10000), then tickets (0–100). Each ticket costs 12. If balance ≥ 12*tickets, print Bought and the remaining balance, separated by a space; otherwise print Missing and the shortfall, separated by a space.",
         ["Calculate the total cost first.", "In each branch, subtract the smaller amount from the larger one, using the appropriate label."], "The mini-project extends the previous ticket office with actual handling of insufficient funds."),
 }
-SKILLS = {"if": "if", "else": "else", "сравнения": "comparisons", "логика": "logic", "диапазоны": "ranges", "короткое замыкание": "short-circuiting", "else if": "else if", "switch": "switch", "границы": "boundaries", "контрольная": "assessment", "приоритет правил": "rule priority", "ветвления": "branching"}
+SKILLS = {"if": "if", "else": "else", "сравнения": "comparisons", "логика": "logic", "диапазоны": "ranges", "короткое замыкание": "short-circuiting", "else if": "else if", "switch": "switch", "границы": "boundaries", "контрольная": "assessment", "приоритет правил": "rule priority", "ветвления": "branching", "вложенные if": "nested if"}

@@ -53,7 +53,7 @@ struct CourseTranslationTests {
         let source = try source()
         let translation = try draft()
         let report = try translation.coverage(for: source)
-        #expect(report.translated == 2904 && report.translated == report.total)
+        #expect(report.translated == 3492 && report.translated == report.total)
         #expect(report.unknown.isEmpty && report.missing.isEmpty && report.isComplete)
         #expect(translation.status == .draft)
         let base = try JSONDecoder().decode(Course.self, from: source)
@@ -113,7 +113,7 @@ struct CourseTranslationTests {
         let expected = Set(CourseTranslation.sourceTexts(in: course).keys)
         let translation = try draft()
         #expect(Set(translation.texts.keys) == expected)
-        #expect(translation.texts.count == 2904)
+        #expect(translation.texts.count == 3492)
         let preview = try translation.developerPreview(from: data)
         #expect(preview.lessons.first(where: { $0.id == "cpp.tickets" })?.title == "Mini-project: ticket office")
         #expect(preview.lessons.first(where: { $0.id == "cpp.telemetry" })?.title == "Assessment: telemetry")
@@ -168,7 +168,7 @@ struct CourseTranslationTests {
         let base = try JSONDecoder().decode(Course.self, from: data)
         let preview = try draft().developerPreview(from: data)
         let automatic = base.exercises.filter { $0.kind == .choice || $0.kind == .output }
-        #expect(automatic.count == 97)
+        #expect(automatic.count == 123)
         let folder = root.appendingPathComponent(".build/test-data/locale-roundtrip-\(UUID().uuidString)")
         let store = try ProgressStore(url: folder.appendingPathComponent("progress.json"))
         let profile = LocalProfile(nickname: "Пилот 👩🏽‍💻", avatar: .star)
@@ -207,7 +207,7 @@ struct CourseTranslationTests {
                 let savedAnswer = try #require(reopened.exercises[exercise.id]?.answer)
                 #expect(AnswerChecker.check(savedAnswer, for: projected) == true)
             }
-            #expect(reopened.completedCount(in: course) == 98)
+            #expect(reopened.completedCount(in: course) == 124)
             #expect(reopened.lastExerciseID.flatMap { id in course.exercises.first { $0.id == id } }?.id == "cpp.inventory.compress")
         }
         #expect(reopened.profile == profile)

@@ -48,12 +48,12 @@ class LocalizationAuthoringTests(unittest.TestCase):
 
     def test_entire_course_has_complete_english_prose(self):
         texts, expected = generator.build_texts(self.course, self.source)
-        self.assertEqual(len(texts), 2904)
-        self.assertEqual(len(expected), 2904)
+        self.assertEqual(len(texts), 3492)
+        self.assertEqual(len(expected), 3492)
         selected = [s for s in self.course["sections"] if s["id"] in {a.SECTION_ID for a in generator.AUTHORS}]
         self.assertEqual(len(selected), 17)
-        self.assertEqual(sum(len(s["lessons"]) for s in selected), 64)
-        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 296)
+        self.assertEqual(sum(len(s["lessons"]) for s in selected), 71)
+        self.assertEqual(sum(len(l["exercises"]) for s in selected for l in s["lessons"]), 348)
         self.assertEqual(set(texts), set(source_texts(dict(self.course, sections=selected))))
         self.assertTrue(all(not re.search("[А-Яа-яЁё]", text) for text in texts.values()))
         root = Path(__file__).resolve().parents[1]

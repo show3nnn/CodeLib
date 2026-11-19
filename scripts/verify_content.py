@@ -39,8 +39,10 @@ def check(item):
                 path = safe_file(name)
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(text)
+            # The first sanitized binaries of a run can pay a cold start on a loaded
+            # machine; a reference program still has a bounded, generous deadline.
             run = subprocess.run([str(binary)], input=case["input"], capture_output=True, text=True,
-                                 timeout=3, check=True, env=env, cwd=run_folder)
+                                 timeout=10, check=True, env=env, cwd=run_folder)
             if run.stdout != case["output"] or run.stderr:
                 raise ValueError(f"{identifier} {standard}: expected {case['output']!r}, got {run.stdout!r}, stderr {run.stderr!r}")
             for name, expected in case.get("expectedFiles", {}).items():

@@ -1,7 +1,7 @@
 """Complete text-field draft: standard algorithms. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9"
+SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
 SECTION_ID = "cpp.section.algorithms"
 ENTITIES = {
     SECTION_ID: dict(title="9. Standard algorithms", summary="Iterators, searching, sorting and estimating costs."),
@@ -29,6 +29,22 @@ ENTITIES = {
         {"Оба останутся в последовательности": "Both remain in the sequence", "Всегда останется только одно": "Only one always remains", "Оба будут удалены": "Both are removed"}),
     "cpp.sorting.copy": task("Original order and ranking", "Input: n (1–100), then n numbers (−100–100). Copy the vector and sort only the copy. Print the original's first element and the smallest value, separated by a space.",
         ["A vector copy has independent values.", "Pass iterators from sorted, not original, to sort."], "Preserving the original order is an explicit architectural decision, not a property of sort."),
+    "cpp.selectionsort": lesson("Selection sort", "Write a sorting algorithm yourself.",
+        "Selection sort is an algorithm you write completely yourself. At each step it finds the minimum in the unsorted part and swaps it with the first element of that part. After k steps, the first k elements are in their final positions.\n\nThe algorithm performs about n(n−1)/2 comparisons for any initial order and up to n−1 swaps: quadratic complexity, noticeable on large inputs. Do not confuse it with std::sort: the standard defines the requirements and complexity of the standard algorithm, not one specific internal method, and does not promise that selection sort runs inside. We study our own algorithm here because it can be fully explained and checked.",
+        "The inner loop scans the whole remainder even when it is already sorted, so the number of comparisons does not depend on the data. A swap is needed only when minIndex != i: swapping an element with itself is pointless. A strict < chooses the first occurrence of the minimum, but selection sort still does not become stable: a distant swap can change the relative order of equal elements.",
+        "One step: swap the minimum of the unsorted part with its first element. A full sort is n−1 steps. Comparisons always number about n(n−1)/2."),
+        "cpp.selectionsort.selectmin": task("The minimum of the tail", "Input: n (1–100), then n integers (−100–100). Print the minimum value and its first index separated by a space. This is one step of selection sort: find the minimum with a linear scan.",
+            ["Store the index of the minimum, do not overwrite the value.", "A strict < keeps the first occurrence of the minimum."], "Finding the minimum is the inner loop of every selection sort step."),
+        "cpp.selectionsort.manualsort": task("Selection sort in full", "Input: n (0–100), then n integers (−100–100). Sort them in ascending order with selection sort: at each step find the minimum of the unsorted part and swap it with the first element of that part. Do not use std::sort here. Print the values separated by spaces, keeping duplicates.",
+            ["The outer loop runs up to and including n−2.", "The inner loop searches for the minimum from i+1 to n−1."], "Input and output alone do not prove an algorithm, so the task contract explicitly requires the selection sort construction."),
+        "cpp.selectionsort.swapcount": task("How many swaps", "Input: n (1–100), then n integers (−100–100). Run selection sort, swapping only when the minimum is not already in the current position, and print the number of swaps performed.",
+            ["A swap with itself is not counted.", "Already sorted data yields zero swaps."], "The swap count can be small even with many comparisons: this is what distinguishes sorting algorithms."),
+        "cpp.selectionsort.selcmp": task("Number of comparisons", "How many comparisons does selection sort perform on an array of n elements?",
+            ["The inner loop scans the whole remainder regardless of the data.", "A sorted input does not reduce the work."], "Selection sort is not adaptive: its cost is determined by size, not by the input order.",
+            {"Зависит от начального порядка": "It depends on the initial order", "Около n(n−1)/2 при любом начальном порядке": "About n(n−1)/2 for any initial order", "Всегда n·log n": "Always n·log n"}),
+        "cpp.selectionsort.selstd": task("std::sort inside", "Must std::sort internally work as selection sort?",
+            ["The standard describes a contract, not an implementation.", "Implementations use different methods with the required complexity."], "We write selection sort ourselves to understand the algorithm; std::sort is a separate contract with its own complexity.",
+            {"Да, это стандартное требование": "Yes, that is a standard requirement", "Нет: стандарт задаёт требования и сложность, не конкретный алгоритм": "No: the standard defines requirements and complexity, not a specific algorithm", "Да, но только для vector<int>": "Yes, but only for vector<int>"}),
     "cpp.complexity": lesson("Complexity and binary search", "Compare step counts as the input grows.",
         "O(n) describes an asymptotic upper bound on how costs grow, not an exact time in seconds. One pass usually makes a number of checks proportional to n. Two consecutive passes are still O(n); two fully nested passes are O(n²). std::sort requires O(n log n) comparisons in this model.\n\nstd::binary_search(v.begin(),v.end(),target) checks for a value in a sorted range and returns bool. For vector, the number of comparisons is logarithmic. Sorting for a single search usually costs more preparation than a linear search. With many searches, ordering may pay off. Algorithm preconditions are mandatory: do not use binary_search on arbitrary unordered input.",
         "Complexity depends on the model and data structure. A logarithmic number of comparisons does not mean a logarithmic number of all operations for every iterator type. Here, vector supports random access, so the simplified model is appropriate.",
@@ -56,4 +72,4 @@ ENTITIES = {
     "cpp.tournament.ordered": task("Is the ranking ready?", "Input: n (0–100), then n scores (0–100). Without sorting, print Yes if they are already in nondecreasing order; otherwise print No. Empty and single-element collections qualify.",
         ["Equal neighbors are allowed.", "Look for a pair where the next element is smaller than the preceding one."], "The conditional operator condition ? a : b selects one of two expressions; here, it only shortens if/else output."),
 }
-SKILLS = {"итераторы": "iterators", "диапазоны": "ranges", "algorithm": "algorithm", "sort": "sort", "медиана": "median", "копирование": "copying", "сложность": "complexity", "binary_search": "binary_search", "предусловия": "preconditions", "мини-проект": "mini-project", "сортировка": "sorting", "ничьи": "ties"}
+SKILLS = {"итераторы": "iterators", "диапазоны": "ranges", "algorithm": "algorithm", "sort": "sort", "медиана": "median", "копирование": "copying", "сложность": "complexity", "binary_search": "binary_search", "предусловия": "preconditions", "мини-проект": "mini-project", "сортировка": "sorting", "ничьи": "ties", "сортировка выбором": "selection sort", "обмен": "swapping"}

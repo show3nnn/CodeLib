@@ -1,5 +1,5 @@
 """English draft of the full data/input section; not an available app language."""
-SOURCE_SHA256 = "89d9e86c2df6aceabb3affc7fb4d6ba87d641af5f3a92e2773942f1a7634d8b9"
+SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
 SECTION_ID = "cpp.section.data"
 
 ENTITIES = {
@@ -70,7 +70,7 @@ ENTITIES = {
     },
     "cpp.types": {
         "title": "double, char and bool", "summary": "Choose a type that fits the meaning of your data.",
-        "theory": 'double stores numbers with a fractional part: double distance = 2.5;. In C++ source, use a dot as the decimal separator. int stores integers; converting double to int discards the fractional part towards zero, provided that the result is representable.\n\nchar marker = \'A\'; stores one character code unit written in single quotation marks; "A" is a string literal, not a char. A Russian character usually occupies several bytes in UTF-8, so one char cannot be promised to hold any letter. bool ready = true; stores true or false. Without special formatting, printing a bool produces 1 or 0.\n\nFor a fixed number of decimal places, include <iomanip> and output std::fixed << std::setprecision(2). This changes stream formatting, not the stored number. Valid numeric input in these tasks uses a decimal dot.',
+        "theory": 'double stores numbers with a fractional part: double distance = 2.5;. In C++ source, use a dot as the decimal separator. int stores integers; converting double to int discards the fractional part towards zero, provided that the result is representable.\n\nchar marker = \'A\'; stores one character code unit written in single quotation marks; "A" is a string literal, not a char. A Russian character usually occupies several bytes in UTF-8, so one char cannot be promised to hold any letter. bool ready = true; stores true or false. Without special formatting, printing a bool produces 1 or 0.\n\nFor a fixed number of decimal places, include <iomanip> and output std::fixed << std::setprecision(2). This changes stream formatting, not the stored number. Valid numeric input in these tasks uses a decimal dot.\n\nFor column alignment, use std::setw(n) from <iomanip>: it sets the minimum width of the next printed value. The fill character is configured by std::setfill: the sequence std::setfill(\'0\') << std::setw(3) pads the number 42 into 042. The integer output base is switched by std::hex and std::oct. These tools appear in fixed-width protocols; the main output of the course is plain and fixed-precision.',
         "microscope": "Most decimal fractions cannot be represented exactly in binary floating point. Formatting a number to two decimal places does not turn calculations into exact monetary arithmetic. Real monetary amounts commonly use integer minor units or another deliberately chosen representation. Here, double is a learning model for measurements.",
         "recap": "Numbers without quotation marks, one char in single quotation marks, text in double quotation marks. Keep formatting separate from calculation.",
     },
@@ -99,6 +99,12 @@ ENTITIES = {
         "title": "Average temperature", "prompt": "Input: two double measurements from −100 to 100. Print their arithmetic mean with one digit after the decimal point.",
         "hints": ["Add the two measurements first.", "Use parentheses around a + b before dividing by 2.0."],
         "explanation": "The parentheses express the mean's formula. The operands are double, so the division is floating-point division.",
+    },
+    "cpp.types.badgezero": {
+        "title": "Sector code with zeros",
+        "prompt": "Input: an integer code (0…999). Print it in a field exactly 3 characters wide, padded on the left with zeros: 42 is printed as 042, and 7 as 007. Use std::setw and std::setfill from <iomanip>.",
+        "hints": ["The field width is set by std::setw(3).", "The fill character is set by std::setfill('0')."],
+        "explanation": "Fixed-width protocols expect a field of exactly three characters.",
     },
     "cpp.tickets": {
         "title": "Mini-project: ticket office", "summary": "Combine input, state and an exact report.",
