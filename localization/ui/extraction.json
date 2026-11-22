@@ -1415,7 +1415,7 @@
   },
   "formatVersion": 1,
   "sourceFiles": {
-    "Sources/CodePath/AcceptanceTest.swift": "ee36bc114ab0a85bd549959e7ce7ba9d547e45c739946dd435595238397c2e1e",
+    "Sources/CodePath/AcceptanceTest.swift": "ed2454cf2fedfcd2b489d2023b222c2b1b0f3a96a3d0fdc8fdfa394f92a587da",
     "Sources/CodePath/AchievementViews.swift": "646963c2c716ac9f6a4414cb0668ae6dba59f87313d8559f4b95e2fe3d469e68",
     "Sources/CodePath/AppModel.swift": "5be932392e24cedbedd5a0188cac14ff664e05eab499df877faae20a5acc26a6",
     "Sources/CodePath/AvatarPhoto.swift": "4062b8de59455312b56fbf02057dc5f0b416c8558745e829e2b71e61b158e2d0",

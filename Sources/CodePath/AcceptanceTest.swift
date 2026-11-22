@@ -5,6 +5,31 @@ import Darwin
 import LearningCore
 import SwiftUI
 
+/// Shared failure policy: these checks are also exercised without GUI or TCC.
+enum AcceptanceValidation {
+    static func missingCaptures(required: Set<String>, recorded: Set<String>, existingFiles: Set<String>) -> [String] {
+        required.subtracting(recorded.intersection(existingFiles)).sorted()
+    }
+
+    static func axFailure(nodeCount: Int, truncated: Bool) -> String? {
+        if nodeCount == 0 { return "не получен" }
+        if truncated { return "усечён" }
+        return nil
+    }
+
+    static func measurementFailure(hasBitmap: Bool, maxOffset: Double, first: Double, last: Double,
+                                   physicalBefore: UInt64?, physicalAfter: UInt64?,
+                                   cpuBefore: Double?, cpuAfter: Double?) -> String? {
+        guard hasBitmap else { return "перерисовка не подтверждена" }
+        guard maxOffset > 0, last > first, abs(last - maxOffset) <= 2 else { return "не достигнут конец документа" }
+        guard physicalBefore != nil, physicalAfter != nil, let cpuBefore, let cpuAfter,
+              cpuAfter >= cpuBefore else { return "CPU или physical footprint не измерены" }
+        return nil
+    }
+
+    static func exitCode(failures: [String]) -> Int32 { failures.isEmpty ? 0 : 1 }
+}
+
 /// Developer-only acceptance run (part 2): renders real windows, captures every
 /// screen in the agreed sizes/themes, inventories accessibility elements, samples
 /// memory/CPU and synchronous scroll redraw. It never changes system settings and
@@ -26,7 +51,7 @@ enum AcceptanceTest {
             recorder.failures.append("Не удалось записать отчёт: \(error)")
         }
         print("Acceptance: \(recorder.captures.count) captures; failures: \(recorder.failures)")
-        exit(recorder.failures.isEmpty ? 0 : 1)
+        exit(AcceptanceValidation.exitCode(failures: recorder.failures))
     }
 }
 
@@ -93,6 +118,7 @@ private final class Recorder {
     var captures: [CaptureRecord] = []
     var inventories: [String: [AXNode]] = [:]
     var truncatedInventories = Set<String>()
+    var axDiagnostics: [String: Any] = [:]
     var unlabeled: [AXNode] = []
     var zeroSized: [AXNode] = []
     var duplicates: [String] = []
@@ -457,7 +483,12 @@ private final class Recorder {
             required.insert("history-\(theme)")
             required.insert("about-\(theme)")
         }
-        let missing = required.subtracting(captures.map(\.name))
+        let existingFiles = Set(captures.filter {
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent($0.file).path)
+        }.map(\.name))
+        let missing = AcceptanceValidation.missingCaptures(required: required,
+                                                           recorded: Set(captures.map(\.name)),
+                                                           existingFiles: existingFiles)
         if !missing.isEmpty { failures.append("Отсутствуют обязательные снимки: \(missing.sorted().joined(separator: ", "))") }
 
         for screen in inventories.keys where inventories[screen]?.isEmpty == true {
@@ -572,17 +603,23 @@ private final class Recorder {
             failures.append("Снимок \(name): \(error)")
             return
         }
-        var nodes = collectAX(screen: name, window: window)
-        if nodes.isEmpty {
-            try? await Task.sleep(for: .milliseconds(400))
+        var nodes: [AXNode] = []
+        // The AX bridge and window server update asynchronously, especially
+        // while opening a new NSHostingView. Retry the actual target window,
+        // never replace a missing tree with another capture's inventory.
+        for attempt in 0..<5 {
+            if attempt > 0 {
+                NSApp.activate(ignoringOtherApps: true)
+                window.makeKeyAndOrderFront(nil)
+                await settle(400)
+            }
             nodes = collectAX(screen: name, window: window)
+            if !nodes.isEmpty { break }
         }
         inventories[name] = nodes
-        if nodes.isEmpty {
-            failures.append("AX-инвентарь \(name) не получен")
-        }
-        if truncatedInventories.contains(name) {
-            failures.append("AX-инвентарь \(name) усечён")
+        if let reason = AcceptanceValidation.axFailure(nodeCount: nodes.count, truncated: truncatedInventories.contains(name)) {
+            failures.append("AX-инвентарь \(name): \(reason)")
+            metrics["axFailure-\(name)"] = axDiagnostics
         }
         if !nodes.isEmpty { computeDuplicates(screen: name, nodes: nodes) }
         let interactive = nodes.filter { Self.interactiveRoles.contains($0.role) && !$0.chrome }
@@ -649,14 +686,18 @@ private final class Recorder {
                             y: screenHeight - window.frame.maxY,
                             width: window.frame.width,
                             height: window.frame.height)
+        axDiagnostics = ["target": "\(target)", "appActive": NSApp.isActive,
+                         "windowKey": window.isKeyWindow, "windowVisible": window.isVisible]
         if let raw = axAttribute(application, kAXWindowsAttribute),
            let windows = raw as? [AXUIElement] {
+            axDiagnostics["windows"] = windows.map { "\(axFrame($0))" }
             let matches = windows.filter { candidate in
                 let frame = axFrame(candidate)
                 return abs(frame.minX - target.minX) < 3 && abs(frame.minY - target.minY) < 3
                     && abs(frame.width - target.width) < 3 && abs(frame.height - target.height) < 3
             }
             if matches.count == 1 { return matches[0] }
+            axDiagnostics["matches"] = matches.count
             // Identical geometry does not identify which window owns the tree.
             if matches.count > 1 { return nil }
         }
@@ -769,7 +810,6 @@ private final class Recorder {
         // Force real drawing of the visible viewport: displayIfNeeded alone defers
         // layer work and would report a misleadingly small number.
         let bitmap = scroll.bitmapImageRepForCachingDisplay(in: scroll.bounds)
-        if bitmap == nil { failures.append("Замер прокрутки без bitmap: перерисовка не подтверждена") }
         var firstOffset: CGFloat = 0
         var lastOffset: CGFloat = 0
         for index in 0..<steps {
@@ -787,8 +827,13 @@ private final class Recorder {
         }
         let residentAfter = residentBytes()
         let cpuAfter = cpuSeconds()
-        if maxOffset <= 0 || lastOffset <= firstOffset || abs(lastOffset - maxOffset) > 2 {
-            failures.append("Замер прокрутки не достиг конца документа")
+        if let reason = AcceptanceValidation.measurementFailure(
+            hasBitmap: bitmap != nil, maxOffset: Double(maxOffset),
+            first: Double(firstOffset), last: Double(lastOffset),
+            physicalBefore: residentBefore, physicalAfter: residentAfter,
+            cpuBefore: cpuBefore, cpuAfter: cpuAfter
+        ) {
+            failures.append("Замер прокрутки: \(reason)")
         }
         let sorted = durations.sorted()
         func percentile(_ fraction: Double) -> Double {
@@ -801,9 +846,9 @@ private final class Recorder {
                 "drawingMethod": bitmap == nil ? "displayIfNeeded" : "cacheDisplay",
                 "steps": steps,
                 "documentHeight": document.bounds.height,
-                "residentBeforeMB": Double(residentBefore) / 1_048_576,
-                "residentAfterScrollMB": Double(residentAfter) / 1_048_576,
-                "cpuSecondsDuringScroll": cpuAfter - cpuBefore,
+                "residentBeforeMB": residentBefore.map { Double($0) / 1_048_576 } as Any? ?? NSNull(),
+                "residentAfterScrollMB": residentAfter.map { Double($0) / 1_048_576 } as Any? ?? NSNull(),
+                "cpuSecondsDuringScroll": cpuBefore.flatMap { before in cpuAfter.map { $0 - before } } as Any? ?? NSNull(),
                 "scrollFirstOffset": firstOffset,
                 "scrollLastOffset": lastOffset,
                 "scrollMedianMS": percentile(0.5),
@@ -811,7 +856,7 @@ private final class Recorder {
                 "scrollMaxMS": sorted.last ?? 0]
     }
 
-    private func residentBytes() -> UInt64 {
+    private func residentBytes() -> UInt64? {
         var info = task_vm_info_data_t()
         var count = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size)
         let result = withUnsafeMutablePointer(to: &info) {
@@ -819,12 +864,12 @@ private final class Recorder {
                 task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &count)
             }
         }
-        return result == KERN_SUCCESS ? info.phys_footprint : 0
+        return result == KERN_SUCCESS ? info.phys_footprint : nil
     }
 
-    private func cpuSeconds() -> Double {
+    private func cpuSeconds() -> Double? {
         var usage = rusage()
-        guard getrusage(RUSAGE_SELF, &usage) == 0 else { return 0 }
+        guard getrusage(RUSAGE_SELF, &usage) == 0 else { return nil }
         func seconds(_ value: timeval) -> Double {
             Double(value.tv_sec) + Double(value.tv_usec) / 1_000_000
         }
