@@ -34,6 +34,7 @@ enum AcceptanceTest {
 private final class Recorder {
     struct AXNode {
         let screen: String
+        let parentIndex: Int?
         let role: String
         let label: String
         let title: String
@@ -44,6 +45,7 @@ private final class Recorder {
 
         var json: [String: Any] {
             ["role": role, "label": label, "title": title, "value": value,
+             "parentIndex": parentIndex as Any? ?? NSNull(), "chrome": chrome,
              "placeholder": placeholder,
              "frame": ["x": frame.origin.x, "y": frame.origin.y,
                        "width": frame.width, "height": frame.height]]
@@ -90,6 +92,7 @@ private final class Recorder {
     let directory: URL
     var captures: [CaptureRecord] = []
     var inventories: [String: [AXNode]] = [:]
+    var truncatedInventories = Set<String>()
     var unlabeled: [AXNode] = []
     var zeroSized: [AXNode] = []
     var duplicates: [String] = []
@@ -418,9 +421,11 @@ private final class Recorder {
         }
         if !exited {
             findings.append("Полноэкранный режим не закрылся: окно осталось в .fullScreen после двух попыток.")
+            failures.append("Не удалось выйти из полноэкранного режима")
         }
         metrics["fullscreenRequested"] = fullscreenRequested
         metrics["fullscreenCaptured"] = fullscreenCaptured
+        metrics["fullscreenExited"] = exited
         let exitElapsed = ContinuousClock.now - exitStart
         metrics["fullscreenExitSeconds"] = Double(exitElapsed.components.seconds)
             + Double(exitElapsed.components.attoseconds) / 1e18
@@ -435,7 +440,25 @@ private final class Recorder {
 
         metrics["performance"] = await performance(model: model, window: window, exercise: first)
         metrics["captures"] = captures.count
-        check(captures.count >= 30, "Снимков достаточно для матрицы экранов")
+        var required = Set(["onboarding-welcome-system", "onboarding-welcome-light", "onboarding-welcome-dark",
+                            "onboarding-profile-light", "onboarding-appearance-light", "onboarding-environment-light",
+                            "achievement-banner-reduced-light", "achievement-banner-reduced-dark",
+                            "lesson-wide-light", "lesson-wide-dark", "lesson-compact-light", "lesson-compact-dark",
+                            "lesson-wide-light-maxtext", "lesson-theory-wide-light", "lesson-theory-sheet-light",
+                            "profile-edit-light", "error-light", "welcome-reduced-motion-transparency-light",
+                            "home-fullscreen-light", "lesson-scroll-end-light"])
+        for page in ["home", "catalog", "syllabus", "progress", "achievements"] {
+            for suffix in ["wide-light", "wide-dark", "compact-light"] { required.insert("\(page)-\(suffix)") }
+        }
+        for theme in ["light", "dark"] {
+            for pane in ["appearance", "appearance-compact", "profile", "data"] {
+                required.insert("settings-\(pane)-\(theme)")
+            }
+            required.insert("history-\(theme)")
+            required.insert("about-\(theme)")
+        }
+        let missing = required.subtracting(captures.map(\.name))
+        if !missing.isEmpty { failures.append("Отсутствуют обязательные снимки: \(missing.sorted().joined(separator: ", "))") }
 
         for screen in inventories.keys where inventories[screen]?.isEmpty == true {
             findings.append("Экран «\(screen)» не отдал ни одного accessibility-элемента.")
@@ -531,6 +554,9 @@ private final class Recorder {
 
     private func capture(_ name: String, screen: String, window: NSWindow,
                          theme: String, textSize: Double) async {
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(nil)
+        await settle(150)
         window.displayIfNeeded()
         let file = "\(name).png"
         var systemCapture = false
@@ -539,25 +565,31 @@ private final class Recorder {
             systemCapture = shot.system
             if shot.blank {
                 findings.append("Снимок \(name) не записан: поверхность полностью стеклянная и без разрешения записи экрана даёт однотонное изображение. Нужен ручной проход.")
+                failures.append("Обязательный снимок \(name) пуст")
                 return
             }
         } catch {
             failures.append("Снимок \(name): \(error)")
+            return
         }
-        var nodes = collectAX(screen: screen, window: window)
+        var nodes = collectAX(screen: name, window: window)
         if nodes.isEmpty {
             try? await Task.sleep(for: .milliseconds(400))
-            nodes = collectAX(screen: screen, window: window)
+            nodes = collectAX(screen: name, window: window)
         }
-        if inventories[screen] == nil || inventories[screen]?.isEmpty == true {
-            inventories[screen] = nodes
+        inventories[name] = nodes
+        if nodes.isEmpty {
+            failures.append("AX-инвентарь \(name) не получен")
         }
+        if truncatedInventories.contains(name) {
+            failures.append("AX-инвентарь \(name) усечён")
+        }
+        if !nodes.isEmpty { computeDuplicates(screen: name, nodes: nodes) }
         let interactive = nodes.filter { Self.interactiveRoles.contains($0.role) && !$0.chrome }
         let withoutLabel = interactive.filter {
             $0.frame.width >= 2 && $0.frame.height >= 2
                 && $0.label.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 && $0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                && $0.value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 && $0.placeholder.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
         unlabeled.append(contentsOf: withoutLabel)
@@ -578,8 +610,11 @@ private final class Recorder {
     private func collectAX(screen: String, window: NSWindow) -> [AXNode] {
         guard let root = axWindow(for: window) else { return [] }
         var nodes: [AXNode] = []
-        func visit(_ element: AXUIElement, depth: Int, chrome: Bool) {
-            guard depth < 60, nodes.count < 3000 else { return }
+        func visit(_ element: AXUIElement, depth: Int, chrome: Bool, parent: Int?) {
+            guard depth < 60, nodes.count < 3000 else {
+                truncatedInventories.insert(screen)
+                return
+            }
             let role = axString(element, kAXRoleAttribute)
             let label = axString(element, kAXDescriptionAttribute)
             let title = axString(element, kAXTitleAttribute)
@@ -595,24 +630,16 @@ private final class Recorder {
             // Chrome roles describe window furniture, not their content: a scroll
             // area must not taint every control inside it as "chrome".
             let propagatesChrome = chrome || Self.chromePropagatingRoles.contains(role)
-            if !role.isEmpty || !label.isEmpty || !title.isEmpty || !value.isEmpty {
-                nodes.append(AXNode(screen: screen, role: role, label: label, title: title,
-                                    value: value, placeholder: placeholder,
-                                    frame: axFrame(element), chrome: isChrome))
-            }
+            let index = nodes.count
+            nodes.append(AXNode(screen: screen, parentIndex: parent, role: role, label: label, title: title,
+                                value: value, placeholder: placeholder,
+                                frame: axFrame(element), chrome: isChrome))
             for child in axChildren(element) {
-                visit(child, depth: depth + 1, chrome: propagatesChrome)
+                visit(child, depth: depth + 1, chrome: propagatesChrome, parent: index)
             }
         }
-        visit(root, depth: 0, chrome: false)
-        var deduplicated: [AXNode] = []
-        var keys = Set<String>()
-        for node in nodes {
-            let key = "\(node.role)|\(node.label)|\(node.title)|\(node.value)|\(Int(node.frame.minX))|\(Int(node.frame.minY))|\(Int(node.frame.width))|\(Int(node.frame.height))"
-            if keys.insert(key).inserted { deduplicated.append(node) }
-        }
-        computeDuplicates(screen: screen, nodes: deduplicated)
-        return deduplicated
+        visit(root, depth: 0, chrome: false, parent: nil)
+        return nodes
     }
 
     private func axWindow(for window: NSWindow) -> AXUIElement? {
@@ -630,10 +657,8 @@ private final class Recorder {
                     && abs(frame.width - target.width) < 3 && abs(frame.height - target.height) < 3
             }
             if matches.count == 1 { return matches[0] }
-            if let titled = matches.first(where: { !axString($0, kAXTitleAttribute).isEmpty }) {
-                return titled
-            }
-            if matches.count > 1 { return matches[0] }
+            // Identical geometry does not identify which window owns the tree.
+            if matches.count > 1 { return nil }
         }
         // Fallback for sheet/child windows that the window list reports oddly.
         let point = CGPoint(x: window.frame.midX, y: screenHeight - window.frame.midY)
@@ -641,7 +666,14 @@ private final class Recorder {
         guard AXUIElementCopyElementAtPosition(application, Float(point.x), Float(point.y), &hit) == .success,
               var current = hit else { return nil }
         for _ in 0..<40 {
-            if axString(current, kAXRoleAttribute) == "AXWindow" { return current }
+            if axString(current, kAXRoleAttribute) == "AXWindow" {
+                let frame = axFrame(current)
+                guard abs(frame.minX - target.minX) < 3, abs(frame.minY - target.minY) < 3,
+                      abs(frame.width - target.width) < 3, abs(frame.height - target.height) < 3 else {
+                    return nil
+                }
+                return current
+            }
             guard let parent = axAttribute(current, kAXParentAttribute),
                   CFGetTypeID(parent) == AXUIElementGetTypeID() else { return nil }
             current = unsafeDowncast(parent, to: AXUIElement.self)
@@ -681,7 +713,7 @@ private final class Recorder {
     private func computeDuplicates(screen: String, nodes: [AXNode]) {
         guard !duplicates.contains(where: { $0.hasPrefix(screen + ":") }) else { return }
         var counts: [String: Int] = [:]
-        for node in nodes where Self.interactiveRoles.contains(node.role) {
+        for node in nodes where Self.interactiveRoles.contains(node.role) && !node.chrome {
             let label = node.label.isEmpty ? node.title : node.label
             guard !label.isEmpty else { continue }
             counts["\(node.role)|\(label)", default: 0] += 1
@@ -726,6 +758,7 @@ private final class Recorder {
         guard let editor = findEditor(in: window.contentView),
               let scroll = editor.enclosingScrollView,
               let document = scroll.documentView else {
+            failures.append("Замер прокрутки не выполнен: редактор не найден")
             return ["note": "Редактор или его прокрутка не найдены; замер не выполнен."]
         }
         let residentBefore = residentBytes()
@@ -736,6 +769,7 @@ private final class Recorder {
         // Force real drawing of the visible viewport: displayIfNeeded alone defers
         // layer work and would report a misleadingly small number.
         let bitmap = scroll.bitmapImageRepForCachingDisplay(in: scroll.bounds)
+        if bitmap == nil { failures.append("Замер прокрутки без bitmap: перерисовка не подтверждена") }
         var firstOffset: CGFloat = 0
         var lastOffset: CGFloat = 0
         for index in 0..<steps {
@@ -753,6 +787,9 @@ private final class Recorder {
         }
         let residentAfter = residentBytes()
         let cpuAfter = cpuSeconds()
+        if maxOffset <= 0 || lastOffset <= firstOffset || abs(lastOffset - maxOffset) > 2 {
+            failures.append("Замер прокрутки не достиг конца документа")
+        }
         let sorted = durations.sorted()
         func percentile(_ fraction: Double) -> Double {
             guard !sorted.isEmpty else { return 0 }
@@ -761,6 +798,7 @@ private final class Recorder {
         await capture("lesson-scroll-end-light", screen: "lesson-scroll", window: window,
                       theme: "light", textSize: model.document.preferences.textSize)
         return ["note": "Синхронная перерисовка шагов прокрутки в тестовом процессе, не покадровый FPS.",
+                "drawingMethod": bitmap == nil ? "displayIfNeeded" : "cacheDisplay",
                 "steps": steps,
                 "documentHeight": document.bounds.height,
                 "residentBeforeMB": Double(residentBefore) / 1_048_576,
@@ -771,20 +809,6 @@ private final class Recorder {
                 "scrollMedianMS": percentile(0.5),
                 "scrollP95MS": percentile(0.95),
                 "scrollMaxMS": sorted.last ?? 0]
-    }
-
-    /// Offscreen `cacheDisplay` cannot sample what is behind the window, so a
-    /// `.behindWindow` visual-effect material renders as solid black. Blending
-    /// inside the window keeps the same material look and becomes capturable.
-    /// This touches only the throwaway acceptance windows, never app code.
-    private func makeMaterialsCapturable(in view: NSView?) {
-        guard let view else { return }
-        if let effect = view as? NSVisualEffectView, effect.blendingMode == .behindWindow {
-            effect.blendingMode = .withinWindow
-            effect.state = .active
-            effect.needsDisplay = true
-        }
-        for child in view.subviews { makeMaterialsCapturable(in: child) }
     }
 
     private func residentBytes() -> UInt64 {
@@ -819,7 +843,6 @@ private final class Recorder {
     // MARK: - Files
 
     private func snapshot(window: NSWindow, theme: String, to url: URL) throws -> (system: Bool, blank: Bool) {
-        makeMaterialsCapturable(in: window.contentView)
         window.displayIfNeeded()
         if screenCaptureAllowed {
             let capture = Process()
@@ -827,7 +850,11 @@ private final class Recorder {
             capture.arguments = ["-x", "-o", "-l\(window.windowNumber)", url.path]
             try capture.run()
             capture.waitUntilExit()
-            if capture.terminationStatus == 0 { return (true, false) }
+            if capture.terminationStatus == 0,
+               let data = try? Data(contentsOf: url),
+               let image = NSBitmapImageRep(data: data), !isBlank(image) {
+                return (true, false)
+            }
         }
         guard let view = window.contentView else { throw ContentError.invalid("Нет содержимого окна") }
         guard let cache = view.bitmapImageRepForCachingDisplay(in: view.bounds) else {
@@ -911,7 +938,8 @@ private final class Recorder {
                 "name": $0.name, "screen": $0.screen, "theme": $0.theme, "textSize": $0.textSize,
                 "width": $0.width, "height": $0.height, "file": $0.file,
                 "systemCapture": $0.systemCapture, "axTotal": $0.axTotal,
-                "axInteractive": $0.axInteractive, "axUnlabeled": $0.axUnlabeled, "axUnknown": $0.axUnknown
+                "axInteractive": $0.axInteractive, "axUnlabeled": $0.axUnlabeled, "axUnknown": $0.axUnknown,
+                "axStatus": truncatedInventories.contains($0.name) ? "truncated" : ($0.axTotal == 0 ? "unavailable" : "collected")
             ] },
             "accessibility": [
                 "unlabeled": unlabeled.map { $0.json.merging(["screen": $0.screen]) { _, new in new } },
@@ -922,7 +950,7 @@ private final class Recorder {
             "failures": failures,
             "limitations": [
                 "VoiceOver: речь, ротор, порядок обхода и объявления проверяются только человеком.",
-                "Accessibility-дерево снято через AX-API собственного процесса (то, что видит VoiceOver), но без аудита речи, ротора, объявлений и порядка обхода.",
+                "AX-инвентарь получен через API собственного процесса; полнота и порядок VoiceOver, речь, ротор и объявления не проверены.",
                 "Full Keyboard Access — системная настройка; прогон её не меняет и снимает только текущую цепочку key view.",
                 "Reduce Motion/Reduce Transparency — системные настройки; явные значения используются только там, где представление их принимает.",
                 "Полноэкранный режим снят один раз как образец; покадровая приёмка каждого экрана остаётся ручной.",
@@ -958,7 +986,9 @@ private final class Recorder {
         lines.append("| Экран | Размер | Тема | Шрифт | A11y | Без подписи | Файл |")
         lines.append("|---|---|---|---|---|---|---|")
         for capture in captures {
-            lines.append("| \(capture.screen) | \(Int(capture.width))×\(Int(capture.height)) | \(capture.theme) | \(Int(capture.textSize)) | \(capture.axTotal) | \(capture.axUnlabeled) | `\(capture.file)` |")
+            let ax = capture.axTotal == 0 ? "не получен" : (truncatedInventories.contains(capture.name) ? "усечён" : "\(capture.axTotal)")
+            let unlabeledCount = capture.axTotal == 0 || truncatedInventories.contains(capture.name) ? "не проверено" : "\(capture.axUnlabeled)"
+            lines.append("| \(capture.screen) | \(Int(capture.width))×\(Int(capture.height)) | \(capture.theme) | \(Int(capture.textSize)) | \(ax) | \(unlabeledCount) | `\(capture.file)` |")
         }
         lines.append("")
         lines.append("## Машинные наблюдения")
@@ -966,16 +996,19 @@ private final class Recorder {
         if let fullscreen = metrics["fullscreenCaptured"] as? Bool {
             lines.append("- Полноэкранный режим: \(fullscreen ? "включился и снят" : "не включился в тестовом процессе").")
         }
-        lines.append("- Снимков: \(captures.count); экранов в инвентаре: \(inventories.count).")
-        lines.append("- Интерактивных элементов без подписи: \(unlabeled.count); нулевого размера: \(zeroSized.count); групп повторов: \(duplicates.count).")
-        lines.append("- Accessibility-дерево снято через AX-API собственного процесса: это то, что предлагается VoiceOver, но без проверки речи, ротора и порядка обхода.")
-        if let performance = metrics["performance"] as? [String: Any] {
-            let median = performance["scrollMedianMS"] as? Double ?? 0
-            let p95 = performance["scrollP95MS"] as? Double ?? 0
-            let maximum = performance["scrollMaxMS"] as? Double ?? 0
-            let resident = performance["residentAfterScrollMB"] as? Double ?? 0
-            let cpu = performance["cpuSecondsDuringScroll"] as? Double ?? 0
-            lines.append(String(format: "- Прокрутка 1000 строк: медиана %.2f мс, p95 %.2f мс, максимум %.2f мс; CPU %.2f с; RSS %.0f МБ.", median, p95, maximum, cpu, resident))
+        let complete = captures.filter { $0.axTotal > 0 && !truncatedInventories.contains($0.name) }.count
+        lines.append("- Снимков: \(captures.count); AX-инвентарей получено без усечения: \(complete)/\(captures.count).")
+        lines.append("- Эвристика на полученных деревьях: без подписи \(unlabeled.count); нулевого размера \(zeroSized.count); групп повторов \(duplicates.count). Это не подтверждение доступности.")
+        lines.append("- AX-данные получены через API собственного процесса; полнота, речь, ротор и порядок VoiceOver требуют ручной проверки.")
+        if let performance = metrics["performance"] as? [String: Any],
+           let median = performance["scrollMedianMS"] as? Double,
+           let p95 = performance["scrollP95MS"] as? Double,
+           let maximum = performance["scrollMaxMS"] as? Double,
+           let resident = performance["residentAfterScrollMB"] as? Double,
+           let cpu = performance["cpuSecondsDuringScroll"] as? Double {
+            lines.append(String(format: "- Прокрутка 1000 строк: медиана %.2f мс, p95 %.2f мс, максимум %.2f мс; CPU %.2f с; physical footprint %.0f МиБ.", median, p95, maximum, cpu, resident))
+        } else {
+            lines.append("- Замер прокрутки не выполнен.")
         }
         if let chain = metrics["keyViewChain"] as? [String], !chain.isEmpty {
             let stepWord = chain.count % 10 == 1 && chain.count % 100 != 11 ? "шаг"
