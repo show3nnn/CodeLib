@@ -129,7 +129,10 @@ struct AchievementCollectionView: View {
 
 struct AchievementBanner: View {
     @Bindable var model: AppModel
+    /// Explicit presentation input for captures/previews, mirroring `WelcomeCodePanel`.
+    var forceOpaque = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     var body: some View {
         VStack(spacing: 0) {
             if let id = model.achievementNotifications.first, let award = AchievementCatalog.all.first(where: { $0.id == id }) {
@@ -145,7 +148,7 @@ struct AchievementBanner: View {
                         if model.achievementNotifications.first == id { model.achievementNotifications.removeFirst() }
                     } label: { Image(systemName: "xmark") }
                         .help("Закрыть уведомление").accessibilityLabel("Закрыть уведомление")
-                }.padding(14).glassEffect(.regular.tint(.green.opacity(0.08)), in: RoundedRectangle(cornerRadius: 16))
+                }.padding(14).modifier(AchievementBannerGlass(opaque: forceOpaque || reduceTransparency))
                     .padding(.horizontal, 20).padding(.vertical, 8)
                     .task(id: id) {
                         _ = AchievementAudio.play(enabled: model.document.preferences.achievementSounds)
@@ -157,6 +160,19 @@ struct AchievementBanner: View {
                     .transition(reduceMotion ? .identity : .opacity)
             }
         }.animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: model.achievementNotifications.first)
+    }
+}
+
+/// The banner is the first thing a learner sees after an award, so it must stay
+/// readable when glass is turned off for accessibility. Mirrors `WorkspaceGlass`.
+private struct AchievementBannerGlass: ViewModifier {
+    let opaque: Bool
+    func body(content: Content) -> some View {
+        if opaque {
+            content.background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 16))
+        } else {
+            content.glassEffect(.regular.tint(.green.opacity(0.08)), in: RoundedRectangle(cornerRadius: 16))
+        }
     }
 }
 

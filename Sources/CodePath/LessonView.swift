@@ -103,17 +103,7 @@ struct LessonView: View {
                     }.animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: showTheory)
                     .sheet(isPresented: Binding(get: { showTheory && geometry.size.width < 850 },
                                                 set: { if !$0 { showTheory = false } })) {
-                        VStack(spacing: 0) {
-                            HStack {
-                                Text(lesson.title).font(.headline)
-                                Spacer()
-                                Button("К заданию", systemImage: "xmark") { showTheory = false }
-                            }.padding(20)
-                            Divider()
-                            ScrollView {
-                                TheoryView(lesson: lesson, preferences: model.document.preferences).padding(24)
-                            }
-                        }.frame(minWidth: 440, idealWidth: 560, minHeight: 420, idealHeight: 620)
+                        TheorySheet(lesson: lesson, preferences: model.document.preferences) { showTheory = false }
                     }
                 }
                 Divider()
@@ -145,6 +135,29 @@ struct LessonView: View {
                 Button("Программа курса") { model.page = .syllabus }
             }
         }
+    }
+}
+
+/// Narrow-window theory presentation. Extracted so the acceptance harness can
+/// render exactly this content in a plain window: an attached sheet is composited
+/// by the window server and does not rasterize without screen-recording consent.
+struct TheorySheet: View {
+    let lesson: Lesson
+    let preferences: Preferences
+    let dismiss: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text(lesson.title).font(.headline)
+                Spacer()
+                Button("К заданию", systemImage: "xmark", action: dismiss)
+            }.padding(20)
+            Divider()
+            ScrollView {
+                TheoryView(lesson: lesson, preferences: preferences).padding(24)
+            }
+        }.frame(minWidth: 440, idealWidth: 560, minHeight: 420, idealHeight: 620)
     }
 }
 

@@ -18,6 +18,7 @@ struct CodePathApp: App {
                     delegate.model = model
                     #if DEBUG
                     delegate.startSmokeTestIfRequested()
+                    delegate.startAcceptanceTestIfRequested()
                     #endif
                 }
         }
@@ -73,6 +74,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var model: AppModel?
     #if DEBUG
     private var smokeStarted = false
+    private var acceptanceStarted = false
     func startSmokeTestIfRequested() {
         let args = ProcessInfo.processInfo.arguments
         guard !smokeStarted, let index = args.firstIndex(of: "--ui-smoke-test"),
@@ -81,6 +83,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Task { @MainActor in
             try? await Task.sleep(for: .milliseconds(400))
             await SmokeTest.run(model: model, directory: URL(fileURLWithPath: args[index + 1]), reopen: args.contains("--reopen"))
+        }
+    }
+    func startAcceptanceTestIfRequested() {
+        let args = ProcessInfo.processInfo.arguments
+        guard !acceptanceStarted, let index = args.firstIndex(of: "--acceptance-run"),
+              args.indices.contains(index + 1), let model else { return }
+        acceptanceStarted = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(500))
+            await AcceptanceTest.run(model: model, directory: URL(fileURLWithPath: args[index + 1]))
         }
     }
     #endif
