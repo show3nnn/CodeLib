@@ -31,6 +31,30 @@ struct ProgressTests {
         return directory.appendingPathComponent("progress.json")
     }
 
+    @Test func movedBitsLessonKeepsPersistedDraftAndPosition() throws {
+        let url = try location()
+        let store = try ProgressStore(url: url)
+        try store.update { document in
+            var saved = ExerciseProgress()
+            saved.draft = "// старый черновик до перестановки"
+            saved.completion = .selfReviewed
+            saved.attempts = 4
+            document.exercises["cpp.bits.bitcount"] = saved
+            document.lastExerciseID = "cpp.bits.bitcount"
+            document.lessonPositions = ["cpp.bits": "cpp.bits.bitcount", "future.lesson": "future.task"]
+        }
+        let reopened = try ProgressStore(url: url)
+        let course = try Course.bundled()
+        let section = try #require(course.sections.first { $0.id == "cpp.section.loops" })
+        let lesson = try #require(section.lessons.first { $0.id == "cpp.bits" })
+        let state = try #require(reopened.document.exercises["cpp.bits.bitcount"])
+        #expect(state.draft == "// старый черновик до перестановки")
+        #expect(state.completion == .selfReviewed)
+        #expect(state.attempts == 4)
+        #expect(reopened.document.resumeExercise(in: lesson)?.id == "cpp.bits.bitcount")
+        #expect(reopened.document.lessonPositions?["future.lesson"] == "future.task")
+    }
+
     @Test func oldVersionOneFilesGainEditorDefaultsWithoutLosingProgress() throws {
         let url = try location()
         var document = ProgressDocument()

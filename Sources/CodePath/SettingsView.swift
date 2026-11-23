@@ -3,7 +3,7 @@ import LearningCore
 import AppKit
 
 struct SettingsView: View {
-    enum Pane: String, CaseIterable {
+    enum Section: String, CaseIterable {
         case profile = "Профиль", appearance = "Оформление", data = "Данные"
         var title: LocalizedStringResource {
             let title: LocalizedStringResource = switch self {
@@ -14,58 +14,85 @@ struct SettingsView: View {
             return PresentationLocale.resource(title)
         }
     }
+
+    static let minimumSize = CGSize(width: 420, height: 500)
+    static let defaultSize = CGSize(width: 460, height: 720)
+
     @Bindable var model: AppModel
-    @State var pane: Pane = .profile
+    /// A starting scroll position for captures; the normal window starts at the top.
+    var initialSection: Section? = nil
     @State private var confirmReset = false
     @State private var confirmImport = false
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var editProfile = false
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack(alignment: .center) {
-                    VStack(alignment: .leading, spacing: 5) {
+        ScrollViewReader { scroll in
+            VStack(spacing: 0) {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("CODELIB / НАСТРОЙКИ").font(.system(size: 10, weight: .bold)).tracking(1.6).foregroundStyle(.green)
-                        Text("Ваше пространство").font(.system(size: 28, weight: .bold)).tracking(-0.7)
+                        Text("Ваше пространство").font(.title2.bold())
+                            .accessibilityAddTraits(.isHeader)
                     }
-                    Spacer()
-                    Image(systemName: "slider.horizontal.3").font(.title2).foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+                    Menu {
+                        ForEach(Section.allCases, id: \.self) { section in
+                            Button {
+                                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                                    scroll.scrollTo(section, anchor: .top)
+                                }
+                            } label: { Text(PresentationLocale.resource(section.title, locale: model.presentationLocale)) }
+                        }
+                    } label: {
+                        Label("Раздел настроек", systemImage: "list.bullet").labelStyle(.iconOnly)
+                    }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+                    .help("Раздел настроек")
+                    .accessibilityIdentifier("settings.section-menu")
                 }
-                Picker("Раздел настроек", selection: $pane) {
-                    ForEach(Pane.allCases, id: \.self) { pane in Text(PresentationLocale.resource(pane.title, locale: model.presentationLocale)).tag(pane) }
-                }.pickerStyle(.segmented).labelsHidden().controlSize(.large).accessibilityIdentifier("settings.pane")
-            }.padding(24)
-            Divider()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    if model.hasUnsavedChanges || model.saveError != nil {
-                        Card {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Label("Изменения ещё не сохранены", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
-                                FailureText(failure: model.saveError, fallback: "Идёт запись на диск.", locale: model.presentationLocale)
-                                HStack {
-                                    Button("Повторить сохранение") { model.flush() }
-                                    Button("Экспорт") { model.exportProgress() }
+                .padding(12)
+                .padding(.horizontal, 16).padding(.vertical, 10)
+                Divider()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            if model.hasUnsavedChanges || model.saveError != nil {
+                                Card {
+                                    VStack(alignment: .leading, spacing: 12) {
+                                        Label("Изменения ещё не сохранены", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
+                                        FailureText(failure: model.saveError, fallback: "Идёт запись на диск.", locale: model.presentationLocale)
+                                        HStack {
+                                            Button("Повторить сохранение") { model.flush() }
+                                            Button("Экспорт") { model.exportProgress() }
+                                        }
+                                    }
                                 }
                             }
+                            profileSection
                         }
+                        .id(Section.profile)
+                        appearanceSection.id(Section.appearance)
+                        dataSection.id(Section.data)
                     }
-                    switch pane {
-                    case .profile: profilePane
-                    case .appearance: appearancePane
-                    case .data: dataPane
-                    }
-                }.padding(24).frame(maxWidth: 820).frame(maxWidth: .infinity)
-            }.id(pane)
-            Divider()
-            HStack {
-                Label("Только на вашем Mac", systemImage: "lock.shield").foregroundStyle(.secondary)
-                Spacer()
-                ReleaseVersionLabel(release: model.appRelease).foregroundStyle(.secondary)
-            }.font(.caption).padding(.horizontal, 24).padding(.vertical, 14)
+                    .padding(16).frame(maxWidth: 540).frame(maxWidth: .infinity)
+                }
+                .accessibilityIdentifier("settings.sections")
+                .onAppear {
+                    if let initialSection { scroll.scrollTo(initialSection, anchor: .top) }
+                }
+                Divider()
+                HStack {
+                    Label("Только на вашем Mac", systemImage: "lock.shield").foregroundStyle(.secondary)
+                    Spacer(minLength: 8)
+                    ReleaseVersionLabel(release: model.appRelease).foregroundStyle(.secondary)
+                }.font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
+            }
         }
         .background(WorkspaceBackdrop())
-        .frame(minWidth: 600, idealWidth: 720, minHeight: 560, idealHeight: 740)
+        .frame(minWidth: Self.minimumSize.width, idealWidth: Self.defaultSize.width,
+               minHeight: Self.minimumSize.height, idealHeight: Self.defaultSize.height)
         .sheet(isPresented: $editProfile) {
             EditProfileView(model: model, profile: model.document.profile ?? LocalProfile())
         }
@@ -81,31 +108,29 @@ struct SettingsView: View {
         } message: { Text("Текущая сохранённая версия останется в резервной копии. Несовместимый файл не будет импортирован.") }
     }
 
-    private var profilePane: some View {
-        VStack(alignment: .leading, spacing: 20) {
+    private var profileSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
             if let profile = model.document.profile {
-                VStack(alignment: .leading, spacing: 24) {
-                    HStack(spacing: 20) {
-                        ProfileAvatar(profile: profile, size: 76)
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(profile.nickname).font(.system(size: 28, weight: .semibold)).tracking(-0.5)
-                                .foregroundStyle(.white).fixedSize(horizontal: false, vertical: true)
-                            Label("Локальный профиль", systemImage: "internaldrive").font(.caption).foregroundStyle(.white.opacity(0.65))
+                Card {
+                    VStack(alignment: .leading, spacing: 14) {
+                        HStack(spacing: 16) {
+                            ProfileAvatar(profile: profile, size: 56)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Label("Локальный профиль", systemImage: "internaldrive").font(.caption).foregroundStyle(.secondary)
+                                Text(profile.nickname).font(.title3.weight(.semibold))
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
                         }
-                        Spacer(minLength: 0)
+                        if let date = profile.createdAt {
+                            Text("С вами с \(PresentationLocale.date(date, locale: model.presentationLocale))")
+                                .font(.callout).foregroundStyle(.secondary)
+                        }
+                        Button { editProfile = true } label: {
+                            Label("Редактировать профиль", systemImage: "pencil")
+                        }
+                        .buttonStyle(.bordered).accessibilityIdentifier("settings.edit-profile")
                     }
-                    if let date = profile.createdAt {
-                        Text("С вами с \(PresentationLocale.date(date, locale: model.presentationLocale))").font(.callout).foregroundStyle(.white.opacity(0.65))
-                    }
-                    Button { editProfile = true } label: {
-                        Label("Редактировать профиль", systemImage: "pencil").font(.callout.weight(.medium))
-                            .foregroundStyle(.white).padding(.horizontal, 16).padding(.vertical, 11)
-                            .background(.white.opacity(0.1), in: Capsule())
-                            .overlay { Capsule().strokeBorder(.white.opacity(0.15)) }
-                    }.buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.edit-profile")
-                }.padding(28).frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(red: 0.055, green: 0.085, blue: 0.075), in: RoundedRectangle(cornerRadius: 24))
+                }
             } else {
                 Card { Text("Профиль можно создать в главном окне начальной настройки.") }
             }
@@ -119,18 +144,19 @@ struct SettingsView: View {
                 HStack {
                     Button("Мой прогресс", systemImage: "chart.bar") { showMain(.progress) }
                     Button("Коллекция наград", systemImage: "trophy") { showMain(.achievements) }
-                }.buttonStyle(.bordered).controlSize(.large)
+                }.buttonStyle(.bordered)
             }
             Text("Без регистрации и облачного аккаунта. Имя, аватар и результаты хранятся локально и входят в экспорт прогресса.")
                 .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }
     }
 
-    private var appearancePane: some View {
-        VStack(alignment: .leading, spacing: 20) {
+    private var appearanceSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
             Card {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Оформление", systemImage: "circle.lefthalf.filled").font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                     Picker("Тема", selection: Binding(get: { model.document.preferences.theme }, set: { value in
                         model.update { $0.preferences.theme = value }
                     })) {
@@ -144,6 +170,7 @@ struct SettingsView: View {
             Card {
                 VStack(alignment: .leading, spacing: 20) {
                     Label("Размер текста", systemImage: "textformat.size").font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                     HStack {
                         Text("Теория и задания")
                         Spacer()
@@ -176,6 +203,7 @@ struct SettingsView: View {
             Card {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Редактор и уведомления", systemImage: "curlybraces").font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                     Toggle("Подсветка синтаксиса", isOn: Binding(get: { model.document.preferences.syntaxHighlighting }, set: { value in
                         model.update { $0.preferences.syntaxHighlighting = value }
                     }))
@@ -193,14 +221,15 @@ struct SettingsView: View {
         }
     }
 
-    private var dataPane: some View {
-        VStack(alignment: .leading, spacing: 20) {
+    private var dataSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
             Card {
                 ExecutionReadinessView(execution: model.execution)
             }
             Card {
                 VStack(alignment: .leading, spacing: 18) {
                     Label("Ваши данные под вашим контролем", systemImage: "externaldrive.badge.checkmark").font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                     Text("Прогресс хранится только на этом Mac. Резервная копия содержит предыдущую успешно сохранённую версию.")
                         .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Text(model.dataURL.path).font(.caption.monospaced()).textSelection(.enabled)
@@ -208,7 +237,7 @@ struct SettingsView: View {
                     HStack {
                         Button("Экспорт прогресса", systemImage: "square.and.arrow.up") { model.exportProgress() }
                         Button("Импорт…", systemImage: "square.and.arrow.down") { confirmImport = true }
-                    }.buttonStyle(.bordered).controlSize(.large)
+                    }.buttonStyle(.bordered)
                     Button("Показать в Finder", systemImage: "folder") {
                         NSWorkspace.shared.activateFileViewerSelecting([model.dataURL])
                     }.disabled(!FileManager.default.fileExists(atPath: model.dataURL.path))
@@ -217,6 +246,7 @@ struct SettingsView: View {
             Card {
                 VStack(alignment: .leading, spacing: 12) {
                     Label("Начать заново", systemImage: "arrow.counterclockwise").font(.headline)
+                        .accessibilityAddTraits(.isHeader)
                     Text("Полный сброс удаляет профиль, ответы, черновики и настройки. Сначала сохраните экспорт.")
                         .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     Button("Сбросить прогресс…", role: .destructive) { confirmReset = true }.buttonStyle(.bordered)

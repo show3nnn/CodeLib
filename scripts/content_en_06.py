@@ -1,7 +1,7 @@
 """Complete text-field draft: functions and decomposition. Developer-only."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
+SOURCE_SHA256 = "40f02f1f8221e834f53d1ec1411662a8e8ce3a75325de87fee365fb75913a84e"
 SECTION_ID = "cpp.section.functions"
 ENTITIES = {
     SECTION_ID: dict(title="6. Functions and decomposition", summary="Give actions names, separate responsibilities and build a mini-project."),

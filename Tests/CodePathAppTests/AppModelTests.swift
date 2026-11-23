@@ -296,7 +296,11 @@ struct AppModelTests {
         model.open(other.exercises[1])
         let reopened = AppModel()
         reopened.openLesson(lesson)
-        #expect(reopened.exercise?.id == lesson.exercises[2].id)
+        #expect(reopened.lessonStep == .theory(lesson.id))
+        #expect(reopened.document.lastExerciseID == other.exercises[1].id)
+        let saved = try #require(reopened.savedPracticeFromTheory)
+        #expect(saved.id == lesson.exercises[2].id)
+        reopened.open(saved)
         #expect(reopened.document.lastExerciseID == lesson.exercises[2].id)
     }
 
@@ -443,8 +447,10 @@ struct AppModelTests {
         let last = try #require(course.exercises.last)
         model.update { $0.lastExerciseID = "removed" }
         model.resume()
-        #expect(model.exercise?.id == first.id)
+        #expect(model.lessonStep == .theory(course.lessons[0].id))
         model.move(-1)
+        #expect(model.exercise == nil)
+        model.move(1)
         #expect(model.exercise?.id == first.id)
         model.open(last)
         model.move(1)
@@ -452,6 +458,34 @@ struct AppModelTests {
         let restored = AppModel()
         restored.resume()
         #expect(restored.exercise?.id == last.id)
+    }
+
+    @Test func theoryIsANavigationStepNotAProgressEvent() throws {
+        _ = try setup()
+        let model = AppModel()
+        let course = try #require(model.course)
+        let previous = course.lessons[0], next = course.lessons[1]
+        let last = try #require(previous.exercises.last)
+        model.open(last)
+        model.updateState(last.id) { $0.draft = ""; $0.hintLevel = 2 }
+        let saved = try Data(contentsOf: model.dataURL)
+        model.move(1)
+        #expect(model.lessonStep == .theory(next.id))
+        model.move(-1)
+        #expect(model.exercise?.id == last.id)
+        let beforeTheory = try Data(contentsOf: model.dataURL)
+        model.openLesson(previous)
+        #expect(model.exercise == nil)
+        #expect(try Data(contentsOf: model.dataURL) == beforeTheory)
+        let reopened = AppModel()
+        reopened.resume()
+        #expect(reopened.exercise?.id == last.id)
+        #expect(reopened.state(for: last.id).draft == "")
+        #expect(reopened.document.lessonPositions == (try ProgressStore.decode(saved)).lessonPositions)
+        model.move(1)
+        #expect(model.exercise?.id == previous.exercises.first?.id)
+        model.move(-1)
+        #expect(model.lessonStep == .theory(previous.id))
     }
 
     @Test func emptyDraftIsNotReplacedWithStarterAndResetIsDurable() throws {

@@ -9,18 +9,24 @@ final class CodePathUITests: XCTestCase {
         let data = project.appendingPathComponent(".build/xcui-data/\(UUID().uuidString)")
         app.launchEnvironment["CODEPATH_DATA_DIR"] = data.path
         app.launch()
+        app.buttons["Начать настройку"].click()
+        app.textFields["profile-nickname"].click()
+        app.textFields["profile-nickname"].typeText("Tester")
+        app.buttons["Далее"].click()
+        app.buttons["Далее"].click()
+        app.buttons["Начать обучение"].click()
         XCTAssertTrue(app.buttons["Продолжить обучение"].waitForExistence(timeout: 10))
         attach(app, "Главная")
         app.buttons["Продолжить обучение"].click()
+        XCTAssertTrue(app.staticTexts["Коротко о главном"].waitForExistence(timeout: 5))
+        app.buttons["К первому заданию"].click()
         XCTAssertTrue(app.staticTexts["Маяк станции"].waitForExistence(timeout: 5))
-        // Hide theory to make the editable area visible without a large scroll.
-        app.buttons["Скрыть теорию"].click()
         let editor = app.textViews.matching(NSPredicate(format: "label BEGINSWITH %@", "Редактор C++")).firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 5))
         editor.click()
         editor.typeKey("a", modifierFlags: .command)
         editor.typeText("// saved draft")
-        let completion = app.buttons["Я проверил(а) решение — отметить выполненным"]
+        let completion = app.buttons["Отметить самому"]
         if !completion.isHittable { app.scrollViews.allElementsBoundByIndex.last?.swipeUp() }
         completion.click()
         XCTAssertTrue(app.staticTexts["Отмечено вами"].waitForExistence(timeout: 5))
@@ -28,7 +34,6 @@ final class CodePathUITests: XCTestCase {
         app.terminate()
         app.launch()
         app.buttons["Продолжить обучение"].click()
-        app.buttons["Скрыть теорию"].click()
         let restored = app.textViews.matching(NSPredicate(format: "label BEGINSWITH %@", "Редактор C++")).firstMatch
         XCTAssertTrue(restored.waitForExistence(timeout: 5))
         XCTAssertEqual(restored.value as? String, "// saved draft")

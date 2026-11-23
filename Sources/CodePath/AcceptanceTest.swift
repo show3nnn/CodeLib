@@ -242,7 +242,7 @@ private final class Recorder {
             }
         }
 
-        // Lesson screen: editor, theory side panel and native sheet.
+        // Lesson screen: practice and the inline first step at both widths.
         model.update { $0.preferences.theme = "light" }
         model.open(first)
         for (theme, sizeName, width, height) in [("light", "wide", CGFloat(1180), CGFloat(800)),
@@ -262,80 +262,36 @@ private final class Recorder {
                       theme: "light", textSize: 28)
         model.update { $0.preferences.textSize = Preferences().textSize; $0.preferences.codeSize = Preferences().codeSize }
 
-        let theory = makeWindow(NSRect(x: 0, y: 0, width: 1120, height: 740), style: [.titled, .resizable])
-        applyAppearance("light", to: theory)
-        theory.contentView = NSHostingView(rootView: LessonView(model: model, showTheory: true)
-            .environment(\.locale, PresentationLocale.locale)
-            .preferredColorScheme(.light)
-            .environment(\.colorScheme, .light)
-            .background(WorkspaceBackdrop()))
-        theory.orderFront(nil)
-        await settle()
-        await capture("lesson-theory-wide-light", screen: "lesson-theory", window: theory,
-                      theme: "light", textSize: model.document.preferences.textSize)
-        theory.setContentSize(NSSize(width: 760, height: 660))
-        await settle(900)
-        let narrowSheetPresented = theory.attachedSheet != nil
-        check(narrowSheetPresented, "Узкое окно открывает теорию листом")
-        if let sheet = theory.attachedSheet {
-            theory.endSheet(sheet)
-            sheet.orderOut(nil)
-        }
-        // The attached sheet is composited by the window server and stays black
-        // through cacheDisplay; render the same extracted content in a plain
-        // window at the sheet's measured size (470×620).
-        if let lesson = model.lesson {
-            let sheetWindow = makeWindow(NSRect(x: 0, y: 0, width: 470, height: 620))
-            applyAppearance("light", to: sheetWindow)
-            sheetWindow.contentView = NSHostingView(rootView: TheorySheet(lesson: lesson,
-                                                                          preferences: model.document.preferences,
-                                                                          dismiss: {})
-                .environment(\.locale, PresentationLocale.locale)
-                .preferredColorScheme(.light)
-                .environment(\.colorScheme, .light)
-                .background(Color(nsColor: .windowBackgroundColor)))
-            sheetWindow.orderFront(nil)
-            await settle(500)
-            await capture("lesson-theory-sheet-light", screen: "lesson-theory-sheet", window: sheetWindow,
+        model.openLesson(course.lessons[0])
+        for (name, width, height) in [("wide", CGFloat(1180), CGFloat(800)), ("compact", 760, 660)] {
+            await size(window, width, height)
+            await capture("lesson-theory-\(name)-light", screen: "lesson-theory", window: window,
                           theme: "light", textSize: model.document.preferences.textSize)
-            sheetWindow.orderOut(nil)
-            sheetWindow.close()
+            check(window.attachedSheet == nil && model.exercise == nil, "Теория открыта в основном окне: \(name)")
         }
-        theory.orderOut(nil)
-        theory.close()
 
         // Secondary screens that own their own window.
+        let savedTheme = model.document.preferences.theme
         for (theme, scheme) in [("light", ColorScheme.light), ("dark", ColorScheme.dark)] {
-            let settings = makeWindow(NSRect(x: 0, y: 0, width: 720, height: 780), style: [.titled, .resizable])
-            applyAppearance(theme, to: settings)
-            settings.contentView = NSHostingView(rootView: SettingsView(model: model, pane: .appearance)
-                .environment(\.locale, PresentationLocale.locale)
-                .preferredColorScheme(scheme)
-                .environment(\.colorScheme, scheme))
-            settings.orderFront(nil)
-            await settle()
-            await capture("settings-appearance-\(theme)", screen: "settings-appearance", window: settings,
-                          theme: theme, textSize: model.document.preferences.textSize)
-            settings.setContentSize(NSSize(width: 600, height: 560))
-            await settle()
-            await capture("settings-appearance-compact-\(theme)", screen: "settings-appearance", window: settings,
-                          theme: theme, textSize: model.document.preferences.textSize)
-            settings.orderOut(nil)
-            settings.close()
-
-            for pane in [SettingsView.Pane.profile, .data] {
-                let paneWindow = makeWindow(NSRect(x: 0, y: 0, width: 720, height: 780), style: [.titled, .resizable])
-                applyAppearance(theme, to: paneWindow)
-                paneWindow.contentView = NSHostingView(rootView: SettingsView(model: model, pane: pane)
+            model.update { $0.preferences.theme = theme }
+            for (section, size, suffix) in [
+                (SettingsView.Section.profile, SettingsView.defaultSize, "profile"),
+                (.appearance, SettingsView.defaultSize, "appearance"),
+                (.appearance, SettingsView.minimumSize, "appearance-compact"),
+                (.data, SettingsView.defaultSize, "data")
+            ] {
+                let settings = makeWindow(NSRect(origin: .zero, size: size), style: [.titled, .resizable])
+                applyAppearance(theme, to: settings)
+                settings.contentView = NSHostingView(rootView: SettingsView(model: model, initialSection: section == .profile ? nil : section)
                     .environment(\.locale, PresentationLocale.locale)
                     .preferredColorScheme(scheme)
                     .environment(\.colorScheme, scheme))
-                paneWindow.orderFront(nil)
+                settings.orderFront(nil)
                 await settle()
-                await capture("settings-\(String(describing: pane))-\(theme)", screen: "settings-\(String(describing: pane))",
-                              window: paneWindow, theme: theme, textSize: model.document.preferences.textSize)
-                paneWindow.orderOut(nil)
-                paneWindow.close()
+                await capture("settings-\(suffix)-\(theme)", screen: "settings-\(section)",
+                              window: settings, theme: theme, textSize: model.document.preferences.textSize)
+                settings.orderOut(nil)
+                settings.close()
             }
 
             let history = makeWindow(NSRect(x: 0, y: 0, width: 680, height: 720), style: [.titled, .resizable])
@@ -364,6 +320,7 @@ private final class Recorder {
             about.orderOut(nil)
             about.close()
         }
+        model.update { $0.preferences.theme = savedTheme }
 
         if let profile = model.document.profile {
             var edited = profile
@@ -470,7 +427,7 @@ private final class Recorder {
                             "onboarding-profile-light", "onboarding-appearance-light", "onboarding-environment-light",
                             "achievement-banner-reduced-light", "achievement-banner-reduced-dark",
                             "lesson-wide-light", "lesson-wide-dark", "lesson-compact-light", "lesson-compact-dark",
-                            "lesson-wide-light-maxtext", "lesson-theory-wide-light", "lesson-theory-sheet-light",
+                            "lesson-wide-light-maxtext", "lesson-theory-wide-light", "lesson-theory-compact-light",
                             "profile-edit-light", "error-light", "welcome-reduced-motion-transparency-light",
                             "home-fullscreen-light", "lesson-scroll-end-light"])
         for page in ["home", "catalog", "syllabus", "progress", "achievements"] {
@@ -999,7 +956,6 @@ private final class Recorder {
                 "Full Keyboard Access — системная настройка; прогон её не меняет и снимает только текущую цепочку key view.",
                 "Reduce Motion/Reduce Transparency — системные настройки; явные значения используются только там, где представление их принимает.",
                 "Полноэкранный режим снят один раз как образец; покадровая приёмка каждого экрана остаётся ручной.",
-                "Приложенный лист теории (sheet) не растрируется без разрешения записи экрана: снят тот же TheorySheet отдельным окном 470×620, без декораций листа.",
                 "Чистое стекло (панель приветствия, баннер достижения в обычном режиме) не растрируется через cacheDisplay: баннер снят в режиме Reduce Transparency, стеклянный вариант проверяется вручную.",
                 "Сайдбар и обычные материалы сняты композитом поверх фона темы; за стеклянными поверхностями фон окна может отличаться от системного.",
                 "Внешний вид оценивает человек: снимки — материал, а не вердикт."

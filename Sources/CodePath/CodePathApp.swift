@@ -39,13 +39,13 @@ struct CodePathApp: App {
             }
             CommandMenu(nativeTitle("Обучение", locale: model.presentationLocale)) {
                 Button { model.move(-1) } label: {
-                    nativeTitle("Предыдущее задание", locale: model.presentationLocale)
+                    nativeTitle("Предыдущий шаг", locale: model.presentationLocale)
                 }.keyboardShortcut("[", modifiers: .command)
-                    .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: -1) == nil)
+                    .disabled(model.page != .lesson || model.adjacentStep(-1) == nil)
                 Button { model.move(1) } label: {
-                    nativeTitle("Следующее задание", locale: model.presentationLocale)
+                    nativeTitle("Следующий шаг", locale: model.presentationLocale)
                 }.keyboardShortcut("]", modifiers: .command)
-                    .disabled(model.page != .lesson || model.course?.adjacent(to: model.selectedExerciseID ?? "", offset: 1) == nil)
+                    .disabled(model.page != .lesson || model.adjacentStep(1) == nil)
                 Button { model.flush() } label: {
                     nativeTitle("Сохранить изменения", locale: model.presentationLocale)
                 }.keyboardShortcut("s", modifiers: .command)
@@ -55,6 +55,7 @@ struct CodePathApp: App {
         Settings {
             SettingsView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }
+        .defaultSize(SettingsView.defaultSize)
         Window(nativeTitle("О codelib", locale: model.presentationLocale), id: "about") {
             AboutView(model: model).environment(\.locale, model.presentationLocale).preferredColorScheme(model.colorScheme).tint(.green)
         }.windowResizability(.contentSize).environment(\.locale, model.presentationLocale)

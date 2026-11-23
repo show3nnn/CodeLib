@@ -40,8 +40,15 @@ final class AppModel {
     var page: Page = .home {
         didSet { if page != .lesson { execution.cancel() } }
     }
+    enum LessonStep: Hashable {
+        case theory(String), exercise(String)
+    }
+    private(set) var lessonStep: LessonStep? {
+        didSet { if oldValue != lessonStep { execution.cancel() } }
+    }
     var selectedExerciseID: String? {
-        didSet { if oldValue != selectedExerciseID { execution.cancel() } }
+        if case .exercise(let id) = lessonStep { return id }
+        return nil
     }
     var message: AppFailure?
     private var updateHistoryPresented = false
@@ -182,8 +189,7 @@ final class AppModel {
             let store = try ProgressStore(url: dataURL)
             self.store = store
             document = store.document
-            selectedExerciseID = course?.exercises.first { $0.id == document.lastExerciseID }?.id
-                ?? course?.exercises.first?.id
+            lessonStep = resumeStep
             storageError = nil
             if FileManager.default.fileExists(atPath: dataURL.path) { migrateLearningMetadata() }
         } catch {
@@ -193,7 +199,23 @@ final class AppModel {
     }
 
     var exercise: Exercise? { course?.exercises.first { $0.id == selectedExerciseID } }
-    var lesson: Lesson? { course?.lesson(containing: selectedExerciseID) }
+    var lesson: Lesson? {
+        if case .theory(let id) = lessonStep { return course?.lessons.first { $0.id == id } }
+        return course?.lesson(containing: selectedExerciseID)
+    }
+    private var resumeStep: LessonStep? {
+        if let id = document.lastExerciseID, course?.lesson(containing: id) != nil { return .exercise(id) }
+        return course?.lessons.first.map { .theory($0.id) }
+    }
+    var savedPracticeFromTheory: Exercise? {
+        guard case .theory = lessonStep, let lesson else { return nil }
+        for id in [document.lessonPositions?[lesson.id], document.lastExerciseID].compactMap({ $0 }) {
+            if let task = lesson.exercises.first(where: { $0.id == id }) {
+                return task.id == lesson.exercises.first?.id ? nil : task
+            }
+        }
+        return nil
+    }
     /// Remains fixed until the complete presentation can switch as one unit.
     var presentationLocale: Locale {
         #if DEBUG
@@ -304,7 +326,7 @@ final class AppModel {
     }
 
     func open(_ exercise: Exercise) {
-        selectedExerciseID = exercise.id
+        lessonStep = .exercise(exercise.id)
         page = .lesson
         message = nil
         let lessonID = course?.lesson(containing: exercise.id)?.id
@@ -320,14 +342,13 @@ final class AppModel {
     }
 
     func resume() {
-        guard let course, let exercise = course.exercises.first(where: { $0.id == document.lastExerciseID })
-                ?? course.exercises.first else { return }
-        open(exercise)
+        if let step = resumeStep { navigate(to: step) }
     }
 
     func openLesson(_ lesson: Lesson) {
-        guard let exercise = document.resumeExercise(in: lesson) else { return }
-        open(exercise)
+        lessonStep = .theory(lesson.id)
+        page = .lesson
+        message = nil
     }
 
     func resetCodeDraft() {
@@ -340,9 +361,32 @@ final class AppModel {
         update { $0.preferences.textSize = defaults.textSize; $0.preferences.codeSize = defaults.codeSize }
     }
 
+    func adjacentStep(_ offset: Int) -> LessonStep? {
+        guard let course, let lesson, let first = lesson.exercises.first, [-1, 1].contains(offset) else { return nil }
+        if case .theory = lessonStep {
+            if offset == 1 { return .exercise(first.id) }
+            return course.adjacent(to: first.id, offset: -1).map { .exercise($0.id) }
+        }
+        guard let id = selectedExerciseID else { return nil }
+        if offset == -1 && id == first.id { return .theory(lesson.id) }
+        guard let task = course.adjacent(to: id, offset: offset) else { return nil }
+        if offset == 1, id == lesson.exercises.last?.id, let next = course.lesson(containing: task.id) {
+            return .theory(next.id)
+        }
+        return .exercise(task.id)
+    }
+
+    private func navigate(to step: LessonStep) {
+        switch step {
+        case .theory(let id):
+            if let lesson = course?.lessons.first(where: { $0.id == id }) { openLesson(lesson) }
+        case .exercise(let id):
+            if let task = course?.exercises.first(where: { $0.id == id }) { open(task) }
+        }
+    }
+
     func move(_ offset: Int) {
-        guard let id = selectedExerciseID, let next = course?.adjacent(to: id, offset: offset) else { return }
-        open(next)
+        if let step = adjacentStep(offset) { navigate(to: step) }
     }
 
     func check() {
@@ -438,8 +482,7 @@ final class AppModel {
             achievementNotifications.removeAll()
             hasUnsavedChanges = false
             saveError = nil
-            selectedExerciseID = course?.exercises.first { $0.id == document.lastExerciseID }?.id
-                ?? course?.exercises.first?.id
+            lessonStep = resumeStep
             migrateLearningMetadata()
         } catch { message = AppFailure(error, operation: .importProgress) }
     }
@@ -454,7 +497,7 @@ final class AppModel {
             achievementNotifications.removeAll()
             hasUnsavedChanges = false
             saveError = nil
-            selectedExerciseID = course?.exercises.first?.id
+            lessonStep = resumeStep
             page = .home
         } catch { message = AppFailure(error, operation: .reset) }
     }

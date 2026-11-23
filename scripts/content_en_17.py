@@ -1,7 +1,7 @@
 """Complete text-field draft: algorithm lab. Developer-only; no executable fields."""
 from translation_authoring import lesson, task, output
 
-SOURCE_SHA256 = "576f31a2bb263e91dc0983f10c3cf3691bed7336ba5d09847b9863c18d41da84"
+SOURCE_SHA256 = "40f02f1f8221e834f53d1ec1411662a8e8ce3a75325de87fee365fb75913a84e"
 SECTION_ID = "cpp.section.algorithm-lab"
 ARRAY_INPUT = "First, n (0–1000) and n integer elements (−1000000–1000000). "
 

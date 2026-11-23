@@ -105,7 +105,7 @@ struct RootView: View {
             }
             .background(Color(nsColor: .windowBackgroundColor))
             .onChange(of: model.page) { _, page in
-                if page == .lesson && model.exercise == nil { model.resume() }
+                if page == .lesson && model.lessonStep == nil { model.resume() }
             }
         } detail: {
             VStack(spacing: 0) {

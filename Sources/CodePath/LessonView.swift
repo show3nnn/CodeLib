@@ -30,11 +30,10 @@ extension Completion {
 
 struct LessonView: View {
     @Bindable var model: AppModel
-    @State var showTheory = false
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        if let lesson = model.lesson, let exercise = model.exercise {
+        if let lesson = model.lesson {
+            let exercise = model.exercise
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 6) {
@@ -44,73 +43,44 @@ struct LessonView: View {
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Button { showTheory.toggle() } label: {
-                        Label {
-                            if showTheory { Text("Скрыть теорию") }
-                            else { Text("Теория") }
-                        } icon: { Image(systemName: "book.closed") }
-                    }
-                        .buttonStyle(.bordered).tint(showTheory ? .green : .secondary)
-                        .accessibilityIdentifier("lesson.theory")
                 }.padding(.horizontal, 24).padding(.top, 20).padding(.bottom, 16)
-                ScrollViewReader { taskProxy in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(Array(lesson.exercises.enumerated()), id: \.element.id) { index, task in
-                            Button {
-                                model.open(task)
-                            } label: {
-                                HStack(spacing: 8) {
-                                    Text(String(format: "%02d", index + 1)).monospacedDigit()
-                                    if task.id == exercise.id { Text(task.title).lineLimit(1) }
-                                    if model.document.completed(task.id) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
-                                }.font(.system(size: 12, weight: .medium)).padding(.horizontal, 12).padding(.vertical, 10)
-                                    .foregroundStyle(task.id == exercise.id ? Color.primary : .secondary)
-                                    .background(task.id == exercise.id ? Color.green.opacity(0.12) : Color.primary.opacity(0.035), in: Capsule())
-                                    .overlay { Capsule().strokeBorder(task.id == exercise.id ? Color.green.opacity(0.35) : .clear) }
-                                    .contentShape(Capsule())
-                            }
-                            .buttonStyle(.plain).help(task.title)
-                            .accessibilityLabel("Задание \(index + 1): \(task.title)")
-                            .accessibilityAddTraits(task.id == exercise.id ? .isSelected : [])
-                            .id(task.id)
-                        }
-                    }.padding(.horizontal, 24).padding(.bottom, 16)
-                }
-                .onAppear { taskProxy.scrollTo(exercise.id, anchor: .center) }
-                .onChange(of: exercise.id) { _, id in taskProxy.scrollTo(id, anchor: .center) }
-                }
-                Divider()
-                GeometryReader { geometry in
-                    HStack(spacing: 0) {
-                        ScrollViewReader { proxy in
-                            ScrollView {
-                                VStack(alignment: .leading, spacing: 24) {
-                                    Color.clear.frame(height: 0).id("top")
-                                    ExerciseView(model: model, exercise: exercise, revealEditor: {
-                                        proxy.scrollTo("editor-\(exercise.id)", anchor: .top)
-                                    }).id(exercise.id)
-                                }.padding(24).frame(maxWidth: 980).frame(maxWidth: .infinity)
-                            }
-                            .onChange(of: exercise.id) { _, _ in proxy.scrollTo("top", anchor: .top) }
-                        }.frame(minWidth: 0, maxWidth: .infinity)
-                        if showTheory && geometry.size.width >= 850 {
-                            Divider()
-                            ScrollView {
-                                TheoryView(lesson: lesson, preferences: model.document.preferences).padding(24)
-                            }.frame(width: 310).background(.background)
-                        }
-                    }.animation(reduceMotion ? nil : .easeInOut(duration: 0.18), value: showTheory)
-                    .sheet(isPresented: Binding(get: { showTheory && geometry.size.width < 850 },
-                                                set: { if !$0 { showTheory = false } })) {
-                        TheorySheet(lesson: lesson, preferences: model.document.preferences) { showTheory = false }
+                HStack(spacing: 12) {
+                    Button { model.openLesson(lesson) } label: {
+                        Label("Теория", systemImage: "book")
+                            .font(.subheadline.weight(.semibold)).padding(.horizontal, 12).padding(.vertical, 10)
+                            .background(Color.green.opacity(exercise == nil ? 0.18 : 0.06), in: Capsule())
+                            .overlay { Capsule().strokeBorder(Color.green.opacity(exercise == nil ? 0.5 : 0.2)) }
                     }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(exercise == nil ? .isSelected : [])
+                    .accessibilityIdentifier("lesson.theory")
+                    Divider().frame(height: 24)
+                    taskStrip(lesson: lesson, selected: exercise?.id)
+                }.padding(.horizontal, 24).padding(.bottom, 16)
+                Divider()
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) {
+                            if let exercise {
+                                ExerciseView(model: model, exercise: exercise) {
+                                    proxy.scrollTo("editor-\(exercise.id)", anchor: .top)
+                                }
+                            } else {
+                                if let saved = model.savedPracticeFromTheory {
+                                    Button("Вернуться к заданию: \(saved.title)", systemImage: "arrow.uturn.forward") { model.open(saved) }
+                                        .buttonStyle(.bordered)
+                                }
+                                Card { TheoryView(lesson: lesson, preferences: model.document.preferences) }
+                                    .accessibilityIdentifier("lesson.theory-content")
+                            }
+                        }.padding(24).frame(maxWidth: exercise == nil ? 800 : 980).frame(maxWidth: .infinity)
+                    }.id(model.lessonStep)
                 }
                 Divider()
                 HStack {
                     Button("Назад", systemImage: "chevron.left") { model.move(-1) }
                         .buttonStyle(.bordered)
-                        .disabled(model.course?.adjacent(to: exercise.id, offset: -1) == nil)
+                        .disabled(model.adjacentStep(-1) == nil)
                     Spacer()
                     Label {
                         if model.hasUnsavedChanges { Text("Не сохранено") }
@@ -120,9 +90,12 @@ struct LessonView: View {
                     }
                         .font(.caption).foregroundStyle(.secondary)
                     Spacer()
-                    Button("Далее", systemImage: "chevron.right") { model.move(1) }
+                    Button { model.move(1) } label: {
+                        if exercise == nil { Label("К первому заданию", systemImage: "arrow.right") }
+                        else { Label("Далее", systemImage: "chevron.right") }
+                    }
                         .buttonStyle(.borderedProminent)
-                        .disabled(model.course?.adjacent(to: exercise.id, offset: 1) == nil)
+                        .disabled(model.adjacentStep(1) == nil)
                 }.controlSize(.large).padding(.horizontal, 24).padding(.vertical, 12).background(.bar)
             }
         } else {
@@ -136,28 +109,35 @@ struct LessonView: View {
             }
         }
     }
-}
 
-/// Narrow-window theory presentation. Extracted so the acceptance harness can
-/// render exactly this content in a plain window: an attached sheet is composited
-/// by the window server and does not rasterize without screen-recording consent.
-struct TheorySheet: View {
-    let lesson: Lesson
-    let preferences: Preferences
-    let dismiss: () -> Void
-
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text(lesson.title).font(.headline)
-                Spacer()
-                Button("К заданию", systemImage: "xmark", action: dismiss)
-            }.padding(20)
-            Divider()
-            ScrollView {
-                TheoryView(lesson: lesson, preferences: preferences).padding(24)
+    private func taskStrip(lesson: Lesson, selected: String?) -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Array(lesson.exercises.enumerated()), id: \.element.id) { index, task in
+                        let active = task.id == selected
+                        Button { model.open(task) } label: {
+                            HStack(spacing: 8) {
+                                Text(String(format: "%02d", index + 1)).monospacedDigit()
+                                if active { Text(task.title).lineLimit(1) }
+                                if model.document.completed(task.id) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.green) }
+                            }.font(.system(size: 12, weight: .medium)).padding(.horizontal, 12).padding(.vertical, 10)
+                                .foregroundStyle(active ? Color.primary : .secondary)
+                                .background(active ? Color.green.opacity(0.12) : Color.primary.opacity(0.035), in: Capsule())
+                                .overlay { Capsule().strokeBorder(active ? Color.green.opacity(0.35) : .clear) }
+                                .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain).help(task.title)
+                        .accessibilityLabel("Задание \(index + 1): \(task.title)")
+                        .accessibilityAddTraits(active ? .isSelected : [])
+                        .id(task.id)
+                    }
+                }
             }
-        }.frame(minWidth: 440, idealWidth: 560, minHeight: 420, idealHeight: 620)
+            .onChange(of: selected ?? lesson.exercises.first?.id, initial: true) { _, id in
+                if let id { proxy.scrollTo(id, anchor: selected == nil ? .leading : .center) }
+            }
+        }
     }
 }
 
@@ -167,7 +147,7 @@ private struct TheoryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             Label("Теория", systemImage: "book.closed").font(.caption.weight(.semibold)).foregroundStyle(.green)
-            Text("Коротко о главном").font(.system(size: 24, weight: .bold)).tracking(-0.6)
+            Text("Коротко о главном").font(.system(size: 24, weight: .bold)).tracking(-0.6).accessibilityAddTraits(.isHeader)
             Text(lesson.theory).font(.system(size: preferences.textSize)).lineSpacing(5).textSelection(.enabled)
                 .fixedSize(horizontal: false, vertical: true)
             CodeBlock(code: lesson.example, fontSize: preferences.codeSize)

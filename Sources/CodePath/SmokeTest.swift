@@ -280,6 +280,30 @@ enum SmokeTest {
                 profileWindow.orderOut(nil)
                 check(model.saveProfile(edited), "Profile changes persist through the real save path")
                 check(model.document.profile?.id == originalProfile.id && model.document.profile?.createdAt == originalProfile.createdAt, "Editing keeps profile identity and creation date")
+                let visibleWindows = Set(NSApp.windows.filter(\.isVisible).map(\.windowNumber))
+                check(activateSettingsMenuItem(in: NSApp.mainMenu), "The native Settings command is present")
+                await settle()
+                if let settings = NSApp.windows.first(where: { $0.isVisible && !visibleWindows.contains($0.windowNumber) }),
+                   let content = settings.contentView {
+                    check(content.bounds.height > content.bounds.width, "The native Settings window opens in portrait")
+                    try snapshot(window: settings, to: directory.appendingPathComponent("settings-native.png"))
+                    if let scroll = settingsScroll(in: content), let document = scroll.documentView {
+                        let before = scroll.documentVisibleRect
+                        let bottom = document.bounds.maxY - before.height
+                        scroll.contentView.scroll(to: NSPoint(x: scroll.contentView.bounds.minX, y: bottom))
+                        scroll.reflectScrolledClipView(scroll.contentView)
+                        await settle()
+                        check(scroll.documentVisibleRect.minY > before.minY &&
+                              abs(scroll.documentVisibleRect.maxY - document.bounds.maxY) < 2,
+                              "The native Settings window scrolls to the final section")
+                        try snapshot(window: settings, to: directory.appendingPathComponent("settings-native-end.png"))
+                    } else {
+                        check(false, "The native Settings window has scrollable content")
+                    }
+                    settings.close()
+                } else {
+                    check(false, "The native Settings command opens a window")
+                }
                 for theme in ["light", "dark"] {
                     model.update { $0.preferences.theme = theme }
                     model.page = .progress
@@ -294,21 +318,32 @@ enum SmokeTest {
                     await settle()
                     try snapshot(window: statistics, to: directory.appendingPathComponent("progress-detail-\(theme).png"))
                     statistics.orderOut(nil)
-                    for pane in SettingsView.Pane.allCases {
-                        let settings = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 720, height: 780), styleMask: [.titled, .resizable], backing: .buffered, defer: false)
-                        settings.contentView = NSHostingView(rootView: SettingsView(model: model, pane: pane)
-                            .environment(\.locale, PresentationLocale.locale).preferredColorScheme(theme == "dark" ? .dark : .light))
+                    var offsets: [CGFloat] = []
+                    for (section, size, suffix) in [
+                        (SettingsView.Section.profile, SettingsView.defaultSize, "profile"),
+                        (.appearance, SettingsView.defaultSize, "appearance"),
+                        (.data, SettingsView.defaultSize, "data"),
+                        (.appearance, SettingsView.minimumSize, "compact")
+                    ] {
+                        let settings = NSWindow(contentRect: NSRect(origin: .zero, size: size),
+                                                styleMask: [.titled, .resizable], backing: .buffered, defer: false)
+                        settings.isReleasedWhenClosed = false
+                        settings.contentView = NSHostingView(rootView: SettingsView(model: model, initialSection: section == .profile ? nil : section)
+                            .environment(\.locale, PresentationLocale.locale).preferredColorScheme(theme == "dark" ? .dark : .light).tint(.green))
                         settings.orderFront(nil)
                         await settle()
-                        try snapshot(window: settings, to: directory.appendingPathComponent("settings-\(pane)-\(theme).png"))
-                        if pane == .appearance {
-                            settings.setContentSize(NSSize(width: 600, height: 560))
-                            await settle()
-                            try snapshot(window: settings, to: directory.appendingPathComponent("settings-compact-\(theme).png"))
+                        try snapshot(window: settings, to: directory.appendingPathComponent("settings-\(suffix)-\(theme).png"))
+                        if let scroll = settingsScroll(in: settings.contentView), let content = settings.contentView {
+                            check(abs(content.bounds.width - size.width) < 2 && abs(content.bounds.height - size.height) < 2,
+                                  "Settings fits the portrait size: \(suffix), \(theme), maximum font sizes")
+                            offsets.append(scroll.documentVisibleRect.minY)
+                        } else {
+                            check(false, "Settings section is in a real scroll view: \(suffix), \(theme)")
                         }
-                        check(settings.contentView != nil, "Settings pane renders: \(pane), \(theme), maximum font sizes")
-                        settings.orderOut(nil)
+                        settings.close()
                     }
+                    check(offsets.count == 4 && offsets[0] < offsets[1] && offsets[1] < offsets[2] && offsets[0] < offsets[3],
+                          "Profile, appearance and data occupy successive scroll positions in \(theme)")
                 }
                 model.update { $0.preferences.textSize = Preferences().textSize }
                 check(model.document.preferences.codeSize == 26, "Resetting course text size keeps the code size")
@@ -397,25 +432,16 @@ enum SmokeTest {
                 check(window.contentLayoutRect.width >= 750, "Redesigned home keeps compact native navigation")
                 window.setContentSize(NSSize(width: 1180, height: 800))
                 model.update { $0.preferences.theme = "light" }
-                model.open(first)
+                model.openLesson(course.lessons[0])
                 await settle()
-                let theoryWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1120, height: 740), styleMask: [.titled, .resizable], backing: .buffered, defer: false)
-                theoryWindow.contentView = NSHostingView(rootView: LessonView(model: model, showTheory: true)
-                    .environment(\.locale, PresentationLocale.locale).preferredColorScheme(model.colorScheme).background(WorkspaceBackdrop()))
-                theoryWindow.orderFront(nil)
+                check(model.exercise == nil && findEditor(in: window.contentView) == nil, "Fresh lesson shows theory before the editor")
+                try snapshot(window: window, to: directory.appendingPathComponent("lesson-theory-wide.png"))
+                window.setContentSize(NSSize(width: 760, height: 660))
                 await settle()
-                check(findEditor(in: theoryWindow.contentView)?.string == first.starter, "Theory side panel leaves the real editor and draft intact")
-                try snapshot(window: theoryWindow, to: directory.appendingPathComponent("lesson-theory-wide.png"))
-                theoryWindow.setContentSize(NSSize(width: 760, height: 660))
-                await settle()
-                if let sheet = theoryWindow.attachedSheet {
-                    check(true, "Compact lesson opens theory in a native sheet")
-                    try snapshot(window: sheet, to: directory.appendingPathComponent("lesson-theory-sheet.png"))
-                    theoryWindow.endSheet(sheet)
-                    sheet.orderOut(nil)
-                } else { failures.append("Compact lesson opens theory in a native sheet") }
-                theoryWindow.orderOut(nil)
-                window.makeKeyAndOrderFront(nil)
+                check(model.lessonStep == .theory(course.lessons[0].id) && window.attachedSheet == nil, "Compact lesson retains the inline theory step")
+                try snapshot(window: window, to: directory.appendingPathComponent("lesson-theory-compact.png"))
+                model.move(1)
+                window.setContentSize(NSSize(width: 1180, height: 800))
                 await settle()
                 if let editor = findEditor(in: window.contentView) {
                     window.makeFirstResponder(editor)
@@ -473,7 +499,9 @@ enum SmokeTest {
                     check(model.state(for: task.id).completion == .automatic, "Accept correct answer: \(task.id)")
                 }
                 for lesson in course.lessons {
-                    model.open(lesson.exercises[0])
+                    model.openLesson(lesson)
+                    check(model.lessonStep == .theory(lesson.id) && model.exercise == nil, "Open lesson at theory: \(lesson.id)")
+                    model.move(1)
                     await settle()
                     check(model.lesson?.id == lesson.id && findEditor(in: window.contentView) != nil, "Render lesson and editor: \(lesson.id)")
                 }
@@ -523,7 +551,7 @@ enum SmokeTest {
                 check(restored.document.exercises[first.id]?.draft == first.starter + "// smoke: черновик 🚀\n", "A new store reads actual editor text")
                 check(restored.document.lastExerciseID == first.id, "Last exercise is durable")
                 model.openLesson(course.lessons[0])
-                check(model.exercise?.id == first.id, "Opening a lesson keeps its saved exercise")
+                check(model.exercise == nil && model.document.lastExerciseID == first.id, "Opening theory preserves saved practice position")
                 check(course.studySections(query: "вместимость рейса", status: .all, progress: model.document).flatMap(\.lessons).contains(where: { $0.id == "cpp.binarylab" }), "Syllabus search finds exercise titles")
                 model.page = .syllabus
                 await settle()
@@ -594,7 +622,7 @@ enum SmokeTest {
             await settle()
             menuBeforePreview = menuTitles(in: NSApp.mainMenu)
             let russianMenu = ["О codelib", "История обновлений", "Продолжить обучение", "Обучение",
-                               "Предыдущее задание", "Следующее задание", "Сохранить изменения"]
+                               "Предыдущий шаг", "Следующий шаг", "Сохранить изменения"]
             check(russianMenu.allSatisfy(menuBeforePreview.contains), "App menu initially uses Russian")
             try model.previewEnglishForSmoke(sourceRoot: URL(fileURLWithPath: path, isDirectory: true))
             await settle()
@@ -603,11 +631,11 @@ enum SmokeTest {
             let learningItems = NSApp.mainMenu?.items.first(where: { $0.title == "Learning" })?
                 .submenu?.items.map(\.title) ?? []
             missingEnglishMenuTitles = ["About codelib", "Release history"].filter { !appItems.contains($0) }
-            missingEnglishMenuTitles += ["Previous task", "Next task", "Save changes"].filter { !learningItems.contains($0) }
+            missingEnglishMenuTitles += ["Previous step", "Next step", "Save changes"].filter { !learningItems.contains($0) }
             if !menuDuringPreview.contains("Continue learning") { missingEnglishMenuTitles.append("Continue learning") }
             if !menuDuringPreview.contains("Learning") { missingEnglishMenuTitles.append("Learning") }
             staleRussianMenuTitles = ["О codelib", "История обновлений"].filter(appItems.contains)
-            staleRussianMenuTitles += ["Предыдущее задание", "Следующее задание", "Сохранить изменения"]
+            staleRussianMenuTitles += ["Предыдущий шаг", "Следующий шаг", "Сохранить изменения"]
                 .filter(learningItems.contains)
             if menuDuringPreview.contains("Продолжить обучение") { staleRussianMenuTitles.append("Продолжить обучение") }
             englishMenuItemsPresent = missingEnglishMenuTitles.isEmpty && staleRussianMenuTitles.isEmpty
@@ -762,11 +790,11 @@ enum SmokeTest {
             window.contentView = NSHostingView(rootView: RootView(model: model).environment(\.locale, model.presentationLocale))
             await settle()
             try snapshot(window: window, to: directory.appendingPathComponent("english-root.png"))
-            for pane in [SettingsView.Pane.appearance, .data] {
-                window.contentView = NSHostingView(rootView: SettingsView(model: model, pane: pane)
+            for section in [SettingsView.Section.appearance, .data] {
+                window.contentView = NSHostingView(rootView: SettingsView(model: model, initialSection: section)
                     .environment(\.locale, model.presentationLocale))
                 await settle()
-                try snapshot(window: window, to: directory.appendingPathComponent("english-settings-\(pane.rawValue).png"))
+                try snapshot(window: window, to: directory.appendingPathComponent("english-settings-\(section.rawValue).png"))
             }
             for step in [OnboardingState.Step.profile, .appearance, .environment] {
                 let fixture = URL(fileURLWithPath: isolatedData, isDirectory: true)
@@ -840,6 +868,28 @@ enum SmokeTest {
             if activateMenuItem(title, in: item.submenu) { return true }
         }
         return false
+    }
+
+    private static func activateSettingsMenuItem(in menu: NSMenu?) -> Bool {
+        guard let menu else { return false }
+        menu.update()
+        for (index, item) in menu.items.enumerated() {
+            if item.keyEquivalent == ",", item.keyEquivalentModifierMask.contains(.command), item.isEnabled {
+                menu.performActionForItem(at: index)
+                return true
+            }
+            if activateSettingsMenuItem(in: item.submenu) { return true }
+        }
+        return false
+    }
+
+    private static func settingsScroll(in view: NSView?) -> NSScrollView? {
+        guard let view else { return nil }
+        if let scroll = view as? NSScrollView, let document = scroll.documentView,
+           document.bounds.height > scroll.contentSize.height {
+            return scroll
+        }
+        return view.subviews.lazy.compactMap { settingsScroll(in: $0) }.first
     }
 
     private static func menuTitles(in menu: NSMenu?) -> [String] {
